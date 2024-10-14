@@ -1,0 +1,75 @@
+{
+  "name": "kappa-koders-project-3-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve --host localhost",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@achrinza/node-ipc": "^10.1.10",
+    "apexcharts": "^3.35.3",
+    "axios": "^0.25.0",
+    "core-js": "^3.6.5",
+    "material-design-icons-iconfont": "^6.7.0",
+    "underscore": "^1.13.2",
+    "uuid": "^8.3.2",
+    "v-rating": "^1.1.2",
+    "vue": "^2.6.14",
+    "vue-apexcharts": "^1.6.2",
+    "vue-doc-preview": "^0.2.1",
+    "vue-json-csv": "^2.1.0",
+    "vue-json-to-csv": "^1.1.8",
+    "vue-nested-json-to-csv": "0.0.23",
+    "vue-pdf-embed": "^1.1.5",
+    "vue-router": "^3.5.3",
+    "vue-signature": "^2.5.4",
+    "vue-underscore": "^0.1.4",
+    "vuetify": "^2.7",
+    "vuex": "^3.6.2"
+  },
+  "devDependencies": {
+    "@babel/core": "7.20.7",
+    "@babel/eslint-parser": "7.19.1",
+    "@mdi/font": "^6.5.95",
+    "@mdi/js": "^6.5.95",
+    "@vue/cli-plugin-babel": "^5.0.8",
+    "@vue/cli-plugin-eslint": "^5.0.8",
+    "@vue/cli-service": "^5.0.8",
+    "@vue/eslint-config-prettier": "^6.0.0",
+    "eslint": "^7.29.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-vue": "^9.8.0",
+    "prettier": "^2.3.2",
+    "sass": "~1.32.0",
+    "sass-loader": "^10.0.0",
+    "vue-cli-plugin-vuetify": "~2.4.5",
+    "vue-template-compiler": "^2.6.11",
+    "vuetify-loader": "^1.7.0"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/recommended",
+      "eslint:recommended",
+      "prettier/vue",
+      "plugin:prettier/recommended"
+    ],
+    "parserOptions": {
+      "parser": "@babel/eslint-parser"
+    },
+    "rules": {
+      "vue/multi-word-component-names": "off",
+      "vue/no-v-text-v-html-on-component": "off"
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
