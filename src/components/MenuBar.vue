@@ -3,9 +3,12 @@ import ocLogo from "/oc-logo-white.png";
 import { ref, onMounted } from "vue";
 import Utils from "../config/utils";
 import AuthServices from "../services/authServices";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const user = ref(null);
-const title = ref("Tutorials");
+const title = ref("Career Services");
 const initials = ref("");
 const name = ref("");
 const logoURL = ref("");
@@ -24,7 +27,7 @@ const logout = () => {
     .then((response) => {
       console.log(response);
       Utils.removeItem("user");
-      $router.push({ name: "login" });
+      router.push({ name: "login" });
     })
     .catch((error) => {
       console.log("error", error);
@@ -40,7 +43,7 @@ onMounted(() => {
 <template>
   <div>
     <v-app-bar app>
-      <router-link :to="{ name: 'tutorials' }">
+      <router-link :to="{ name: 'resume' }">
         <v-img
           class="mx-2"
           :src="logoURL"
@@ -54,8 +57,8 @@ onMounted(() => {
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <div v-if="user">
-        <v-btn class="mx-2" :to="{ name: 'tutorials' }"> List </v-btn>
-        <v-btn class="mx-2" :to="{ name: 'add' }"> Add Tutorial </v-btn>
+        <v-btn class="mx-2" :to="{ name: 'resume' }"> Resume </v-btn>
+        <v-btn class="mx-2" :to="{ name: 'information' }"> Information </v-btn>
       </div>
       <v-menu bottom min-width="200px" rounded offset-y v-if="user">
         <template v-slot:activator="{ props }">

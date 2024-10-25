@@ -1,58 +1,52 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import Login from "./views/Login.vue";
+import ResumeView from "./views/Resume/ResumeList.vue";
+import InformationView from "./views/Information/InformationList.vue";
 
-import TutorialsList from "./views/TutorialsList.vue";
-import EditTutorial from "./views/EditTutorial.vue";
-import AddTutorial from "./views/AddTutorial.vue";
-import ViewTutorial from "./views/ViewTutorial.vue";
-import AddLesson from "./views/AddLesson.vue";
-import EditLesson from "./views/EditLesson.vue";
+import RouterStateController from "./utils/routerStateController.js";
+
+const routerState = new RouterStateController();
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: "/",
+      path: "/login",
       alias: "/login",
       name: "login",
       component: Login,
     },
     {
-      path: "/tutorials",
-      name: "tutorials",
-      component: TutorialsList,
+      path: "/",
+      alias: "/resume",
+      name: "resume",
+      component: ResumeView,
     },
     {
-      path: "/edit/:id",
-      name: "edit",
-      component: EditTutorial,
-      props: true,
-    },
-    {
-      path: "/add",
-      name: "add",
-      component: AddTutorial,
-    },
-    {
-      path: "/view/:id",
-      name: "view",
-      component: ViewTutorial,
-      props: true,
-    },
-    {
-      path: "/addLesson/:tutorialId",
-      name: "addLesson",
-      component: AddLesson,
-      props: true,
-    },
-    {
-      path: "/editLesson/:tutorialId/:lessonId",
-      name: "editLesson",
-      component: EditLesson,
-      props: true,
+      path: "/information",
+      name: "information",
+      component: InformationView,
     },
   ],
+});
+
+router.beforeEach(async (to, from, next) => {
+  //const user = JSON.parse(localStorage.getItem("user"));
+  const isAuthenticated = await routerState.isAuthenticated();
+  console.log(isAuthenticated);
+  if (!isAuthenticated) {
+    if (to.path !== "/login") {
+      next({ path: "/login" });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+  // else if(await routerState.isAuthenticated() && to.path == "/login") {
+  //   next({ path: "/"})
+  // }
 });
 
 export default router;

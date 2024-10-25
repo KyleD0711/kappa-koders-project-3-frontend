@@ -10,4 +10,7 @@ export default {
   logoutUser(token) {
     return apiClient.post("logout", token);
   },
+  validateToken(token) {
+    return apiClient.post("validate", token);
+  },
 };
