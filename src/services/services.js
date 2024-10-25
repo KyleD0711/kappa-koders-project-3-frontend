@@ -5,9 +5,9 @@ import Router from "../router.js";
 
 var baseurl = "";
 if (import.meta.env.DEV) {
-  baseurl = "http://localhost:3011/resume-builder-t1";
+  baseurl = "http://localhost:3011/resume-t1";
 } else {
-  baseurl = "/resume-builder-t1";
+  baseurl = "/resume-t1";
 }
 
 const apiClient = axios.create({
