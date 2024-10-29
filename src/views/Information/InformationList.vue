@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+import EducationView from "../../components/education/EducationView.vue";
+</script>
 <template>
-  <div>Welcome to the Information List Vue!</div>
+  <EducationView></EducationView>
 </template>
