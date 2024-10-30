@@ -56,7 +56,9 @@ const updateItem = async (item) => {
       isVisible.value = !isVisible.value;
       emit("submitForm");
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      errorMsg.value = err;
+    });
 };
 
 const gpa = class extends Validator {
