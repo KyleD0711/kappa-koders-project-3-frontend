@@ -1,20 +1,75 @@
 <script setup>
+import { defineProps, ref, defineEmits } from "vue";
+import educationServices from "../../services/educationServices";
 import { useModalStore } from "../../store/modal.store";
 import { storeToRefs } from "pinia";
+import { onMounted } from "vue";
+import { Validator } from "@vueform/vueform";
 const modalStore = useModalStore();
 const { isVisible } = storeToRefs(modalStore);
+
+const emit = defineEmits(["submitForm"]);
+
+const props = defineProps({
+  education: {
+    type: Object,
+    required: true,
+  },
+});
+
+const item = ref({});
+const degreeItems = ["Masters", "Bachelors", "Associates"];
 
 const closeDialog = () => {
   isVisible.value = !isVisible.value;
 };
 
-const degreeItems = ["Masters", "Bachelors", "Associates"];
-
-const submitForm = async (form$) => {
-  const data = form$.data;
-
-  console.log(data);
+const submitForm = async () => {
+  const data = {
+    id: props.education.id,
+    ...item.value,
+  };
+  if (data.id === null || data.id === undefined || data.id === "") {
+    addItem(data);
+  } else {
+    updateItem(data);
+  }
 };
+
+const addItem = async (data) => {
+  await educationServices
+    .createEducation(data)
+    .then(() => {
+      isVisible.value = !isVisible.value;
+      emit("submitForm");
+    })
+    .catch((err) => console.log(err));
+};
+
+const updateItem = async (item) => {
+  await educationServices
+    .updateEducation(item)
+    .then(() => {
+      isVisible.value = !isVisible.value;
+      emit("submitForm");
+    })
+    .catch((err) => console.log(err));
+};
+
+const gpa = class extends Validator {
+  get msg() {
+    return "GPA must be between 0 and 4.0";
+  }
+  check(value) {
+    return value <= 4.0 && value > 0;
+  }
+};
+
+onMounted(() => {
+  if (props.education.id != null) {
+    item.value = props.education;
+  }
+});
 </script>
 <template>
   <v-dialog v-model="isVisible" max-width="60%">
@@ -26,6 +81,8 @@ const submitForm = async (form$) => {
         :endpoint="false"
         @submit="submitForm"
         :display-errors="false"
+        v-model="item"
+        sync
       >
         <StaticElement
           name="education_title"
@@ -39,10 +96,10 @@ const submitForm = async (form$) => {
           :rules="['required']"
         />
         <SelectElement
-          name="degree"
+          name="credential_earned"
           :items="degreeItems"
           :native="false"
-          before="Degree"
+          before="Credential Earned"
           :rules="['required']"
         ></SelectElement>
         <GroupElement
@@ -50,7 +107,7 @@ const submitForm = async (form$) => {
           description="Dates attended institution"
         >
           <DateElement
-            name="dateFrom"
+            name="date_from"
             :columns="{
               container: 6,
               label: 12,
@@ -60,7 +117,7 @@ const submitForm = async (form$) => {
             :rules="['required']"
           ></DateElement>
           <DateElement
-            name="dateTo"
+            name="date_to"
             :columns="{
               container: 6,
               label: 12,
@@ -74,6 +131,7 @@ const submitForm = async (form$) => {
           name="gpa"
           add-class="gpa-field"
           before="GPA"
+          :rules="['required', gpa]"
         ></TextElement>
         <TextareaElement
           name="coursework"
@@ -81,7 +139,7 @@ const submitForm = async (form$) => {
         ></TextareaElement>
         <GroupElement name="button_container">
           <ButtonElement
-            secondary="true"
+            secondary
             name="cancel"
             :submits="false"
             button-label="Cancel"
@@ -97,7 +155,7 @@ const submitForm = async (form$) => {
           <ButtonElement
             name="Submit"
             :submits="true"
-            button-label="Create account"
+            button-label="Submit"
             :full="true"
             size="md"
             :columns="{

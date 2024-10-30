@@ -1,5 +1,7 @@
 <script setup>
+import { onMounted, ref } from "vue";
 import EducationModal from "./EducationModal.vue";
+import educationServices from "../../services/educationServices";
 import { useModalStore } from "../../store/modal.store";
 import { storeToRefs } from "pinia";
 
@@ -12,22 +14,60 @@ const headers = [
     key: "institution",
   },
   {
-    title: "Degree",
-    key: "degree",
+    title: "Credential Earned",
+    key: "credential_earned",
   },
   {
     title: "Actions",
     key: "actions",
   },
 ];
-const items = [
-  { institution: "Oklahoma Christian University", degree: "Bachelor's" },
-  { institution: "Johnson County Community College", degree: "GED" },
-];
 
-const showDialog = () => {
+const items = ref([]);
+const education = ref({});
+const isLoaded = ref(false);
+
+const getEducation = async () => {
+  await educationServices
+    .getAllEducationForUser()
+    .then((res) => {
+      items.value = res.data;
+      isLoaded.value = true;
+    })
+    .catch((err) => console.log(err));
+};
+
+const deleteItem = async (item) => {
+  await educationServices
+    .deleteEducation(item.id)
+    .then((_) => {
+      getEducation();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+const showAddDialog = () => {
+  education.value = {
+    institution: "",
+    credential_earned: "",
+    date_to: "",
+    date_from: "",
+    gpa: "",
+    coursework: null,
+  };
   isVisible.value = !isVisible.value;
 };
+
+const editItem = (item) => {
+  education.value = item;
+  isVisible.value = !isVisible.value;
+};
+
+onMounted(() => {
+  getEducation();
+});
 </script>
 <template>
   <div style="margin: 10px">
@@ -39,12 +79,12 @@ const showDialog = () => {
         variant="elevated"
         color="D9D9D9"
         style="margin: 10px"
-        @click="showDialog"
+        @click="showAddDialog"
         >Add new</v-btn
       >
     </div>
 
-    <v-data-table :headers="headers" :items="items">
+    <v-data-table :headers="headers" :items="items" v-if="isLoaded">
       <template v-slot:item.actions="{ item }">
         <v-icon class="me-2" size="small" @click="editItem(item)">
           mdi-pencil
@@ -56,5 +96,9 @@ const showDialog = () => {
       </template>
     </v-data-table>
   </div>
-  <EducationModal></EducationModal>
+  <EducationModal
+    v-if="isVisible"
+    :education="education"
+    @submit-form="getEducation"
+  ></EducationModal>
 </template>
