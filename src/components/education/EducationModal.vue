@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, ref, defineEmits } from "vue";
+import { ref, defineEmits } from "vue";
 import educationServices from "../../services/educationServices";
 import { useModalStore } from "../../store/modal.store";
 import { storeToRefs } from "pinia";
@@ -19,6 +19,7 @@ const props = defineProps({
 
 const item = ref({});
 const degreeItems = ["Masters", "Bachelors", "Associates"];
+const errorMsg = ref("");
 
 const closeDialog = () => {
   isVisible.value = !isVisible.value;
@@ -43,7 +44,9 @@ const addItem = async (data) => {
       isVisible.value = !isVisible.value;
       emit("submitForm");
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      errorMsg.value = err;
+    });
 };
 
 const updateItem = async (item) => {
@@ -165,6 +168,9 @@ onMounted(() => {
             }"
           />
         </GroupElement>
+        <StaticElement name="errormsg" v-if="errorMsg"
+          ><span style="color: red">{{ errorMsg }}</span></StaticElement
+        >
       </Vueform>
     </v-card>
   </v-dialog>
