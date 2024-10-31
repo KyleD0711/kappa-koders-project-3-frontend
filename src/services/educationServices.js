@@ -1,15 +1,15 @@
 import apiClient from "./services.js";
 export default {
   getAllEducationForUser() {
-    return apiClient.get("/user/education");
+    return apiClient.get("/student/education");
   },
   deleteEducation(id) {
-    return apiClient.delete(`/user/education/${id}`);
+    return apiClient.delete(`/student/education/${id}`);
   },
   createEducation(item) {
-    return apiClient.post(`/user/education`, item);
+    return apiClient.post(`/student/education`, item);
   },
   updateEducation(item) {
-    return apiClient.put(`/user/education/${item.id}`, item);
+    return apiClient.put(`/student/education/${item.id}`, item);
   },
 };
