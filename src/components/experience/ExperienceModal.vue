@@ -1,9 +1,9 @@
 <script setup>
-import { ref, defineEmits } from "vue";
+import { ref, defineEmits, onMounted } from "vue";
 import experienceServices from "../../services/experienceServices";
 import { useModalStore } from "../../store/modal.store";
 import { storeToRefs } from "pinia";
-import { onMounted } from "vue";
+import { Validator } from "@vueform/vueform";
 const modalStore = useModalStore();
 const { isVisible } = storeToRefs(modalStore);
 
@@ -59,6 +59,19 @@ const updateItem = async (item) => {
     });
 };
 
+const dateValidator = class extends Validator {
+  get msg() {
+    return "Date Start must be before Date End";
+  }
+
+  check(value) {
+    const date1 = new Date(value.date_start);
+    const date2 = new Date(value.date_end);
+
+    return date1 < date2;
+  }
+};
+
 onMounted(() => {
   if (props.experience.id != null) {
     item.value = props.experience;
@@ -90,7 +103,7 @@ onMounted(() => {
           before="Position Title"
           :rules="['required']"
         ></TextElement>
-        <GroupElement name="date_container" description="Dates employed">
+        <GroupElement name="date_container" :rules="[dateValidator]">
           <DateElement
             name="date_start"
             :columns="{
