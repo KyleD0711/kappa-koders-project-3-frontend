@@ -70,6 +70,17 @@ const gpa = class extends Validator {
   }
 };
 
+const dateValidator = class extends Validator {
+  get msg() {
+    return "Date From must be before Date To.";
+  }
+  check(value) {
+    const date1 = new Date(value.date_from);
+    const date2 = new Date(value.date_to);
+    return date1 < date2;
+  }
+};
+
 onMounted(() => {
   if (props.education.id != null) {
     item.value = props.education;
@@ -102,15 +113,13 @@ onMounted(() => {
         />
         <SelectElement
           name="credential_earned"
+          :search="true"
           :items="degreeItems"
           :native="false"
           before="Credential Earned"
           :rules="['required']"
         ></SelectElement>
-        <GroupElement
-          name="date_container"
-          description="Dates attended institution"
-        >
+        <GroupElement name="date_container" :rules="[dateValidator]">
           <DateElement
             name="date_from"
             :columns="{
