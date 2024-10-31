@@ -80,9 +80,7 @@ onMounted(() => {
 </script>
 <template>
   <v-dialog v-model="isVisible" max-width="60%">
-    <v-card
-      style="background-color: #d9d9d9; border-radius: 10px; padding: 20px"
-    >
+    <div style="background-color: #d9d9d9; border-radius: 10px; padding: 20px">
       <Vueform
         size="md"
         :endpoint="false"
@@ -125,6 +123,7 @@ onMounted(() => {
             :rules="['required']"
           ></DateElement>
         </GroupElement>
+        <StaticElement></StaticElement>
         <GroupElement name="button_container">
           <ButtonElement
             secondary
@@ -157,6 +156,6 @@ onMounted(() => {
           ><span style="color: red">{{ errorMsg }}</span></StaticElement
         >
       </Vueform>
-    </v-card>
+    </div>
   </v-dialog>
 </template>
