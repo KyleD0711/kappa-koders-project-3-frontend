@@ -91,9 +91,7 @@ onMounted(() => {
         </v-icon>
         <v-icon size="small" @click="deleteItem(item)"> mdi-delete </v-icon>
       </template>
-      <template v-slot:no-data>
-        <v-btn color="primary" @click="initialize"> Reset </v-btn>
-      </template>
+      <template v-slot:no-data> No data found! </template>
     </v-data-table>
   </div>
   <EducationModal
