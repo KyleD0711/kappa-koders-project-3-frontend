@@ -1,6 +1,4 @@
 <template>
-  <div>Welcome to the Information List Vue!</div>
-
   <SideBar />
   <router-view />
 </template>

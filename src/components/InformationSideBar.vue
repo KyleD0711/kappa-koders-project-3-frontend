@@ -67,7 +67,7 @@ export default {
 
 .infoSidebar {
     width:20%;
-    height: 100%;
+    height: 50%;
     background-color: #ccc;
 }
 
@@ -78,7 +78,7 @@ export default {
 
     padding-left: 10px;
     align-content: center;
-color: #fff;
+    color: #fff;
 
     margin-top: 5px;
     margin-bottom: 5px;
