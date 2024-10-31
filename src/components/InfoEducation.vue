@@ -1,15 +1,10 @@
-<script setup></script>
+<script setup>
+
+import EducationView from './education/EducationView.vue';
+
+</script>
 
 
 <template>
-  <div class="modal">Welcome to the Info Education Page!</div>
+<EducationView></EducationView>
 </template>
-
-<style>
-
-.modal {
-  display: flex;
-  justify-content: flex-end;
-}
-
-</style>
