@@ -12,16 +12,16 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: "/login",
-      alias: "/login",
-      name: "login",
-      component: Login,
-    },
-    {
       path: "/",
       alias: "/resume",
       name: "resume",
       component: ResumeView,
+    },
+    {
+      path: "/login",
+      alias: "/login",
+      name: "login",
+      component: Login,
     },
     {
       path: "/information",
@@ -32,9 +32,7 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  //const user = JSON.parse(localStorage.getItem("user"));
   const isAuthenticated = await routerState.isAuthenticated();
-  console.log(isAuthenticated);
   if (!isAuthenticated) {
     if (to.path !== "/login") {
       next({ path: "/login" });
@@ -44,9 +42,6 @@ router.beforeEach(async (to, from, next) => {
   } else {
     next();
   }
-  // else if(await routerState.isAuthenticated() && to.path == "/login") {
-  //   next({ path: "/"})
-  // }
 });
 
 export default router;
