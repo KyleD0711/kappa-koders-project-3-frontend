@@ -82,16 +82,19 @@ onMounted(() => {
       >
     </div>
 
-    <v-data-table :headers="headers" :items="items" v-if="isLoaded">
+    <v-data-table
+      :headers="headers"
+      :items="items"
+      v-if="isLoaded"
+      no-data-text="No data found!"
+    >
       <template v-slot:item.actions="{ item }">
         <v-icon class="me-2" size="small" @click="editItem(item)">
           mdi-pencil
         </v-icon>
         <v-icon size="small" @click="deleteItem(item)"> mdi-delete </v-icon>
       </template>
-      <template v-slot:no-data>
-        <v-btn color="primary" @click="initialize"> Reset </v-btn>
-      </template>
+      <template v-slot:no-data> No data found! </template>
     </v-data-table>
     <ExperienceModal
       v-if="isVisible"
