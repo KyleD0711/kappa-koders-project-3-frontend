@@ -1,6 +1,6 @@
 <script setup>
 import { ref, defineEmits, onMounted } from "vue";
-import experienceServices from "../../services/experienceServices";
+import projectServices from "../../services/projectServices";
 import { useModalStore } from "../../store/modal.store";
 import { storeToRefs } from "pinia";
 import { Validator } from "@vueform/vueform";
@@ -10,7 +10,7 @@ const { isVisible } = storeToRefs(modalStore);
 const emit = defineEmits(["submitForm"]);
 
 const props = defineProps({
-  experience: {
+  project: {
     type: Object,
     required: true,
   },
@@ -25,7 +25,7 @@ const closeDialog = () => {
 
 const submitForm = async () => {
   const data = {
-    id: props.experience.id,
+    id: props.project.id,
     ...item.value,
   };
   if (data.id === null || data.id === undefined || data.id === "") {
@@ -36,8 +36,8 @@ const submitForm = async () => {
 };
 
 const addItem = async (data) => {
-  await experienceServices
-    .createExperience(data)
+  await projectServices
+    .createProject(data)
     .then(() => {
       isVisible.value = !isVisible.value;
       emit("submitForm");
@@ -48,8 +48,8 @@ const addItem = async (data) => {
 };
 
 const updateItem = async (item) => {
-  await experienceServices
-    .updateExperience(item)
+  await projectServices
+    .updateProject(item)
     .then(() => {
       isVisible.value = !isVisible.value;
       emit("submitForm");
@@ -61,20 +61,20 @@ const updateItem = async (item) => {
 
 const dateValidator = class extends Validator {
   get msg() {
-    return "Date Start must be before Date End";
+    return "Date Start must be before Date Completed";
   }
 
   check(value) {
     const date1 = new Date(value.date_start);
-    const date2 = new Date(value.date_end);
+    const date2 = new Date(value.date_completed);
 
     return date1 < date2;
   }
 };
 
 onMounted(() => {
-  if (props.experience.id != null) {
-    item.value = props.experience;
+  if (props.project.id != null) {
+    item.value = props.project;
   }
 });
 </script>
@@ -90,15 +90,15 @@ onMounted(() => {
         sync
       >
         <StaticElement
-          name="experience_title"
-          content="Experience"
+          name="project_title"
+          content="Project"
           tag="h1"
           align="center"
         ></StaticElement>
-        <TextElement name="employer" before="Employer" :rules="['required']" />
+        <TextElement name="name" before="Name" :rules="['required']" />
         <TextElement
-          name="position_title"
-          before="Position Title"
+          name="description"
+          before="Description"
           :rules="['required']"
         ></TextElement>
         <GroupElement name="date_container" :rules="[dateValidator]">
@@ -113,13 +113,13 @@ onMounted(() => {
             :rules="['required']"
           ></DateElement>
           <DateElement
-            name="date_end"
+            name="date_completed"
             :columns="{
               container: 6,
               label: 12,
               wrapper: 12,
             }"
-            before="Date End"
+            before="Date Completed"
             :rules="['required']"
           ></DateElement>
         </GroupElement>

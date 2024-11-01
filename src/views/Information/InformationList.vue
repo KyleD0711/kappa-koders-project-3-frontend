@@ -1,7 +1,6 @@
 <script setup>
-import EducationView from "../../components/education/EducationView.vue";
-import ExperienceView from "../../components/experience/ExperienceView.vue";
+import ProjectView from "../../components/project/ProjectView.vue";
 </script>
 <template>
-  <ExperienceView></ExperienceView>
+  <ProjectView></ProjectView>
 </template>
