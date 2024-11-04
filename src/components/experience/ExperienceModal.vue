@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineEmits, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import experienceServices from "../../services/experienceServices";
 import { useModalStore } from "../../store/modal.store";
 import { storeToRefs } from "pinia";
