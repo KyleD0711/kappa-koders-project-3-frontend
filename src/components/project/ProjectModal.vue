@@ -72,6 +72,16 @@ const dateValidator = class extends Validator {
   }
 };
 
+const descriptionValidator = class extends Validator {
+  get msg() {
+    return "Description must be under 45 characters long";
+  }
+
+  check(value) {
+    return value.length <= 45;
+  }
+};
+
 onMounted(() => {
   if (props.project.id != null) {
     item.value = props.project;
@@ -99,7 +109,7 @@ onMounted(() => {
         <TextElement
           name="description"
           before="Description"
-          :rules="['required']"
+          :rules="['required', descriptionValidator]"
         ></TextElement>
         <GroupElement name="date_container" :rules="[dateValidator]">
           <DateElement
