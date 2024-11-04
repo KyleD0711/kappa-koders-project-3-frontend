@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
-import ExperienceModal from "./ExperienceModal.vue";
-import experienceServices from "../../services/experienceServices";
+import SkillModal from "./SkillModal.vue";
+import skillServices from "../../services/skillServices";
 import { useModalStore } from "../../store/modal.store";
 import { storeToRefs } from "pinia";
 
@@ -10,12 +10,12 @@ const { isVisible } = storeToRefs(modalStore);
 
 const headers = [
   {
-    title: "Employer",
-    key: "employer",
+    title: "Name",
+    key: "name",
   },
   {
-    title: "Position Title",
-    key: "position_title",
+    title: "Description",
+    key: "description",
   },
   {
     title: "Actions",
@@ -24,12 +24,12 @@ const headers = [
 ];
 
 const items = ref([]);
-const experience = ref({});
+const skill = ref({});
 const isLoaded = ref(false);
 
-const getExperience = async () => {
-  await experienceServices
-    .getAllExperienceForUser()
+const getSkill = async () => {
+  await skillServices
+    .getAllSkillForUser()
     .then((res) => {
       items.value = res.data;
       isLoaded.value = true;
@@ -38,10 +38,10 @@ const getExperience = async () => {
 };
 
 const deleteItem = async (item) => {
-  await experienceServices
-    .deleteExperience(item.id)
+  await skillServices
+    .deleteSkill(item.id)
     .then((_) => {
-      getExperience();
+      getSkill();
     })
     .catch((err) => {
       console.log(err);
@@ -49,29 +49,28 @@ const deleteItem = async (item) => {
 };
 
 const showAddDialog = () => {
-  experience.value = {
-    employer: "",
-    position_title: "",
-    date_start: "",
-    date_end: "",
+  skill.value = {
+    name: "",
+    description: "",
+    proficiency_level: "",
   };
   isVisible.value = !isVisible.value;
 };
 
 const editItem = (item) => {
-  experience.value = item;
+  skill.value = item;
   isVisible.value = !isVisible.value;
 };
 
 onMounted(() => {
-  getExperience();
+  getSkill();
 });
 </script>
 <template>
   <div style="margin: 10px">
     <div style="display: flex">
       <p style="align-self: center; margin: 10px, 20px; color: #d9d9d9">
-        Experience
+        Skill
       </p>
       <v-btn
         variant="elevated"
@@ -96,10 +95,10 @@ onMounted(() => {
       </template>
       <template v-slot:no-data> No data found! </template>
     </v-data-table>
-    <ExperienceModal
+    <SkillModal
       v-if="isVisible"
-      :experience="experience"
-      @submit-form="getExperience"
-    ></ExperienceModal>
+      :skill="skill"
+      @submit-form="getSkill"
+    ></SkillModal>
   </div>
 </template>

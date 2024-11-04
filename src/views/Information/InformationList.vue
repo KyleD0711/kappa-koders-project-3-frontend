@@ -1,6 +1,6 @@
 <script setup>
-import ProjectView from "../../components/project/ProjectView.vue";
+import SkillView from "../../components/skill/SkillView.vue";
 </script>
 <template>
-  <ProjectView></ProjectView>
+  <SkillView></SkillView>
 </template>

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, defineEmits, onMounted } from "vue";
-import experienceServices from "../../services/experienceServices";
+import skillServices from "../../services/skillServices";
 import { useModalStore } from "../../store/modal.store";
 import { storeToRefs } from "pinia";
 import { Validator } from "@vueform/vueform";
@@ -10,13 +10,14 @@ const { isVisible } = storeToRefs(modalStore);
 const emit = defineEmits(["submitForm"]);
 
 const props = defineProps({
-  experience: {
+  skill: {
     type: Object,
     required: true,
   },
 });
 
 const item = ref({});
+const proficiency_levels = ["Beginner", "Intermediate", "Advanced"];
 const errorMsg = ref("");
 
 const closeDialog = () => {
@@ -25,7 +26,7 @@ const closeDialog = () => {
 
 const submitForm = async () => {
   const data = {
-    id: props.experience.id,
+    id: props.skill.id,
     ...item.value,
   };
   if (data.id === null || data.id === undefined || data.id === "") {
@@ -36,8 +37,8 @@ const submitForm = async () => {
 };
 
 const addItem = async (data) => {
-  await experienceServices
-    .createExperience(data)
+  await skillServices
+    .createSkill(data)
     .then(() => {
       isVisible.value = !isVisible.value;
       emit("submitForm");
@@ -48,8 +49,8 @@ const addItem = async (data) => {
 };
 
 const updateItem = async (item) => {
-  await experienceServices
-    .updateExperience(item)
+  await skillServices
+    .updateSkill(item)
     .then(() => {
       isVisible.value = !isVisible.value;
       emit("submitForm");
@@ -59,22 +60,22 @@ const updateItem = async (item) => {
     });
 };
 
-const dateValidator = class extends Validator {
+const descriptionValidator = class extends Validator {
   get msg() {
-    return "Date Start must be before Date End";
+    return "Description must be between 0 and 45 characters long";
   }
-
   check(value) {
-    const date1 = new Date(value.date_start);
-    const date2 = new Date(value.date_end);
-
-    return date1 < date2;
+    if (value == null || (value.length >= 0 && value.length <= 45)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 };
 
 onMounted(() => {
-  if (props.experience.id != null) {
-    item.value = props.experience;
+  if (props.skill.id != null) {
+    item.value = props.skill;
   }
 });
 </script>
@@ -90,39 +91,27 @@ onMounted(() => {
         sync
       >
         <StaticElement
-          name="experience_title"
-          content="Experience"
+          name="skill_title"
+          content="Skill"
           tag="h1"
           align="center"
         ></StaticElement>
-        <TextElement name="employer" before="Employer" :rules="['required']" />
+        <TextElement 
+          name="name" 
+          before="Name" 
+          :rules="['required']" />
         <TextElement
-          name="position_title"
-          before="Position Title"
-          :rules="['required']"
+          name="description"
+          before="Description"
+          :rules="[descriptionValidator]"
         ></TextElement>
-        <GroupElement name="date_container" :rules="[dateValidator]">
-          <DateElement
-            name="date_start"
-            :columns="{
-              container: 6,
-              label: 12,
-              wrapper: 12,
-            }"
-            before="Date Start"
-            :rules="['required']"
-          ></DateElement>
-          <DateElement
-            name="date_end"
-            :columns="{
-              container: 6,
-              label: 12,
-              wrapper: 12,
-            }"
-            before="Date End"
-            :rules="['required']"
-          ></DateElement>
-        </GroupElement>
+        <SelectElement
+          name="proficiency_level"
+          :search="true"
+          :items="proficiency_levels"
+          :native="false"
+          before="Proficiency Level"
+        ></SelectElement>
         <StaticElement></StaticElement>
         <GroupElement name="button_container">
           <ButtonElement
