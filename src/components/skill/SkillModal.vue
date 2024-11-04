@@ -62,10 +62,14 @@ const updateItem = async (item) => {
 
 const descriptionValidator = class extends Validator {
   get msg() {
-    return "Description must be under 45 characters long";
+    return "Description must be between 0 and 45 characters long";
   }
   check(value) {
-    return value.length <= 45;
+    if (value == null || (value.length >= 0 && value.length <= 45)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 };
 
@@ -99,7 +103,7 @@ onMounted(() => {
         <TextElement
           name="description"
           before="Description"
-          :reules="[descriptionValidator]"
+          :rules="[descriptionValidator]"
         ></TextElement>
         <SelectElement
           name="proficiency_level"
