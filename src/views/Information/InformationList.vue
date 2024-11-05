@@ -1,6 +1,8 @@
+<script setup>
+import SkillView from "../../components/skill/SkillView.vue";
+</script>
 <template>
-  <SideBar />
-  <router-view />
+  <SkillView></SkillView>
 </template>
 
 <script setup>
