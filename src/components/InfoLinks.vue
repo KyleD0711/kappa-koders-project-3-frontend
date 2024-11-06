@@ -1,6 +1,11 @@
-<script setup></script>
+<script setup>
+
+//import LinkView from './links/LinkView.vue';
+
+</script>
 
 
 <template>
-  <div>Welcome to the Info Links Page!</div>
+
+
 </template>

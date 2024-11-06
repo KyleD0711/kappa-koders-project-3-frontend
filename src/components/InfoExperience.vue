@@ -1,6 +1,10 @@
-<script setup></script>
+<script setup>
 
+import ExperienceView from './experience/ExperienceView.vue';
+
+
+</script>
 
 <template>
-  <div>Welcome to the Info Experience Page!</div>
+  <ExperienceView></ExperienceView>
 </template>

@@ -1,6 +1,13 @@
-<script setup></script>
+<script setup>
+
+import ProjectView from './project/ProjectView.vue';
+
+
+</script>
 
 
 <template>
-  <div>Welcome to the Info Projects Page!</div>
+
+<ProjectView></ProjectView>
+
 </template>
