@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+import ResumeViewer from "../../components/resume/ResumeViewer.vue";
+</script>
 <template>
-  <div>Welcome to the Resume Page!</div>
+  <ResumeViewer></ResumeViewer>
 </template>

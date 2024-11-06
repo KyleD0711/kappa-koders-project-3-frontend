@@ -1,0 +1,43 @@
+{
+  "template": {
+    "section_name": "pdf_body",
+    "style": {
+      "background-color": "white",
+      "margin": "50px 150px",
+      "padding": "10px 10px",
+      "border-radius": "10px"
+    },
+    "content": "",
+    "children": [
+      {
+        "section_name": "pdf_header",
+        "style": {},
+        "content": "",
+        "children": [
+          {
+            "section_name": "name",
+            "style": {
+              "text-align": "center"
+            },
+            "content": "First Name Last Name",
+            "children": []
+          },
+          {
+            "section_name": "personal_info",
+            "style": {
+              "text-align": "center"
+            },
+            "content": "Oklahoma City, Oklahoma | (555) 555-5555 | ike.theagle@oc.edu | LinkedIn/Website URL (optional)",
+            "children": []
+          }
+        ]
+      },
+      {
+        "section_name": "pdf_body",
+        "style": {},
+        "content": "",
+        "children": [{}]
+      }
+    ]
+  }
+}
