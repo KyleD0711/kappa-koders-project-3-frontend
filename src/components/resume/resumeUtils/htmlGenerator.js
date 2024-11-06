@@ -9,10 +9,16 @@ export default {
 
     // Recursive function to build HTML elements
     function buildElement(element) {
-      const { section_name, style = {}, content = "", children = [] } = element;
+      const {
+        section_name,
+        style = {},
+        content = "",
+        children = [],
+        type = "div",
+      } = element;
       const styleString = styleToString(style);
-      let openTag = `<div class="${section_name}" style="${styleString}">`;
-      const closeTag = `</div>`;
+      let openTag = `<${type} class="${section_name}" style="${styleString}">`;
+      const closeTag = `</${type}>`;
 
       if (section_name == "divider") {
         openTag = getDividerTag();
