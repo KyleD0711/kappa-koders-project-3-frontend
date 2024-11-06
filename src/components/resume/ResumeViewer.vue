@@ -18,7 +18,7 @@ const innerHtml = ref(null);
 //   },
 // });
 
-const render_fields = ["experience", "education", "skills"];
+const render_fields = ["education", "experience", "skills", "project"];
 
 const resume_data = {
   title: "Kyle Denney",

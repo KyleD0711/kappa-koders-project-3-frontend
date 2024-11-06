@@ -368,6 +368,95 @@
           ]
         }
       ]
+    },
+    "project": {
+      "section_name": "project",
+      "style": {},
+      "content": "",
+      "children": [
+        {
+          "section_name": "section_header",
+          "style": {},
+          "content": "",
+          "children": [
+            {
+              "section_name": "head",
+              "style": {
+                "font-weight": "bold"
+              },
+              "content": "PROJECTS",
+              "children": []
+            },
+            {
+              "section_name": "divider",
+              "style": {},
+              "content": "",
+              "children": []
+            }
+          ]
+        },
+        {
+          "section_name": "section_item",
+          "style": {
+            "margin-bottom": "10px"
+          },
+          "content": "",
+          "children": [
+            {
+              "section_name": "section_item_header",
+              "style": {
+                "display": "flex",
+                "justify-content": "space-between"
+              },
+              "content": "",
+              "children": [
+                {
+                  "section_name": "name",
+                  "style": {},
+                  "content": "",
+                  "children": []
+                },
+                {
+                  "section_name": "right",
+                  "style": {
+                    "display": "inline-flex"
+                  },
+                  "content": "",
+                  "children": [
+                    {
+                      "section_name": "date_start",
+                      "style": {},
+                      "content": "",
+                      "children": []
+                    },
+                    {
+                      "section_name": "",
+                      "style": {
+                        "margin": "0px 4px"
+                      },
+                      "content": "-",
+                      "children": []
+                    },
+                    {
+                      "section_name": "date_completed",
+                      "style": {},
+                      "content": "",
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "section_name": "description",
+              "style": {},
+              "content": "",
+              "type": "li",
+              "children": []
+            }
+          ]
+        }
+      ]
     }
   },
   "data": {
@@ -427,19 +516,19 @@
     },
     "project": {
       "name": {
-        "section_name": "",
+        "section_name": "name",
         "optional": true
       },
       "description": {
-        "section_name": "",
+        "section_name": "description",
         "optional": true
       },
       "date_start": {
-        "section_name": "",
+        "section_name": "date_start",
         "optional": true
       },
       "date_completed": {
-        "section_name": "",
+        "section_name": "date_completed",
         "optional": true
       }
     },
