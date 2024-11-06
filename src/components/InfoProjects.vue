@@ -1,10 +1,7 @@
 <script setup>
-
-import ProjectView from './project/ProjectView.vue';
-
+import ProjectView from "./project/ProjectView.vue";
 </script>
 
-
 <template>
-<ProjectView></ProjectView>
+  <ProjectView></ProjectView>
 </template>

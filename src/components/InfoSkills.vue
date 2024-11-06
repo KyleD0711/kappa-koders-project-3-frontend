@@ -1,10 +1,7 @@
 <script setup>
-
-import SkillView from './skill/SkillView.vue';
-
+import SkillView from "./skill/SkillView.vue";
 </script>
 
-
 <template>
-<SkillView></SkillView>
+  <SkillView></SkillView>
 </template>

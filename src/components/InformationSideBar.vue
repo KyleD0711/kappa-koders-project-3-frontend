@@ -1,5 +1,6 @@
 <script>
 import { useRouter } from "vue-router";
+import "primeicons/primeicons.css";
 
 export default {
   setup() {
