@@ -16,7 +16,7 @@ const props = defineProps({
     },
 }),
 
-const item = ref({}); 
+ item = ref({}); 
 const errorMsg = ref("");
 
 const closeDialog = () => {
@@ -84,7 +84,7 @@ onMounted(() => {
       >
 
       <StaticElement
-          name="link_name"
+          name="name"
           content="Link Name"
           tag="h1"
           align="center"
@@ -95,7 +95,7 @@ onMounted(() => {
           :rules="['required']"
         />
         <StaticElement
-          name="link_url"
+          name="url"
           content="URL"
           tag="h1"
           align="center"
