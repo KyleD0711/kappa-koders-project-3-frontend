@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import Login from "./views/Login.vue";
-import ResumeList from "./views/Resume/ResumeList.vue"
+import ResumeList from "./views/Resume/ResumeList.vue";
 import ResumeView from "./views/Resume/ResumeView.vue";
 import InformationList from "./views/Information/InformationList.vue";
 import InfoExperience from "./components/InfoExperience.vue";
@@ -34,7 +34,7 @@ const router = createRouter({
       alias: "/resume",
       name: "editResume",
       component: ResumeView,
-      props: (route) => ({ formId: Number(route.params.resumeId) })
+      props: (route) => ({ formId: Number(route.params.resumeId) }),
     },
     {
       path: "/login",
