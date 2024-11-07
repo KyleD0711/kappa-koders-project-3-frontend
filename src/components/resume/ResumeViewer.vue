@@ -12,26 +12,28 @@ const innerHtml = ref(null);
 //     type: Object,
 //     required: true,
 //   },
-//   render_fields: {
-//     type: Array,
-//     required: true,
-//   },
 // });
 
-const template_metadata = ref({
-  section_dividers: true,
-});
-
-const render_fields = ["education", "awards", "project", "skills", "awards"];
-
 const resume_data = {
-  resume_template: "template2",
+  metadata: {
+    resume_template: "template1",
+    render_fields: ["awards", "education", "project", "skills", "awards"],
+    section_dividers: true,
+  },
   title: "Kyle Denney",
   email: "kyle.denney@email.com",
   phone_number: "555-123-4567",
   professional_summary:
     "Bachelor of Arts degree candidate, with a major in Economics, and experience developing and analyzing cost models, providing quality assurance reviews, and creating process solutions to improve financial forecasts for clients. Looking to continue the development of risk management, audit, and compliance skills in a team-centered environment.",
   education: [
+    {
+      institution: "University of State",
+      credential_earned: "Bachelor of Arts in Economics",
+      date_to: "2024-05",
+      date_from: "2020-08",
+      gpa: "3.8",
+      coursework: null,
+    },
     {
       institution: "University of State",
       credential_earned: "Bachelor of Arts in Economics",
@@ -98,7 +100,7 @@ const resume_data = {
 
 const renderPDF = () => {
   let full_json_object = {};
-  let resume_template = template[resume_data.resume_template];
+  let resume_template = template[resume_data.metadata.resume_template];
 
   let pdf_header = jsonUtils.findAndUpdateSectionByName(
     resume_template.structure.pdf_header,
@@ -124,7 +126,7 @@ const renderPDF = () => {
   );
 
   let body_children = [pdf_header, professional_summary];
-  render_fields.forEach((value) => {
+  resume_data.metadata.render_fields.forEach((value) => {
     let section = jsonUtils.findAndUpdateSectionByData(
       resume_template,
       resume_data,
@@ -134,7 +136,7 @@ const renderPDF = () => {
   });
 
   full_json_object = {
-    template: {
+    resume: {
       section_name: "body",
       content: "",
       style: {
@@ -143,9 +145,12 @@ const renderPDF = () => {
       children: body_children,
     },
   };
+
+  console.log(full_json_object);
+
   innerHtml.value = htmlGenerator.generateHTMLFromTemplate(
-    full_json_object.template,
-    template_metadata.value
+    full_json_object.resume,
+    resume_data.metadata
   );
 };
 
