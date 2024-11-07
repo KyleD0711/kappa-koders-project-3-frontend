@@ -1,140 +1,175 @@
 <script setup>
 import { onMounted, ref } from "vue";
-import htmlGenerator from "../../../templates/htmlGenerator";
+import htmlGenerator from "./resumeUtils/htmlGenerator";
+import jsonUtils from "./resumeUtils/jsonUtils";
+import template from "../../../templates/templates.json";
+import { email } from "@vueform/vueform";
 
 const innerHtml = ref(null);
 
-const props = defineProps({
-  education: {
-    type: Array,
-    required: true,
-  },
-  experience: {
-    type: Array,
-    required: true,
-  },
+// const props = defineProps({
+//   resume_data: {
+//     type: Object,
+//     required: true,
+//   },
+//   render_fields: {
+//     type: Array,
+//     required: true,
+//   },
+// });
+
+const template_metadata = ref({
+  section_dividers: true,
 });
 
-let user = {
-  fName: "Kyle",
-  lName: "Denney",
-};
+const render_fields = ["education", "awards", "project", "skills", "awards"];
 
-let personal_info = "";
-
-const professional_summary = "Cool stuff is going on";
-
-let education = {
-  institution: "",
-  credential_earned: "",
-  date_to: "",
-  date_from: "",
-  gpa: "",
-  coursework: null,
-};
-
-const template2 = [
-  {
-    section_name: "pdf_header",
-    style: {},
-    content: "",
-    children: [
-      {
-        section_name: "name",
-        style: {
-          "text-align": "center",
-          "font-size": "2em",
-          "font-weight": "bold",
-          "margin-top": "0.67em",
-          "margin-bottom": "0.67em",
-          "line-height": "1.2",
-        },
-        content: `${user.fName} ${user.lName}`,
-        children: [],
-      },
-      {
-        section_name: "personal_info",
-        style: {
-          "text-align": "center",
-        },
-        content: personal_info,
-        children: [],
-      },
-    ],
-  },
-  {
-    section_name: "professional_summary",
-    style: {},
-    content: "",
-    children: [
-      {
-        section_name: "section_header",
-        style: {
-          "font-weight": "bold",
-          "margin-bottom": "5px",
-        },
-        content: "PROFESSIONAL SUMMARY",
-        children: [],
-      },
-      {
-        section_name: "divider",
-      },
-      {
-        section_name: "section_body",
-        style: {},
-        content: professional_summary,
-      },
-    ],
-  },
-];
-
-const template = {
-  section_name: "pdf_body",
-  style: {
-    "background-color": "white",
-    margin: "50px 150px",
-    padding: "10px 10px",
-    "border-radius": "10px",
-  },
-  content: "",
-  children: [
+const resume_data = {
+  resume_template: "template2",
+  title: "Kyle Denney",
+  email: "kyle.denney@email.com",
+  phone_number: "555-123-4567",
+  professional_summary:
+    "Bachelor of Arts degree candidate, with a major in Economics, and experience developing and analyzing cost models, providing quality assurance reviews, and creating process solutions to improve financial forecasts for clients. Looking to continue the development of risk management, audit, and compliance skills in a team-centered environment.",
+  education: [
     {
-      section_name: "pdf_header",
-      style: {},
-      content: "",
-      children: [
-        {
-          section_name: "name",
-          style: {
-            "text-align": "center",
-            "font-size": "2em",
-            "font-weight": "bold",
-            "margin-top": "0.67em",
-            "margin-bottom": "0.67em",
-            "line-height": "1.2",
-          },
-          content: "First Name Last Name",
-          children: [],
-        },
-        {
-          section_name: "personal_info",
-          style: {
-            "text-align": "center",
-          },
-          content:
-            "Oklahoma City, Oklahoma | (555) 555-5555 | ike.theagle@oc.edu | LinkedIn/Website URL (optional)",
-          children: [],
-        },
-      ],
+      institution: "University of State",
+      credential_earned: "Bachelor of Arts in Economics",
+      date_to: "2024-05",
+      date_from: "2020-08",
+      gpa: "3.8",
+      coursework: null,
+    },
+    {
+      institution: "University of State",
+      credential_earned: "Bachelor of Arts in Economics",
+      date_to: "2024-05",
+      date_from: "2020-08",
+      gpa: "3.8",
+      coursework: null,
+    },
+  ],
+  experience: [
+    {
+      employer: "ABC Financial Services",
+      position_title: "Financial Analyst Intern",
+      date_start: "2023-06",
+      date_end: "2023-08",
+    },
+    {
+      employer: "ABC Financial Services",
+      position_title: "Financial Analyst Intern",
+      date_start: "2023-06",
+      date_end: "2023-08",
+    },
+  ],
+  skills: [
+    {
+      name: "Data Analysis",
+      description:
+        "Proficient in Excel, R, and SQL for data analysis and financial modeling.",
+      proficiency_level: "Intermediate",
+    },
+  ],
+  project: [
+    {
+      name: "Cost Optimization Project",
+      description:
+        "Developed cost models to identify process efficiencies, resulting in a 10% cost reduction.",
+      date_start: "2023-01",
+      date_completed: "2023-04",
+    },
+  ],
+  awards: [
+    {
+      name: "Dean’s List",
+      institution: "University of State",
+      description: "Awarded for academic excellence in multiple semesters.",
+      date_awarded: "2022-12",
+    },
+  ],
+  url: [
+    {
+      name: "Portfolio",
+      url: "https://kyledenneyportfolio.com",
     },
   ],
 };
 
+const renderPDF = () => {
+  let full_json_object = {};
+  let resume_template = template[resume_data.resume_template];
+
+  let pdf_header = jsonUtils.findAndUpdateSectionByName(
+    resume_template.structure.pdf_header,
+    resume_template.data.pdf_header.title,
+    resume_data.title
+  );
+
+  let personal_info = `${resume_data.email} | ${resume_data.phone_number}`;
+  resume_data.url.forEach((value) => {
+    personal_info += ` | ${value.name}: ${value.url}`;
+  });
+
+  pdf_header = jsonUtils.findAndUpdateSectionByName(
+    pdf_header,
+    resume_template.data.pdf_header.personal_info,
+    personal_info
+  );
+
+  let professional_summary = jsonUtils.findAndUpdateSectionByName(
+    resume_template.structure.professional_summary,
+    resume_template.data.professional_summary,
+    resume_data.professional_summary
+  );
+
+  let body_children = [pdf_header, professional_summary];
+  render_fields.forEach((value) => {
+    let section = jsonUtils.findAndUpdateSectionByData(
+      resume_template,
+      resume_data,
+      value
+    );
+    body_children.push({ ...section });
+  });
+
+  full_json_object = {
+    template: {
+      section_name: "body",
+      content: "",
+      style: {
+        "font-family": resume_template.structure.metadata.font,
+      },
+      children: body_children,
+    },
+  };
+  innerHtml.value = htmlGenerator.generateHTMLFromTemplate(
+    full_json_object.template,
+    template_metadata.value
+  );
+};
+
+// Should be used to toggle whether dividers should show
+// const toggleDividers = () => {
+//   template_metadata.value.section_dividers =
+//     !template_metadata.value.section_dividers;
+//   renderPDF();
+// };
+
 onMounted(() => {
-  innerHtml.value = htmlGenerator.generateHTMLFromTemplate(template2);
-  // console.log(htmlGenerator.parseHTMLToJSON(htmlFile));
+  renderPDF();
 });
 </script>
 <template>
-  <div v-html="innerHtml"></div>
+  <div
+    name="pdf-body"
+    style="
+      background-color: white;
+      margin: 50px 150px;
+      padding: 10px 10px;
+      border-radius: 10px;
+    "
+  >
+    <div v-html="innerHtml"></div>
+  </div>
 </template>
