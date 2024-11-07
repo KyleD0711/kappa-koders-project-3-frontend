@@ -1,6 +1,9 @@
 {
   "template1": {
     "structure": {
+      "metadata": {
+        "font": "'Times New Roman', Times, serif"
+      },
       "pdf_header": {
         "section_name": "pdf_header",
         "style": {},
@@ -666,6 +669,9 @@
   },
   "template2": {
     "structure": {
+      "metadata": {
+        "font": "Arial, Helvetica, sans-serif"
+      },
       "pdf_header": {
         "section_name": "pdf_header",
         "style": {
@@ -1240,6 +1246,9 @@
   },
   "template3": {
     "structure": {
+      "metadata": {
+        "font": "Arial, Helvetica, sans-serif"
+      },
       "pdf_header": {
         "section_name": "pdf_header",
         "style": {

@@ -8,11 +8,11 @@ import { email } from "@vueform/vueform";
 const innerHtml = ref(null);
 
 // const props = defineProps({
-//   data: {
+//   resume_data: {
 //     type: Object,
 //     required: true,
 //   },
-//   order: {
+//   render_fields: {
 //     type: Array,
 //     required: true,
 //   },
@@ -22,16 +22,10 @@ const template_metadata = ref({
   section_dividers: true,
 });
 
-const render_fields = [
-  "education",
-  "awards",
-  "experience",
-  "skills",
-  "project",
-];
+const render_fields = ["education", "awards", "project", "skills", "awards"];
 
 const resume_data = {
-  resume_template: "template3",
+  resume_template: "template2",
   title: "Kyle Denney",
   email: "kyle.denney@email.com",
   phone_number: "555-123-4567",
@@ -143,7 +137,9 @@ const renderPDF = () => {
     template: {
       section_name: "body",
       content: "",
-      style: {},
+      style: {
+        "font-family": resume_template.structure.metadata.font,
+      },
       children: body_children,
     },
   };
