@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Login from "./views/Login.vue";
 import ResumeView from "./views/Resume/ResumeList.vue";
 import InformationView from "./views/Information/InformationList.vue";
+import AwardView from "./components/award/AwardView.vue"
 
 import RouterStateController from "./utils/routerStateController.js";
 
@@ -28,6 +29,11 @@ const router = createRouter({
       name: "information",
       component: InformationView,
     },
+    {
+      path: "/award",
+      name: "award",
+      component: AwardView
+    }
   ],
 });
 
