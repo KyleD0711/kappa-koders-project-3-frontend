@@ -1,3 +1,4 @@
+
 <template>
   <SideBar />
   <router-view />

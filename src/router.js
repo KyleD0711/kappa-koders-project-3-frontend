@@ -11,8 +11,6 @@ import InfoEducation from "./components/InfoEducation.vue"
 import InfoProjects from "./components/InfoProjects.vue"
 import InfoUsers from "./components/InfoUsers.vue"
 
-
-
 import RouterStateController from "./utils/routerStateController.js";
 
 const routerState = new RouterStateController();
@@ -75,6 +73,11 @@ const router = createRouter({
 
       ]
     },
+    {
+      path: "/award",
+      name: "award",
+      component: AwardView
+    }
   ],
 });
 
