@@ -143,7 +143,7 @@ export default {
 }
 
 .infoSection {
-    height: 75px;
+    height: 60px;
     width: 100%;
     background-color: #ccc;
 
@@ -151,7 +151,7 @@ export default {
     align-content: center;
     color: #000;
 
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
 }
 </style>
