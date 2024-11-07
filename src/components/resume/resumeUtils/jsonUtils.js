@@ -65,5 +65,4 @@ export default {
       ],
     };
   },
-  generateJsonForSection(section_name, data) {},
 };

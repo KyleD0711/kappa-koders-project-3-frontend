@@ -2,7 +2,7 @@
 import { onMounted, ref } from "vue";
 import htmlGenerator from "./resumeUtils/htmlGenerator";
 import jsonUtils from "./resumeUtils/jsonUtils";
-import template1 from "../../../templates/template.json";
+import template from "../../../templates/templates.json";
 import { email } from "@vueform/vueform";
 
 const innerHtml = ref(null);
@@ -18,9 +18,20 @@ const innerHtml = ref(null);
 //   },
 // });
 
-const render_fields = ["education", "experience", "skills", "project"];
+const template_metadata = ref({
+  section_dividers: true,
+});
+
+const render_fields = [
+  "education",
+  "awards",
+  "experience",
+  "skills",
+  "project",
+];
 
 const resume_data = {
+  resume_template: "template3",
   title: "Kyle Denney",
   email: "kyle.denney@email.com",
   phone_number: "555-123-4567",
@@ -75,12 +86,14 @@ const resume_data = {
       date_completed: "2023-04",
     },
   ],
-  award: {
-    name: "Dean’s List",
-    institution: "University of State",
-    description: "Awarded for academic excellence in multiple semesters.",
-    date_award: "2022-12",
-  },
+  awards: [
+    {
+      name: "Dean’s List",
+      institution: "University of State",
+      description: "Awarded for academic excellence in multiple semesters.",
+      date_awarded: "2022-12",
+    },
+  ],
   url: [
     {
       name: "Portfolio",
@@ -91,9 +104,11 @@ const resume_data = {
 
 const renderPDF = () => {
   let full_json_object = {};
+  let resume_template = template[resume_data.resume_template];
+
   let pdf_header = jsonUtils.findAndUpdateSectionByName(
-    template1.structure.pdf_header,
-    template1.data.pdf_header.title,
+    resume_template.structure.pdf_header,
+    resume_template.data.pdf_header.title,
     resume_data.title
   );
 
@@ -104,20 +119,20 @@ const renderPDF = () => {
 
   pdf_header = jsonUtils.findAndUpdateSectionByName(
     pdf_header,
-    template1.data.pdf_header.personal_info,
+    resume_template.data.pdf_header.personal_info,
     personal_info
   );
 
   let professional_summary = jsonUtils.findAndUpdateSectionByName(
-    template1.structure.professional_summary,
-    template1.data.professional_summary,
+    resume_template.structure.professional_summary,
+    resume_template.data.professional_summary,
     resume_data.professional_summary
   );
 
   let body_children = [pdf_header, professional_summary];
   render_fields.forEach((value) => {
     let section = jsonUtils.findAndUpdateSectionByData(
-      template1,
+      resume_template,
       resume_data,
       value
     );
@@ -132,11 +147,18 @@ const renderPDF = () => {
       children: body_children,
     },
   };
-
   innerHtml.value = htmlGenerator.generateHTMLFromTemplate(
-    full_json_object.template
+    full_json_object.template,
+    template_metadata.value
   );
 };
+
+// Should be used to toggle whether dividers should show
+// const toggleDividers = () => {
+//   template_metadata.value.section_dividers =
+//     !template_metadata.value.section_dividers;
+//   renderPDF();
+// };
 
 onMounted(() => {
   renderPDF();

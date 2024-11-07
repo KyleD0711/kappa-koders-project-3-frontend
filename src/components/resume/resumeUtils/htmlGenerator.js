@@ -1,5 +1,5 @@
 export default {
-  generateHTMLFromTemplate(template) {
+  generateHTMLFromTemplate(template, metadata) {
     // Helper function to convert style object to inline CSS string
     function styleToString(style) {
       return Object.entries(style)
@@ -10,7 +10,7 @@ export default {
     // Recursive function to build HTML elements
     function buildElement(element) {
       const {
-        section_name,
+        section_name = "",
         style = {},
         content = "",
         children = [],
@@ -18,9 +18,9 @@ export default {
       } = element;
       const styleString = styleToString(style);
       let openTag = `<${type} class="${section_name}" style="${styleString}">`;
-      const closeTag = `</${type}>`;
+      let closeTag = `</${type}>`;
 
-      if (section_name == "divider") {
+      if (section_name == "divider" && metadata.section_dividers) {
         openTag = getDividerTag();
       }
       // Create opening tag with inline styles
