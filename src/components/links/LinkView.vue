@@ -1,9 +1,9 @@
 <script setup>
 import { onMounted, ref } from "vue";
-import LinkModal from "./LinkModal.vue";
 import linkServices from "../../services/linkServices";
 import { useModalStore } from "../../store/modal.store";
 import { storeToRefs } from "pinia";
+import LinkModal from "./LinkModal.vue";
 
 const modalStore = useModalStore();
 const { isVisible } = storeToRefs(modalStore);
@@ -38,7 +38,7 @@ const getLinks = async () => {
 };
 
 const deleteLink = async (item) => {
-  await educationServices
+  await linkServices
     .deleteLink(item.id)
     .then((_) => {
       getLinks();
@@ -86,11 +86,17 @@ onMounted(() => {
         <v-icon class="me-2" size="small" @click="editItem(item)">
           mdi-pencil
         </v-icon>
-        <v-icon size="small" @click="deleteItem(item)"> mdi-delete </v-icon>
+        <v-icon size="small" @click="deleteLink(item)"> mdi-delete </v-icon>
       </template>
       <template v-slot:no-data> No data found! </template>
     </v-data-table>
   </div>
+
+  <LinkModal
+    v-if="isVisible"
+    :link="link"
+    @submit-form="getLinks"
+  ></LinkModal>
 
 
 </template>

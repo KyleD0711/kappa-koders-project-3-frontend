@@ -1,4 +1,7 @@
+
+
 <script setup>
+
 import SideBar from '../../components/InformationSideBar.vue'
 
 </script>

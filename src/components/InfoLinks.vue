@@ -1,11 +1,10 @@
 <script setup>
 
-//import LinkView from './links/LinkView.vue';
+import LinksView from './links/LinkView.vue';
 
 </script>
 
 
 <template>
-
-
+<LinksView></LinksView>
 </template>
