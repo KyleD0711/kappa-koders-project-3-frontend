@@ -12,6 +12,8 @@ import InfoProjects from "./components/InfoProjects.vue"
 import InfoUsers from "./components/InfoUsers.vue"
 
 
+import InformationView from "./views/Information/InformationList.vue";
+import AwardView from "./components/award/AwardView.vue"
 
 import RouterStateController from "./utils/routerStateController.js";
 
@@ -35,46 +37,13 @@ const router = createRouter({
     {
       path: "/information",
       name: "information",
-      component: InformationList,
-      children: [
-        {
-          path: 'experience',
-          name: 'experience',
-          component: InfoExperience
-        },
-        {
-          path: 'skills',
-          name: 'skills',
-          component: InfoSkills
-        },
-        {
-          path: 'awards',
-          name: 'awards',
-          component: InfoAwards
-        },
-        {
-          path: 'links',
-          name: 'links',
-          component: InfoLinks
-        },
-        {
-          path: 'education',
-          name: 'education',
-          component: InfoEducation
-        },
-        {
-          path: 'projects',
-          name: 'projects',
-          component: InfoProjects
-        },
-        {
-          path: 'users',
-          name: 'users',
-          component: InfoUsers
-        },
-
-      ]
+      component: InformationView,
     },
+    {
+      path: "/award",
+      name: "award",
+      component: AwardView
+    }
   ],
 });
 
