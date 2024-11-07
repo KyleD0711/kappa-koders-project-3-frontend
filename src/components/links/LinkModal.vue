@@ -90,18 +90,13 @@ onMounted(() => {
           align="center"
         ></StaticElement>
         <TextElement
-          name="institution"
-          before="Institution"
+          name="name"
+          before="Name"
           :rules="['required']"
         />
-        <StaticElement
-          name="url"
-          content="URL"
-          tag="h1"
-          align="center"
-        ></StaticElement>
+        
         <TextElement
-          name="URL"
+          name="url"
           before="URL"
           :rules="['required']"
         />
