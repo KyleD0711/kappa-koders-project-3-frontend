@@ -1,9 +1,12 @@
 <script setup>
 import ocLogo from "/oc-logo-white.png";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch, watchEffect } from "vue";
 import Utils from "../config/utils";
 import AuthServices from "../services/authServices";
 import { useRouter } from "vue-router";
+
+import { useNavBarStore } from "../store/navbar.store";
+import { storeToRefs } from "pinia";
 
 const router = useRouter();
 
@@ -12,6 +15,10 @@ const title = ref("Career Services");
 const initials = ref("");
 const name = ref("");
 const logoURL = ref("");
+
+const navStore = useNavBarStore()
+navStore.setupRouteWatcher()
+const { showNavOptions } = storeToRefs(navStore);
 
 const resetMenu = () => {
   user.value = null;
@@ -55,11 +62,11 @@ onMounted(() => {
         {{ title }}
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <div v-if="user">
+      <div v-if="showNavOptions">
         <v-btn class="mx-2" :to="{ name: 'resume' }"> Resume </v-btn>
         <v-btn class="mx-2" :to="{ name: 'information' }"> Information </v-btn>
       </div>
-      <v-menu bottom min-width="200px" rounded offset-y v-if="user">
+      <v-menu bottom min-width="200px" rounded offset-y v-if="showNavOptions">
         <template v-slot:activator="{ props }">
           <v-btn v-bind="props" icon x-large>
             <v-avatar v-if="user" color="secondary">
