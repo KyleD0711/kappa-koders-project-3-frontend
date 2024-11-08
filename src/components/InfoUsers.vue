@@ -1,6 +1,12 @@
-<script setup></script>
+<script setup>
+
+import UserView from './user/UserView.vue';
+
+</script>
 
 
 <template>
-  <div>Welcome to the Info Users Page!</div>
+
+<UserView></UserView>
+
 </template>

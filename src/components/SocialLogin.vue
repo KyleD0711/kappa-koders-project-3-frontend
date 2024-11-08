@@ -3,6 +3,7 @@ import { ref, onMounted } from "vue";
 import AuthServices from "../services/authServices";
 import Utils from "../config/utils.js";
 import { useRouter } from "vue-router";
+import userRoleServices from "../services/userRoleServices.js";
 
 const router = useRouter();
 const fName = ref("");
@@ -35,6 +36,9 @@ const handleCredentialResponse = async (response) => {
   await AuthServices.loginUser(token)
     .then((response) => {
       user.value = response.data;
+      await userRoleServices.getAllRolesForUser(user.value.id)
+      // Once userrole comes back 
+      // user.value.role = response.role
       Utils.setStore("user", user.value);
       fName.value = user.value.fName;
       lName.value = user.value.lName;
