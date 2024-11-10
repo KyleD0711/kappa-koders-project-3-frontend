@@ -73,11 +73,6 @@ const router = createRouter({
 
       ]
     },
-    {
-      path: "/award",
-      name: "award",
-      component: AwardView
-    }
   ],
 });
 

@@ -4,8 +4,8 @@ import ResumeSidebar from "../../components/resume/ResumeSidebar.vue";
 </script>
 <template>
   <div style="display: flex;">
-    <div style="width: 40%;">
-      <ResumeSidebar />
+    <div style="width: 50%;">
+      <ResumeSidebar/>
     </div>
     <div style="flex-grow: 1;">
       <ResumeViewer />

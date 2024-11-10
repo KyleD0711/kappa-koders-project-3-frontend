@@ -1,137 +1,128 @@
-<template>
-  <v-app>
-      <v-navigation-drawer
-    app
-    class="navigation-drawer"
-    v-model:opened="open"
-    :breakpoint="20"
-    permanent
-  >
-    <v-list v-model:opened="open">
-      <v-list-item>
-        <v-list-item-title style="font-size: 16px;">
-          {Resume Name}
-          <v-icon style="padding-left:39%">mdi-pencil</v-icon>
-        </v-list-item-title>
-      </v-list-item>
+<script setup>
+import { ref, watch, onMounted } from 'vue';
+import draggable from 'vuedraggable';
+import { VCard, VExpansionPanels, VExpansionPanel, VExpansionPanelTitle, VExpansionPanelText, VIcon } from 'vuetify/components';
+import { useModalStore } from "../../store/modal.store";
+import EducationModal from '../education/EducationModal.vue';
+import educationServices from '../../services/educationServices';
+import { storeToRefs } from 'pinia'; 
 
-      <v-list-group class="section-0 list-item-title" v-for="section in sections" :key="section.title" :value="section.title">
-        <template v-slot:activator="{ props }">
-          <v-list-item v-bind="props">
-            <div class="activator-content">
-              <v-icon>mdi-drag</v-icon>
-              <v-list-item-title>{{ section.title }}</v-list-item-title>
-            </div>
-          </v-list-item>
-        </template>
-        <v-list>
-          <v-list-item
-            class="section-1"
-            v-for="item in section.items"
-            :key="item.name"
-          >
-            <v-list-item-content class="list-item-content">
-              <v-checkbox></v-checkbox>
-              <v-list-item-title class="item-title">{{ item.name }}</v-list-item-title>
-              <v-icon @click="editItem(item)" class="edit-icon">mdi-pencil</v-icon>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-      </v-list-group>
-    </v-list>
-  </v-navigation-drawer>
+const modalStore = useModalStore();
+const { isVisible } = storeToRefs(modalStore);
 
-  </v-app>
-</template>
+const sections = ref([]);
 
-<script>
-import { ref } from 'vue';
-
-export default {
-  setup() {
-    const open = ref(['']);
-    const sections = ref([
+const getEducation = async () => {
+  try {
+    const res = await educationServices.getAllEducationForUser();
+    sections.value = [
       {
-        title: "Education",
-        items: [
-          { name: "High School", selected: true },
-          { name: "Bachelor's Degree", selected: true },
-        ],
+        title: 'Education',
+        items: res.data.map(item => ({ name: item.institution, selected: true, data: item })),
+        open: false,
       },
-      {
-        title: "Experience",
-        items: [
-          { name: "Internship", selected: true },
-          { name: "Full-time Job", selected: true },
-        ],
-      },
-      {
-        title: "Personal Links",
-        items: [{ name: "LinkedIn", selected: true }],
-      },
-      {
-        title: "Honors/Awards",
-        items: [{ name: "Dean's List", selected: true }],
-      },
-      {
-        title: "Interests",
-        items: [{ name: "Coding", selected: true }],
-      },
-    ]);
-
-    return {
-      open,
-      sections,
-    };
-  },
+      // You can add additional sections for Experience, Skills, etc., if needed.
+    ];
+  } catch (err) {
+    console.error(err);
+  }
 };
+
+// Function to open the modal for editing
+const editItem = (item) => {
+  modalStore.education = item.data;
+  isVisible.value = true;
+};
+
+onMounted(() => {
+  getEducation();
+});
+
+watch(sections, (newSections) => {
+    console.log("Sections updated:", JSON.stringify(newSections, null, 2));
+}, { deep: true });
 </script>
 
-<style scoped>
-.v-navigation-drawer {
-  background-color: #262626;
-  color: white;
-  width: 100%;
-}
+<template>
+  <div class="resumeTitle">
+    Resume Name
+    <v-icon style="padding-left: 36%; font-size: 30px;" class="edit-icon">mdi-pencil</v-icon>
+  </div>
 
-.section-0 {
-  background-color: #403F3F;
+  <draggable class="section-1" v-model="sections" tag="ul">
+    <template #item="{ element: section }">
+      <v-card class="mb-3">
+        <v-expansion-panels>
+          <v-expansion-panel v-model="section.open" class="section-0">
+            <v-expansion-panel-title>
+              <v-icon class="mr-2">mdi-drag</v-icon>
+              {{ section.title }}
+            </v-expansion-panel-title>
+            <v-expansion-panel-text class="section-1">
+              <draggable class="item-list" v-model="section.items" tag="ul">
+                <template #item="{ element: item }">
+                    <v-card class="mb-3">
+                        <li :key="item.name" class="list-item">
+                        <div class="left-icons">
+                            <v-icon>mdi-drag</v-icon>
+                            <span>{{ item.name }}</span>
+                        </div>
+                        <div class="right-icons">
+                            <v-icon @click="editItem(item)" class="edit-icon">mdi-pencil</v-icon>
+                            <v-checkbox v-model="item.selected" class="v-checkbox pa-0 ma-0" />
+                        </div>
+                        </li>
+                    </v-card>
+                </template>
+              </draggable>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
+      </v-card>
+    </template>
+  </draggable>
+
+  <EducationModal v-if="isVisible" :education="modalStore.education" @submit-form="getEducation" />
+</template>
+
+
+<style>
+.resumeTitle{
+    color: white;
+    padding-left: 5%;
+    font-size: 30px;
 }
 
 .section-1 {
   background-color: #575757;
   display: block;
+  color:white;
   flex-direction: column;
-  padding-left: 16px;
 }
 
-.list-item-content {
-  display: flex;
-  align-items: center;  /* Ensure items are vertically aligned */
-  justify-content: space-between; /* Spread out elements */
-  padding: 10px 0; /* Reduce padding around list items */
+.section-0 {
+    background-color: #403F3F;
+    color:white;
 }
 
-.item-content {
-  display: flex;
-  align-items: center;  /* Align icon and title inline */
-  flex-grow: 1; /* Allow title to take available space */
-}
-
-.item-title {
-  font-size: 14px; /* Smaller font size to fit better */
-}
-
-.checkbox .v-input--selection-controls__input {
+.v-checkbox {
   margin: 0;
   padding: 0;
-}
-
-.activator-content {
   display: flex;
   align-items: center;
+}
+
+.list-item {
+  display: flex;
   justify-content: space-between;
-  width: 100%;
+  align-items: center;
+  gap: 8px; /* Adjust space between elements if needed */
+}
+
+.right-icons {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Adjust space between pencil icon and checkbox */
 }
 
 </style>
