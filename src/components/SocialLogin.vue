@@ -9,6 +9,7 @@ const router = useRouter();
 const fName = ref("");
 const lName = ref("");
 const user = ref({});
+const test = ref({});
 
 const loginWithGoogle = () => {
   window.handleCredentialResponse = handleCredentialResponse;
@@ -36,9 +37,6 @@ const handleCredentialResponse = async (response) => {
   await AuthServices.loginUser(token)
     .then((response) => {
       user.value = response.data;
-      await userRoleServices.getAllRolesForUser(user.value.id)
-      // Once userrole comes back 
-      // user.value.role = response.role
       Utils.setStore("user", user.value);
       fName.value = user.value.fName;
       lName.value = user.value.lName;
@@ -47,6 +45,18 @@ const handleCredentialResponse = async (response) => {
     .catch((error) => {
       console.log("error", error);
     });
+    console.log(user.value)
+  await userRoleServices.getAllRolesForUser(user.value.id)
+    .then((res) => {
+      test.value = res.data;
+      console.log(test);
+
+    })
+    .catch((error) => {
+    console.log("error", error);
+    });
+    // Once userrole comes back 
+    // user.value.role = response.role
 };
 
 onMounted(() => {
