@@ -34,6 +34,17 @@ const modalStore = useModalStore();
 const { isVisible } = storeToRefs(modalStore);
 
 const sections = ref([]);
+const headers = ref([]);
+const options = ref({
+  links: false,
+  breaklines: false,
+});
+const personalInfo = ref({
+  firstName: 'Jonah',
+  lastName: 'Veit',
+  email: 'jonah@gmail.com',
+  professionalSummary: 'Bachelor of Arts degree candidate, with a major in Economics, and experience developing and analyzing cost models, providing quality assurance reviews, and creating process solutions to improve financial forecasts for clients. Looking to continue the development of risk management, audit, and compliance skills in a team-centered environment.',
+});
 
 const getEducation = async () => {
   try {
@@ -45,7 +56,6 @@ const getEducation = async () => {
       sections.value.push({
         title: 'Education',
         items: res.data.map(item => ({ name: item.institution, selected: true, data: item })),
-        open: false,
       });
     }
   } catch (err) {
@@ -63,7 +73,6 @@ const getExperience = async () => {
       sections.value.push({
         title: 'Experience',
         items: res.data.map(item => ({ name: item.employer, selected: true, data: item })),
-        open: false,
       });
     }
   } catch (err) {
@@ -81,7 +90,6 @@ const getProject = async () => {
       sections.value.push({
         title: 'Project',
         items: res.data.map(item => ({ name: item.name, selected: true, data: item })),
-        open: false,
       });
     }
   } catch (err) {
@@ -99,7 +107,6 @@ const getAwards = async () =>{
       sections.value.push({
         title: 'Award',
         items: res.data.map(item => ({ name: item.institution, selected: true, data: item })),
-        open: false,
       });
     }
   } catch (err) {
@@ -110,14 +117,13 @@ const getAwards = async () =>{
 const getLinks = async () =>{
   try {
     const res = await linkServices.getAllLinkForUser();
-    const linkSection = sections.value.find(section => section.title === 'Link');
-    if (linkSection) {
-      linkSection.items = res.data.map(item => ({ name: item.name, selected: true, data: item }));
+    const linkHeader = headers.value.find(header => header.title === 'Link');
+    if (linkHeader) {
+      linkHeader.items = res.data.map(item => ({ name: item.name, selected: true, data: item }));
     } else {
-      sections.value.push({
+      headers.value.push({
         title: 'Link',
         items: res.data.map(item => ({ name: item.name, selected: true, data: item })),
-        open: false,
       });
     }
   } catch (err) {
@@ -135,7 +141,6 @@ const getSkills = async () =>{
       sections.value.push({
         title: 'Skill',
         items: res.data.map(item => ({ name: item.name, selected: true, data: item })),
-        open: false,
       });
     }
   } catch (err) {
@@ -143,7 +148,13 @@ const getSkills = async () =>{
   }
 }
 
+const editLinkItem = (item) => {
+  modalStore.link = item.data;
+  modalStore.modalType = 'link';
+  modalStore.isVisible = true; 
+}
 
+// edits
 const editItem = (item, sectionTitle) => {
   if (sectionTitle === 'Education') {
     modalStore.education = item.data;
@@ -157,20 +168,28 @@ const editItem = (item, sectionTitle) => {
   } else if (sectionTitle === 'Award') {
     modalStore.award = item.data; 
     modalStore.modalType = 'award'; 
-  }else if (sectionTitle === 'Link') {
-    modalStore.link = item.data; 
-    modalStore.modalType = 'link'; 
   } else if (sectionTitle === 'Skill') {
     modalStore.skill = item.data; 
     modalStore.modalType = 'skill'; 
   }
   else {
-    console.error('Unsupported section:', sectionTitle);
+   console.error('Unsupported section:', sectionTitle);
   }
 
   modalStore.isVisible = true; 
 };
 
+// add link
+const showAddLinkDialog = () => {
+  modalStore.link = {
+    name: "",
+    url: ""
+  };
+  modalStore.isVisible = true; 
+  modalStore.modalType = 'link'; 
+}
+
+// add
 const showAddDialog = (section) => {
   if (section === 'Education') {
     modalStore.education = {
@@ -212,13 +231,6 @@ const showAddDialog = (section) => {
     };
     modalStore.isVisible = true; 
     modalStore.modalType = 'award'; 
-  } else if (section === 'Link') {
-    modalStore.link = {
-       name: "",
-      url: ""
-    };
-    modalStore.isVisible = true; 
-    modalStore.modalType = 'link'; 
   } else if (section === 'Skill') {
     modalStore.skill = {
       name: "",
@@ -241,23 +253,101 @@ onMounted(() => {
   getSkills();
 });
 
-watch(sections, (newSections) => {
-    //console.log("Sections updated:", JSON.stringify(newSections, null, 2));
+watch(headers, (newHeaders) => {
+    console.log("Headers updated:", JSON.stringify(newHeaders, null, 2));
 }, { deep: true });
 </script>
 
 <template>
   <div class="sidebar">
-    <div class="resumeTitle">
+    <div class="resumeTitle" style="padding-top: 2%;">
       Resume Name
-      <v-icon style="padding-left: 33%; font-size: 30px;" class="edit-icon">mdi-pencil</v-icon>
+      <v-icon style="font-size: 30px;" class="edit-icon">mdi-pencil</v-icon>
     </div>
     
-    <draggable class="section-1" v-model="sections" tag="ul">
+    <v-expansion-panels style="padding-bottom: 2%;">
+      <v-expansion-panel class="section-0">
+        <v-expansion-panel-title style="font-size:20px">
+          Header
+        </v-expansion-panel-title>
+        <v-expansion-panel-text  class="panel-background">
+          <div class="option-checkboxes">
+            <v-form>
+              <v-row>
+                <v-col cols="6">
+                  <v-text-field
+                    v-model="personalInfo.firstName"
+                    label="First Name"
+                  ></v-text-field>
+                </v-col>
+
+                <v-col cols="6">
+                  <v-text-field
+                    v-model="personalInfo.lastName"
+                    label="Last Name"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+
+              <v-text-field
+                v-model="personalInfo.email"
+                label="Email"
+              ></v-text-field>
+
+              <v-textarea
+                v-model="personalInfo.professionalSummary"
+                label="Professional Summary"
+              ></v-textarea>
+            </v-form>
+            <v-checkbox v-model="options.breaklines" label="Include Breaklines" />
+            <draggable v-model="headers" tag="ul">
+              <template #item="{ element: header }">
+                <v-card class="mb-3">
+                  <v-expansion-panels>
+                    <v-expansion-panel class="section-0" :key="header.title">
+                      <v-expansion-panel-title>
+                        Links
+                      </v-expansion-panel-title>
+                      <v-expansion-panel-text>
+                        <draggable class="item-list" v-model="header.items" tag="ul">
+                          <template #item="{ element: item }">
+                            <v-card class="mb-3">
+                              <li :key="item.name" class="list-item">
+                                <div class="left-icons">
+                                  <v-icon>mdi-drag</v-icon>
+                                  <span>{{ item.name }}</span>
+                                </div>
+                                <div class="right-icons">
+                                  <v-icon @click="editLinkItem(item)" class="edit-icon">mdi-pencil</v-icon>
+                                  <v-checkbox v-model="item.selected" class="v-checkbox pa-0 ma-0" />
+                                </div>
+                              </li>
+                            </v-card>
+                          </template>
+                        </draggable>
+                        <v-card @click="showAddLinkDialog()">  
+                          <div class="addSection">
+                            Add {{header.title}} <v-icon style="padding-bottom: 1%;">mdi-plus</v-icon>
+                          </div>
+                        </v-card>
+                      </v-expansion-panel-text>
+                    </v-expansion-panel>
+                  </v-expansion-panels>
+                </v-card>
+              </template>
+            </draggable>
+          </div>
+        </v-expansion-panel-text>
+      </v-expansion-panel>
+    </v-expansion-panels>
+
+    <hr class="light-breakline" />
+
+    <draggable v-model="sections" tag="ul">
       <template #item="{ element: section }">
         <v-card class="mb-3">
           <v-expansion-panels>
-<v-expansion-panel v-model="section.open" class="section-0" :key="section.title">
+            <v-expansion-panel class="section-0" :key="section.title">
               <v-expansion-panel-title>
                 <v-icon class="mr-2">mdi-drag</v-icon>
                 {{ section.title }}
@@ -290,7 +380,7 @@ watch(sections, (newSections) => {
         </v-card>
       </template>
     </draggable>
-    
+
     <!-- Conditionally render the correct modal based on modalType -->
     <EducationModal v-if="isVisible && modalStore.modalType === 'education'" :education="modalStore.education" @submit-form="getEducation" />
     <ExperienceModal v-if="isVisible && modalStore.modalType === 'experience'" :experience="modalStore.experience" @submit-form="getExperience" />
@@ -303,15 +393,15 @@ watch(sections, (newSections) => {
 
 <style>
 .sidebar {
-  border: 2px solid #cccccc; 
+  border: 2px solid #737373; 
   padding: 10px; 
   border-radius: 4px; 
 }
 
 .resumeTitle{
     color: white;
-    padding-left: 5%;
-    padding-bottom: 4%;
+    padding-left: 2%;
+    padding-bottom: 2%;
     font-size: 30px;
 }
 
@@ -320,6 +410,7 @@ watch(sections, (newSections) => {
 }
 
 .section-1 {
+  background-color: #575757;
   display: block;
   color:white;
   flex-direction: column;
@@ -328,6 +419,12 @@ watch(sections, (newSections) => {
 .section-0 {
     background-color: #403F3F;
     color:white;
+}
+
+.option-checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .v-checkbox {
@@ -351,7 +448,21 @@ watch(sections, (newSections) => {
 }
 
 .v-card {
-  background-color: #D9D9D9; /* Or whatever color you want */
+  background-color: #D9D9D9;
+}
+
+.panel-background {
+  background-color: #575757;
+  color: white; 
+  padding: 16px; 
+  border-radius: 4px; 
+}
+
+.light-breakline {
+  border: none;
+  border-top: 3px solid #737373;
+  margin: 10px 0; 
+  padding-bottom: 3%;
 }
 
 
