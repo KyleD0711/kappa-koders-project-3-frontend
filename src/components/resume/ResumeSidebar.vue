@@ -53,6 +53,16 @@ const toggleEditTitle = () => {
   isEditingTitle.value = !isEditingTitle.value;
 };
 
+const saveTitle = () => {
+  isEditingTitle.value = false;
+  // You can add any save functionality here (like saving to a database or state)
+};
+
+const cancelEditTitle = () => {
+  isEditingTitle.value = false;
+  // Reset title or do something else if needed
+  resumeTitle.value = "Resume Name"; // Use the initial title or previous value
+};
 
 const getEducation = async () => {
   try {
@@ -269,21 +279,29 @@ watch(headers, (newHeaders) => {
 <template>
   <div class="sidebar">
     <div class="resumeTitle" style="padding-top: 2%;">
-        <template v-if="isEditingTitle">
+      <template v-if="isEditingTitle">
+        <div class="text-field-wrapper">
           <v-text-field
             v-model="resumeTitle"
             dense
             hide-details
             solo
-            @blur="toggleEditTitle"
-            @keyup.enter="toggleEditTitle"
+            @blur="saveTitle"
+            @keyup.enter="saveTitle"
           ></v-text-field>
-        </template>
-        <template v-else>
-          <span @click="toggleEditTitle">{{ resumeTitle }}</span>
-          <v-icon style="font-size: 30px; padding-left: 5%" class="edit-icon" @click="toggleEditTitle">mdi-pencil</v-icon>
-        </template>
-      </div>
+          <v-icon
+            class="close-icon"
+            @click="cancelEditTitle"
+          >
+            mdi-close
+          </v-icon>
+        </div>
+      </template>
+      <template v-else>
+        <span @click="toggleEditTitle">{{ resumeTitle }}</span>
+        <v-icon style="font-size: 30px; padding-left: 5%" class="edit-icon" @click="toggleEditTitle">mdi-pencil</v-icon>
+      </template>
+    </div>
 
     
     <v-expansion-panels style="padding-bottom: 2%;">
@@ -413,6 +431,18 @@ watch(headers, (newHeaders) => {
 </template>
 
 <style>
+.text-field-wrapper {
+  position: relative;
+}
+
+.close-icon {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
 .resumeTitle {
   color: white;
   padding-left: 2%;
