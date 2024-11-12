@@ -45,11 +45,10 @@ const handleCredentialResponse = async (response) => {
     .catch((error) => {
       console.log("error", error);
     });
-    console.log(user.value)
-  await userRoleServices.getAllRolesForUser(user.value.id)
+  await userRoleServices.getAllRolesForUser(user.value.userId)
     .then((res) => {
       test.value = res.data;
-      console.log(test);
+      console.log("ROLES: ", test);
 
     })
     .catch((error) => {
