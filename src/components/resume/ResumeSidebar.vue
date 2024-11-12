@@ -46,6 +46,14 @@ const personalInfo = ref({
   professionalSummary: 'Bachelor of Arts degree candidate, with a major in Economics, and experience developing and analyzing cost models, providing quality assurance reviews, and creating process solutions to improve financial forecasts for clients. Looking to continue the development of risk management, audit, and compliance skills in a team-centered environment.',
 });
 
+const resumeTitle = ref("Resume Name");
+const isEditingTitle = ref(false);
+
+const toggleEditTitle = () => {
+  isEditingTitle.value = !isEditingTitle.value;
+};
+
+
 const getEducation = async () => {
   try {
     const res = await educationServices.getAllEducationForUser();
@@ -261,9 +269,22 @@ watch(headers, (newHeaders) => {
 <template>
   <div class="sidebar">
     <div class="resumeTitle" style="padding-top: 2%;">
-      Resume Name
-      <v-icon style="font-size: 30px;" class="edit-icon">mdi-pencil</v-icon>
-    </div>
+        <template v-if="isEditingTitle">
+          <v-text-field
+            v-model="resumeTitle"
+            dense
+            hide-details
+            solo
+            @blur="toggleEditTitle"
+            @keyup.enter="toggleEditTitle"
+          ></v-text-field>
+        </template>
+        <template v-else>
+          <span @click="toggleEditTitle">{{ resumeTitle }}</span>
+          <v-icon style="font-size: 30px; padding-left: 5%" class="edit-icon" @click="toggleEditTitle">mdi-pencil</v-icon>
+        </template>
+      </div>
+
     
     <v-expansion-panels style="padding-bottom: 2%;">
       <v-expansion-panel class="section-0">
@@ -392,6 +413,19 @@ watch(headers, (newHeaders) => {
 </template>
 
 <style>
+.resumeTitle {
+  color: white;
+  padding-left: 2%;
+  padding-bottom: 2%;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.resumeTitle v-text-field {
+  font-size: 30px;
+  color: white;
+}
+
 .sidebar {
   border: 2px solid #737373; 
   padding: 10px; 
