@@ -3,28 +3,47 @@ import { onMounted, ref } from "vue";
 import htmlGenerator from "./resumeUtils/htmlGenerator";
 import jsonUtils from "./resumeUtils/jsonUtils";
 import template from "../../../templates/templates.json";
-import { email } from "@vueform/vueform";
 
 const innerHtml = ref(null);
 
-// const props = defineProps({
-//   resume_data: {
-//     type: Object,
-//     required: true,
-//   },
-// });
+const props = defineProps({
+  resume_data: {
+    type: Object,
+    required: true,
+  },
+  metadata: {
+    type: Object,
+    required: true,
+  },
+  header_data: {
+    type: Object,
+    required: true,
+  },
+  template: {
+    type: Object,
+    required: true,
+  },
+});
 
 const resume_data = {
   metadata: {
     resume_template: "template1",
-    render_fields: ["awards", "education", "project", "skills", "awards"],
+    render_fields: ["awards", "education", "project", "skills"],
     section_dividers: true,
   },
-  title: "Kyle Denney",
-  email: "kyle.denney@email.com",
-  phone_number: "555-123-4567",
-  professional_summary:
-    "Bachelor of Arts degree candidate, with a major in Economics, and experience developing and analyzing cost models, providing quality assurance reviews, and creating process solutions to improve financial forecasts for clients. Looking to continue the development of risk management, audit, and compliance skills in a team-centered environment.",
+  header_data: {
+    title: "Kyle Denney",
+    email: "kyle.denney@email.com",
+    phone_number: "555-123-4567",
+    professional_summary:
+      "Bachelor of Arts degree candidate, with a major in Economics, and experience developing and analyzing cost models, providing quality assurance reviews, and creating process solutions to improve financial forecasts for clients. Looking to continue the development of risk management, audit, and compliance skills in a team-centered environment.",
+    links: [
+      {
+        name: "Portfolio",
+        url: "https://kyledenneyportfolio.com",
+      },
+    ],
+  },
   education: [
     {
       institution: "University of State",
@@ -90,12 +109,6 @@ const resume_data = {
       date_awarded: "2022-12",
     },
   ],
-  url: [
-    {
-      name: "Portfolio",
-      url: "https://kyledenneyportfolio.com",
-    },
-  ],
 };
 
 const renderPDF = () => {
@@ -103,19 +116,19 @@ const renderPDF = () => {
   let resume_template = template[resume_data.metadata.resume_template];
 
   let pdf_header = jsonUtils.findAndUpdateSectionByName(
-    resume_template.structure.pdf_header,
+    resume_template.structure.header_data.pdf_header,
     resume_template.data.pdf_header.title,
     resume_data.title
   );
 
   let personal_info = `${resume_data.email} | ${resume_data.phone_number}`;
-  resume_data.url.forEach((value) => {
+  resume_data.header_data.links.forEach((value) => {
     personal_info += ` | ${value.name}: ${value.url}`;
   });
 
   pdf_header = jsonUtils.findAndUpdateSectionByName(
     pdf_header,
-    resume_template.data.pdf_header.personal_info,
+    resume_template.data.pdf_header.header_data.personal_info,
     personal_info
   );
 
@@ -145,8 +158,6 @@ const renderPDF = () => {
       children: body_children,
     },
   };
-
-  console.log(full_json_object);
 
   innerHtml.value = htmlGenerator.generateHTMLFromTemplate(
     full_json_object.resume,
