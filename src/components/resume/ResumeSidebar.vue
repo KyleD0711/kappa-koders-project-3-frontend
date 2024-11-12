@@ -33,17 +33,22 @@ import { storeToRefs } from 'pinia';
 const modalStore = useModalStore();
 const { isVisible } = storeToRefs(modalStore);
 
-const sections = ref([]);
+const resume_data = ref([]);
 const headers = ref([]);
-const options = ref({
-  links: false,
-  breaklines: false,
+const metadata = ref([]);
+
+const resume_data_local = ref([]);
+const headers_local = ref([]);
+const metadata_local = ref({
+  render_fields: [],
+  breaklines: true,
 });
 const personalInfo = ref({
-  firstName: 'Jonah',
-  lastName: 'Veit',
+  fName: 'Jonah',
+  lName: 'Veit',
   email: 'jonah@gmail.com',
-  professionalSummary: 'Bachelor of Arts degree candidate, with a major in Economics, and experience developing and analyzing cost models, providing quality assurance reviews, and creating process solutions to improve financial forecasts for clients. Looking to continue the development of risk management, audit, and compliance skills in a team-centered environment.',
+  phone_number: '999-888-77777',
+  prof_sum: 'Bachelor of Arts degree candidate, with a major in Economics, and experience developing and analyzing cost models, providing quality assurance reviews, and creating process solutions to improve financial forecasts for clients. Looking to continue the development of risk management, audit, and compliance skills in a team-centered environment.',
 });
 
 const resumeTitle = ref("Resume Name");
@@ -55,7 +60,6 @@ const toggleEditTitle = () => {
 
 const saveTitle = () => {
   isEditingTitle.value = false;
-  // You can add any save functionality here (like saving to a database or state)
 };
 
 const cancelEditTitle = () => {
@@ -67,11 +71,11 @@ const cancelEditTitle = () => {
 const getEducation = async () => {
   try {
     const res = await educationServices.getAllEducationForUser();
-    const educationSection = sections.value.find(section => section.title === 'Education');
+    const educationSection = resume_data_local.value.find(section => section.title === 'Education');
     if (educationSection) {
       educationSection.items = res.data.map(item => ({ name: item.institution, selected: true, data: item }));
     } else {
-      sections.value.push({
+      resume_data_local.value.push({
         title: 'Education',
         items: res.data.map(item => ({ name: item.institution, selected: true, data: item })),
       });
@@ -84,11 +88,11 @@ const getEducation = async () => {
 const getExperience = async () => {
   try {
     const res = await experienceServices.getAllExperienceForUser();
-    const experienceSection = sections.value.find(section => section.title === 'Experience');
+    const experienceSection = resume_data_local.value.find(section => section.title === 'Experience');
     if (experienceSection) {
       experienceSection.items = res.data.map(item => ({ name: item.employer, selected: true, data: item }));
     } else {
-      sections.value.push({
+      resume_data_local.value.push({
         title: 'Experience',
         items: res.data.map(item => ({ name: item.employer, selected: true, data: item })),
       });
@@ -101,11 +105,11 @@ const getExperience = async () => {
 const getProject = async () => {
   try {
     const res = await projectServices.getAllProjectForUser();
-    const projectSection = sections.value.find(section => section.title === 'Project');
+    const projectSection = resume_data_local.value.find(section => section.title === 'Project');
     if (projectSection) {
       projectSection.items = res.data.map(item => ({ name: item.name, selected: true, data: item }));
     } else {
-      sections.value.push({
+      resume_data_local.value.push({
         title: 'Project',
         items: res.data.map(item => ({ name: item.name, selected: true, data: item })),
       });
@@ -118,11 +122,11 @@ const getProject = async () => {
 const getAwards = async () =>{
   try {
     const res = await awardServices.getAllAwards();
-    const awardSection = sections.value.find(section => section.title === 'Award');
+    const awardSection = resume_data_local.value.find(section => section.title === 'Award');
     if (awardSection) {
       awardSection.items = res.data.map(item => ({ name: item.institution, selected: true, data: item }));
     } else {
-      sections.value.push({
+      resume_data_local.value.push({
         title: 'Award',
         items: res.data.map(item => ({ name: item.institution, selected: true, data: item })),
       });
@@ -135,11 +139,11 @@ const getAwards = async () =>{
 const getLinks = async () =>{
   try {
     const res = await linkServices.getAllLinkForUser();
-    const linkHeader = headers.value.find(header => header.title === 'Link');
+    const linkHeader = headers_local.value.find(header => header.title === 'Link');
     if (linkHeader) {
       linkHeader.items = res.data.map(item => ({ name: item.name, selected: true, data: item }));
     } else {
-      headers.value.push({
+      headers_local.value.push({
         title: 'Link',
         items: res.data.map(item => ({ name: item.name, selected: true, data: item })),
       });
@@ -152,11 +156,11 @@ const getLinks = async () =>{
 const getSkills = async () =>{
   try {
     const res = await skillServices.getAllSkillForUser();
-    const skillSection = sections.value.find(section => section.title === 'Skill');
+    const skillSection = resume_data_local.value.find(section => section.title === 'Skill');
     if (skillSection) {
       skillSection.items = res.data.map(item => ({ name: item.name, selected: true, data: item }));
     } else {
-      sections.value.push({
+      resume_data_local.value.push({
         title: 'Skill',
         items: res.data.map(item => ({ name: item.name, selected: true, data: item })),
       });
@@ -271,13 +275,100 @@ onMounted(() => {
   getSkills();
 });
 
-watch(headers, (newHeaders) => {
-    console.log("Headers updated:", JSON.stringify(newHeaders, null, 2));
+watch([resume_data_local, headers_local, personalInfo, metadata_local], () => {
+  console.clear();
+  handleDataChange();
 }, { deep: true });
+watch([resume_data_local, headers_local, personalInfo, metadata_local], () => {
+  console.clear();
+  handleDataChange();
+}, { deep: true });
+
+const handleDataChange = () => {  
+  if (resume_data_local.value) {
+    const parsedResumeData = parseResumeData(resume_data_local.value);
+    resume_data.value = parsedResumeData;
+
+    // Parse metadata after resume_data is parsed
+    const parsedMetadata = parseMetadata(metadata_local.value, parsedResumeData);
+    metadata.value = parsedMetadata;
+
+    const jsonResumeDataString = JSON.stringify(resume_data.value, null, 2); 
+    console.log('JSON Stringified Resume Data:', jsonResumeDataString);
+
+    const jsonMetadataString = JSON.stringify(metadata.value, null, 2);
+    console.log('JSON Stringified Metadata:', jsonMetadataString);
+  }
+
+  if (headers_local.value || personalInfo.value) {
+    const parsedHeaders = parseHeaders(headers_local.value, personalInfo.value);
+    headers.value = parsedHeaders;
+
+    // const jsonHeadersString = JSON.stringify(headers.value, null, 2); 
+    // console.log('JSON Stringified Headers:', jsonHeadersString);
+  }
+};
+
+const parseResumeData = (resumeData) => {
+  const result = {};
+
+  resumeData.forEach(section => {
+    if (section.items && Array.isArray(section.items)) {
+      const selectedItems = section.items
+        .filter(item => item.selected === true)
+        .map(item => item.data || {});
+
+      if (selectedItems.length > 0) {
+        result[section.title.toLowerCase()] = selectedItems;
+      }
+    }
+  });
+
+  return result;
+};
+
+const parseHeaders = (headers, personalInfo) => {
+  const result = {};
+
+  headers.forEach(header => {
+    if (header.items && Array.isArray(header.items)) {
+      const selectedItems = header.items
+        .filter(item => item.selected === true) 
+        .map(item => ({
+          id: item.id || '', 
+          name: item.name,
+          url: item.data ? item.data.url : ''
+        }));
+
+      if (selectedItems.length > 0) {
+        result[header.title.toLowerCase()] = selectedItems;
+      }
+    }
+  });
+  
+  result.fName = personalInfo.fName || '';
+  result.lName = personalInfo.lName || '';
+  result.email = personalInfo.email || '';
+  result.phone_number = personalInfo.phone_number || '';
+  result.prof_sum = personalInfo.prof_sum || '';
+
+  return result;
+};
+
+const parseMetadata = (metadata_local, resume_data) => {
+  const result = {};
+
+  result.render_fields = Object.keys(resume_data);
+  result.breaklines = metadata_local.breaklines;
+
+  return result;
+};
+
+
 </script>
 
 <template>
-  <div class="sidebar">
+  <div>
     <div class="resumeTitle" style="padding-top: 2%;">
       <template v-if="isEditingTitle">
         <div class="text-field-wrapper">
@@ -303,7 +394,6 @@ watch(headers, (newHeaders) => {
       </template>
     </div>
 
-    
     <v-expansion-panels style="padding-bottom: 2%;">
       <v-expansion-panel class="section-0">
         <v-expansion-panel-title style="font-size:20px">
@@ -315,14 +405,14 @@ watch(headers, (newHeaders) => {
               <v-row>
                 <v-col cols="6">
                   <v-text-field
-                    v-model="personalInfo.firstName"
+                    v-model="personalInfo.fName"
                     label="First Name"
                   ></v-text-field>
                 </v-col>
 
                 <v-col cols="6">
                   <v-text-field
-                    v-model="personalInfo.lastName"
+                    v-model="personalInfo.lName"
                     label="Last Name"
                   ></v-text-field>
                 </v-col>
@@ -333,13 +423,18 @@ watch(headers, (newHeaders) => {
                 label="Email"
               ></v-text-field>
 
+              <v-text-field
+                v-model="personalInfo.phone_number"
+                label="Phone Number"
+              ></v-text-field>
+
               <v-textarea
-                v-model="personalInfo.professionalSummary"
+                v-model="personalInfo.prof_sum"
                 label="Professional Summary"
               ></v-textarea>
             </v-form>
-            <v-checkbox v-model="options.breaklines" label="Include Breaklines" />
-            <draggable v-model="headers" tag="ul">
+            <v-checkbox v-model="metadata_local.breaklines" label="Include Breaklines" />
+            <draggable v-model="headers_local" tag="ul">
               <template #item="{ element: header }">
                 <v-card class="mb-3">
                   <v-expansion-panels>
@@ -382,7 +477,7 @@ watch(headers, (newHeaders) => {
 
     <hr class="light-breakline" />
 
-    <draggable v-model="sections" tag="ul">
+    <draggable v-model="resume_data_local" tag="ul">
       <template #item="{ element: section }">
         <v-card class="mb-3">
           <v-expansion-panels>
@@ -454,12 +549,6 @@ watch(headers, (newHeaders) => {
 .resumeTitle v-text-field {
   font-size: 30px;
   color: white;
-}
-
-.sidebar {
-  border: 2px solid #737373; 
-  padding: 10px; 
-  border-radius: 4px; 
 }
 
 .resumeTitle{
