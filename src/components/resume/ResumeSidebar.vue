@@ -270,7 +270,10 @@ const showAddDialog = (section) => {
 };
 
 onMounted(() => {
-  isLoaded = false;
+  isLoaded.value = false;
+  console.log("[Resume Sidebar] - isLoaded is false");
+  emit('dataChange', {isLoaded: isLoaded.value});
+
   getEducation();
   getExperience();
   getProject();
@@ -281,35 +284,37 @@ onMounted(() => {
   handleDataChange();
 });
 
-watch([resume_data_local, header_data_local, personalInfo, metadata_local], () => {
-  //console.clear();
+watch([resume_data_local, header_data_local, personalInfo, metadata_local, isLoaded], () => {
   handleDataChange();
 }, { deep: true });
 
 const handleDataChange = () => {  
+  console.clear();
+
+  const changes = {};
+
   if (resume_data_local.value) {
     const parsedResumeData = parseResumeData(resume_data_local.value);
     resume_data.value = parsedResumeData;
-
-    emit('dataChange', { resume_data: resume_data.value});
+    changes.resume_data = resume_data.value;
 
     const parsedMetadata = parseMetadata(metadata_local.value, parsedResumeData);
     metadata.value = parsedMetadata;
-
-    emit('dataChange', { metadata: metadata.value});
+    changes.metadata = metadata.value;
   }
 
   if (header_data_local.value || personalInfo.value) {
     const parsedHeader_data = parseHeader_data(header_data_local.value, personalInfo.value);
     header_data.value = parsedHeader_data;
-
-    emit('dataChange',{ header_data: header_data.value});
+    changes.header_data = header_data.value;
   }
   
-  console.log('Resume_Data:', JSON.stringify(resume_data.value, null, 2));
-  console.log('Metadata:', JSON.stringify(metadata.value, null, 2));
-  console.log('Header_data:', JSON.stringify(header_data.value, null, 2));
+  isLoaded.value = true;
+  changes.isLoaded = isLoaded.value;
 
+  // Emit all changes at once
+  emit('dataChange', changes);
+  console.log("[Resume Sidebar] - emitted changes:", changes);
 };
 
 const parseResumeData = (resumeData) => {
@@ -337,11 +342,8 @@ const parseHeader_data = (header_data, personalInfo) => {
     if (header.items && Array.isArray(header.items)) {
       const selectedItems = header.items
         .filter(item => item.selected === true) 
-        .map(item => ({
-          id: item.id || '', 
-          name: item.name,
-          url: item.data ? item.data.url : ''
-        }));
+        .map(item => item.data || {});
+
 
       if (selectedItems.length > 0) {
         result[header.title.toLowerCase()] = selectedItems;

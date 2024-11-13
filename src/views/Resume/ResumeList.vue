@@ -11,30 +11,40 @@ const resume_data = ref({});
 const isLoaded = ref({});
 
 const handleDataChange = (data) => {
+  // console.clear();
+  console.log("[Resume List] - Data Change");
   if (data.metadata) {
+    console.log("[Resume List] - metadata has been changed");
     metadata.value = data.metadata;
   }
-  else if (data.resume_data) {
+  
+  if (data.resume_data) {
+    console.log("[Resume List] - resume_data has been changed");
     resume_data.value = data.resume_data;
   }
-  else if (data.header_data) {
+  
+  if (data.header_data) {
+    console.log("[Resume List] - header_data has been changed");
     header_data.value = data.header_data;
   }
-  else if (data.isLoaded){
+  
+  if (data.isLoaded){
+    console.log("[Resume List] - isLoaded has been changed to " + data.isLoaded);
     isLoaded.value = data.isLoaded;
   }
 }
 
 
+
+
 </script>
 <template>
   <div style="display: flex">
-
-    
     <div style="width: 50%">
-      <ResumeSidebar :resume_data="resume_data" />
+      <ResumeSidebar 
+        :resume_data="resume_data"
+        @dataChange = "handleDataChange" />
     </div>
-
     <v-divider
       vertical
       :thickness="4"
@@ -43,6 +53,7 @@ const handleDataChange = (data) => {
     <div style="flex-grow: 1">
       <ResumeViewer
       @dataChange="handleDataChange"
+        :is-loaded="isLoaded"
         :template="templateData"
         :metadata="metadata"
         :header_data="header_data"
