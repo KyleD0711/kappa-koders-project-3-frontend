@@ -33,15 +33,20 @@ import { storeToRefs } from 'pinia';
 const modalStore = useModalStore();
 const { isVisible } = storeToRefs(modalStore);
 
+const emit = defineEmits(['updateResumeData', 'updateHeader_data', 'updateMetadata', 'updateTemplate']);
+
 const resume_data = ref([]);
-const headers = ref([]);
+const header_data = ref([]);
 const metadata = ref([]);
+const template = ref({
+  resume_template: "template1",
+});
 
 const resume_data_local = ref([]);
-const headers_local = ref([]);
+const header_data_local = ref([]);
 const metadata_local = ref({
   render_fields: [],
-  breaklines: true,
+  section_dividers: true,
 });
 const personalInfo = ref({
   fName: 'Jonah',
@@ -139,11 +144,11 @@ const getAwards = async () =>{
 const getLinks = async () =>{
   try {
     const res = await linkServices.getAllLinkForUser();
-    const linkHeader = headers_local.value.find(header => header.title === 'Link');
+    const linkHeader = header_data_local.value.find(header => header.title === 'Link');
     if (linkHeader) {
       linkHeader.items = res.data.map(item => ({ name: item.name, selected: true, data: item }));
     } else {
-      headers_local.value.push({
+      header_data_local.value.push({
         title: 'Link',
         items: res.data.map(item => ({ name: item.name, selected: true, data: item })),
       });
@@ -273,14 +278,12 @@ onMounted(() => {
   getAwards();
   getLinks();
   getSkills();
+
+  handleDataChange();
 });
 
-watch([resume_data_local, headers_local, personalInfo, metadata_local], () => {
-  console.clear();
-  handleDataChange();
-}, { deep: true });
-watch([resume_data_local, headers_local, personalInfo, metadata_local], () => {
-  console.clear();
+watch([resume_data_local, header_data_local, personalInfo, metadata_local], () => {
+  //console.clear();
   handleDataChange();
 }, { deep: true });
 
@@ -289,24 +292,35 @@ const handleDataChange = () => {
     const parsedResumeData = parseResumeData(resume_data_local.value);
     resume_data.value = parsedResumeData;
 
+    // Emit updated resume data to the parent
+    emit('updateResumeData', resume_data.value);
+
     // Parse metadata after resume_data is parsed
     const parsedMetadata = parseMetadata(metadata_local.value, parsedResumeData);
     metadata.value = parsedMetadata;
 
+    // Emit updated metadata to the parent
+    emit('updateMetadata', metadata.value);
+
     const jsonResumeDataString = JSON.stringify(resume_data.value, null, 2); 
-    console.log('JSON Stringified Resume Data:', jsonResumeDataString);
+    //console.log('Resume_Data:', jsonResumeDataString);
 
     const jsonMetadataString = JSON.stringify(metadata.value, null, 2);
-    console.log('JSON Stringified Metadata:', jsonMetadataString);
+    //console.log('Metadata:', jsonMetadataString);
   }
 
-  if (headers_local.value || personalInfo.value) {
-    const parsedHeaders = parseHeaders(headers_local.value, personalInfo.value);
-    headers.value = parsedHeaders;
+  if (header_data_local.value || personalInfo.value) {
+    const parsedHeader_data = parseHeader_data(header_data_local.value, personalInfo.value);
+    header_data.value = parsedHeader_data;
 
-    // const jsonHeadersString = JSON.stringify(headers.value, null, 2); 
-    // console.log('JSON Stringified Headers:', jsonHeadersString);
+    // Emit updated Header_data to the parent
+    emit('updateHeader_data', header_data.value);
+
+    const jsonHeader_dataString = JSON.stringify(header_data.value, null, 2); 
+    //console.log('Header_data:', jsonHeader_dataString);
   }
+
+  emit('updateTemplate', template.value);
 };
 
 const parseResumeData = (resumeData) => {
@@ -327,10 +341,10 @@ const parseResumeData = (resumeData) => {
   return result;
 };
 
-const parseHeaders = (headers, personalInfo) => {
+const parseHeader_data = (header_data, personalInfo) => {
   const result = {};
 
-  headers.forEach(header => {
+  header_data.forEach(header => {
     if (header.items && Array.isArray(header.items)) {
       const selectedItems = header.items
         .filter(item => item.selected === true) 
@@ -359,8 +373,8 @@ const parseMetadata = (metadata_local, resume_data) => {
   const result = {};
 
   result.render_fields = Object.keys(resume_data);
-  result.breaklines = metadata_local.breaklines;
-
+  result.section_dividers = metadata_local.section_dividers;
+  
   return result;
 };
 
@@ -433,8 +447,8 @@ const parseMetadata = (metadata_local, resume_data) => {
                 label="Professional Summary"
               ></v-textarea>
             </v-form>
-            <v-checkbox v-model="metadata_local.breaklines" label="Include Breaklines" />
-            <draggable v-model="headers_local" tag="ul">
+            <v-checkbox v-model="metadata_local.section_dividers" label="Include section dividers" />
+            <draggable v-model="header_data_local" tag="ul">
               <template #item="{ element: header }">
                 <v-card class="mb-3">
                   <v-expansion-panels>
