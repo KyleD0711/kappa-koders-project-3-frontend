@@ -6,44 +6,45 @@ import template from "../../../templates/templates.json";
 
 const innerHtml = ref(null);
 
-const props = defineProps({
-  resume_data: {
-    type: Object,
-    required: true,
-  },
-  metadata: {
-    type: Object,
-    required: true,
-  },
-  header_data: {
-    type: Object,
-    required: true,
-  },
-  template: {
-    type: Object,
-    required: true,
-  },
-});
+// const props = defineProps({
+//   resume_data: {
+//     type: Object,
+//     required: true,
+//   },
+//   metadata: {
+//     type: Object,
+//     required: true,
+//   },
+//   header_data: {
+//     type: Object,
+//     required: true,
+//   },
+//   template: {
+//     type: Object,
+//     required: true,
+//   },
+// });
 
+const templateName = "template1";
+
+const metadata = {
+  render_fields: ["awards", "education", "project", "skills"],
+  section_dividers: true,
+};
+const header_data = {
+  title: "Kyle Denney",
+  email: "kyle.denney@email.com",
+  phone_number: "555-123-4567",
+  professional_summary:
+    "Bachelor of Arts degree candidate, with a major in Economics, and experience developing and analyzing cost models, providing quality assurance reviews, and creating process solutions to improve financial forecasts for clients. Looking to continue the development of risk management, audit, and compliance skills in a team-centered environment.",
+  links: [
+    {
+      name: "Portfolio",
+      url: "https://kyledenneyportfolio.com",
+    },
+  ],
+};
 const resume_data = {
-  metadata: {
-    resume_template: "template1",
-    render_fields: ["awards", "education", "project", "skills"],
-    section_dividers: true,
-  },
-  header_data: {
-    title: "Kyle Denney",
-    email: "kyle.denney@email.com",
-    phone_number: "555-123-4567",
-    professional_summary:
-      "Bachelor of Arts degree candidate, with a major in Economics, and experience developing and analyzing cost models, providing quality assurance reviews, and creating process solutions to improve financial forecasts for clients. Looking to continue the development of risk management, audit, and compliance skills in a team-centered environment.",
-    links: [
-      {
-        name: "Portfolio",
-        url: "https://kyledenneyportfolio.com",
-      },
-    ],
-  },
   education: [
     {
       institution: "University of State",
@@ -113,33 +114,33 @@ const resume_data = {
 
 const renderPDF = () => {
   let full_json_object = {};
-  let resume_template = template[resume_data.metadata.resume_template];
+  let resume_template = template[templateName];
 
   let pdf_header = jsonUtils.findAndUpdateSectionByName(
-    resume_template.structure.header_data.pdf_header,
+    resume_template.structure.pdf_header,
     resume_template.data.pdf_header.title,
-    resume_data.title
+    header_data.title
   );
 
-  let personal_info = `${resume_data.email} | ${resume_data.phone_number}`;
-  resume_data.header_data.links.forEach((value) => {
+  let personal_info = `${header_data.email} | ${header_data.phone_number}`;
+  header_data.links.forEach((value) => {
     personal_info += ` | ${value.name}: ${value.url}`;
   });
 
   pdf_header = jsonUtils.findAndUpdateSectionByName(
     pdf_header,
-    resume_template.data.pdf_header.header_data.personal_info,
+    resume_template.data.pdf_header.personal_info,
     personal_info
   );
 
   let professional_summary = jsonUtils.findAndUpdateSectionByName(
     resume_template.structure.professional_summary,
     resume_template.data.professional_summary,
-    resume_data.professional_summary
+    header_data.professional_summary
   );
 
   let body_children = [pdf_header, professional_summary];
-  resume_data.metadata.render_fields.forEach((value) => {
+  metadata.render_fields.forEach((value) => {
     let section = jsonUtils.findAndUpdateSectionByData(
       resume_template,
       resume_data,
@@ -161,17 +162,9 @@ const renderPDF = () => {
 
   innerHtml.value = htmlGenerator.generateHTMLFromTemplate(
     full_json_object.resume,
-    resume_data.metadata
+    metadata
   );
 };
-
-// Should be used to toggle whether dividers should show
-// const toggleDividers = () => {
-//   template_metadata.value.section_dividers =
-//     !template_metadata.value.section_dividers;
-//   renderPDF();
-// };
-
 onMounted(() => {
   renderPDF();
 });
