@@ -103,6 +103,7 @@ const resume_data = ref({
     ></v-divider>
     <div style="flex-grow: 1">
       <ResumeViewer
+        :is-loaded="true"
         :template="templateData"
         :metadata="metadata"
         :header_data="header_data"

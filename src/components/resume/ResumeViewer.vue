@@ -1,7 +1,8 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { ref, watch } from "vue";
 import htmlGenerator from "./resumeUtils/htmlGenerator";
 import jsonUtils from "./resumeUtils/jsonUtils";
+import NoDataFound from "./NoDataFound.vue";
 
 const innerHtml = ref(null);
 
@@ -20,6 +21,10 @@ const props = defineProps({
   },
   template: {
     type: Object,
+    required: true,
+  },
+  isLoaded: {
+    type: Boolean,
     required: true,
   },
 });
@@ -41,6 +46,7 @@ const renderPDF = () => {
   );
 
   let personal_info = `${header_data.email} | ${header_data.phone_number}`;
+
   header_data.links.forEach((value) => {
     personal_info += ` | ${value.name}: ${value.url}`;
   });
@@ -58,6 +64,7 @@ const renderPDF = () => {
   );
 
   let body_children = [pdf_header, professional_summary];
+
   metadata.render_fields.forEach((value) => {
     let section = jsonUtils.findAndUpdateSectionByData(
       template,
@@ -82,8 +89,11 @@ const renderPDF = () => {
     metadata
   );
 };
-onMounted(() => {
-  renderPDF();
+
+watch(props, () => {
+  if (props.isLoaded) {
+    renderPDF();
+  }
 });
 </script>
 <template>
@@ -96,6 +106,7 @@ onMounted(() => {
       border-radius: 10px;
     "
   >
-    <div v-html="innerHtml"></div>
+    <NoDataFound v-if="!props.isLoaded"></NoDataFound>
+    <div v-else v-html="innerHtml"></div>
   </div>
 </template>
