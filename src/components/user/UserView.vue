@@ -1,14 +1,24 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import userServices from "../../services/userServices";
-import userRoleServices from "../../services/userRoleServices";import { useModalStore } from "../../store/modal.store";
+import userRoleServices from "../../services/userRoleServices";
+import { useModalStore } from "../../store/modal.store";
 import { storeToRefs } from "pinia";
 import UserModal from "./UserModal.vue";
+// import { userRole } from "../../../../kappakoders-project3-backend/app/models";
 
 const modalStore = useModalStore();
 const { isVisible } = storeToRefs(modalStore);
 
 const headers = [
+    {
+      title: "First Name",
+      key: "fName",
+    },
+    {
+      title: "Last Name",
+      key: "lName"
+    },
     {
         title: "Email",
         key: "email",
@@ -28,8 +38,8 @@ const link = ref({});
 const isLoaded = ref(false);
 
 const getUsers = async () => {
-    await userServices
-    .getAllUser()
+    await userRoleServices
+    .getAllRolesForUser()
     .then((res) => {
         items.value = res.data;
         isLoaded.value = true;
