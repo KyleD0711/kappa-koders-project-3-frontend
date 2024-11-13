@@ -1,39 +1,56 @@
 <script setup>
 import ResumeViewer from "../../components/resume/ResumeViewer.vue";
 import ResumeSidebar from "../../components/resume/ResumeSidebar.vue";
-import { ref } from 'vue';
+import { ref } from "vue";
+import template from "../../../templates/templates.json";
+const templateData = ref(template["template1"]);
 
-const resume_data = ref({});
 const metadata = ref({});
 const header_data = ref({});
-const template = ref({});
+const resume_data = ref({});
+const isLoaded = ref({});
+
+const handleDataChange = (data) => {
+  if (data.metadata) {
+    metadata.value = data.metadata;
+  }
+  else if (data.resume_data) {
+    resume_data.value = data.resume_data;
+  }
+  else if (data.header_data) {
+    header_data.value = data.header_data;
+  }
+  else if (data.isLoaded){
+    isLoaded.value = data.isLoaded;
+  }
+}
+
 
 </script>
-
 <template>
-  <div style="display: flex;">
-    <div style="width: 50%;">
-      <ResumeSidebar 
-        @updateResumeData="resume_data = $event" 
-        @updateHeader_data="header_data = $event" 
-        @updateMetadata="metadata = $event" 
-        @updateTemplate="template = $event" 
+  <div style="display: flex">
 
-      />
+    
+    <div style="width: 50%">
+      <ResumeSidebar :resume_data="resume_data" />
     </div>
-    <v-divider vertical :thickness="4" class="white border-opacity-100"></v-divider>
-    <div style="flex-grow: 1;">
-      <ResumeViewer 
-        v-if="resume_data && metadata && header_data" 
-        :resume_data="resume_data" 
-        :metadata="metadata" 
+
+    <v-divider
+      vertical
+      :thickness="4"
+      class="white border-opacity-100"
+    ></v-divider>
+    <div style="flex-grow: 1">
+      <ResumeViewer
+      @dataChange="handleDataChange"
+        :template="templateData"
+        :metadata="metadata"
         :header_data="header_data"
-        :template="template"
+        :resume_data="resume_data"
       />
     </div>
   </div>
 </template>
-
 
 <style scoped>
 .white {

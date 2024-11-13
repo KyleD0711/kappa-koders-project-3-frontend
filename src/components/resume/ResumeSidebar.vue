@@ -33,14 +33,12 @@ import { storeToRefs } from 'pinia';
 const modalStore = useModalStore();
 const { isVisible } = storeToRefs(modalStore);
 
-const emit = defineEmits(['updateResumeData', 'updateHeader_data', 'updateMetadata', 'updateTemplate']);
+const emit = defineEmits(['dataChange']);
 
 const resume_data = ref([]);
 const header_data = ref([]);
 const metadata = ref([]);
-const template = ref({
-  resume_template: "template1",
-});
+const isLoaded = ref({});
 
 const resume_data_local = ref([]);
 const header_data_local = ref([]);
@@ -272,6 +270,7 @@ const showAddDialog = (section) => {
 };
 
 onMounted(() => {
+  isLoaded = false;
   getEducation();
   getExperience();
   getProject();
@@ -292,35 +291,25 @@ const handleDataChange = () => {
     const parsedResumeData = parseResumeData(resume_data_local.value);
     resume_data.value = parsedResumeData;
 
-    // Emit updated resume data to the parent
-    emit('updateResumeData', resume_data.value);
+    emit('dataChange', { resume_data: resume_data.value});
 
-    // Parse metadata after resume_data is parsed
     const parsedMetadata = parseMetadata(metadata_local.value, parsedResumeData);
     metadata.value = parsedMetadata;
 
-    // Emit updated metadata to the parent
-    emit('updateMetadata', metadata.value);
-
-    const jsonResumeDataString = JSON.stringify(resume_data.value, null, 2); 
-    //console.log('Resume_Data:', jsonResumeDataString);
-
-    const jsonMetadataString = JSON.stringify(metadata.value, null, 2);
-    //console.log('Metadata:', jsonMetadataString);
+    emit('dataChange', { metadata: metadata.value});
   }
 
   if (header_data_local.value || personalInfo.value) {
     const parsedHeader_data = parseHeader_data(header_data_local.value, personalInfo.value);
     header_data.value = parsedHeader_data;
 
-    // Emit updated Header_data to the parent
-    emit('updateHeader_data', header_data.value);
-
-    const jsonHeader_dataString = JSON.stringify(header_data.value, null, 2); 
-    //console.log('Header_data:', jsonHeader_dataString);
+    emit('dataChange',{ header_data: header_data.value});
   }
+  
+  console.log('Resume_Data:', JSON.stringify(resume_data.value, null, 2));
+  console.log('Metadata:', JSON.stringify(metadata.value, null, 2));
+  console.log('Header_data:', JSON.stringify(header_data.value, null, 2));
 
-  emit('updateTemplate', template.value);
 };
 
 const parseResumeData = (resumeData) => {
