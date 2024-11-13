@@ -18,10 +18,11 @@
     "dotenv": "^16.0.3",
     "eslint": "^8.28.0",
     "eslint-plugin-vue": "^9.7.0",
-    "pinia": "^2.2.4",
+    "pinia": "^2.2.5",
     "vite-plugin-vuetify": "^1.0.0",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6",
+    "vuedraggable": "^4.1.0",
     "vuetify": "^3.0.1",
     "webfontloader": "^1.6.28"
   },

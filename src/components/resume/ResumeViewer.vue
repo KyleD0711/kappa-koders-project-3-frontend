@@ -181,7 +181,7 @@ onMounted(() => {
     name="pdf-body"
     style="
       background-color: white;
-      margin: 50px 150px;
+      margin: 25px 50px;
       padding: 10px 10px;
       border-radius: 10px;
     "
