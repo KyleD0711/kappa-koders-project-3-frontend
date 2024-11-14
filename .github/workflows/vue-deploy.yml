@@ -1,6 +1,5 @@
 name: Deploy dev to AWS
 
-#turn off deploy to AWS
 on:
   pull_request:
     types: [closed]
