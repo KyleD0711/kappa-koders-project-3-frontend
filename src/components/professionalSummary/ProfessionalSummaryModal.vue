@@ -16,6 +16,7 @@ const props = defineProps({
   },
 });
 const item = ref({});
+
 const errorMsg = ref("");
 
 const closeDialog = () => {
@@ -59,7 +60,7 @@ const updateItem = async (item) => {
 };
 
 onMounted(() => {
-  if (props.professionalSummary.id == null) {
+  if (props.professionalSummary.id != null) {
     item.value = props.professionalSummary;
   }
 });
@@ -84,7 +85,11 @@ onMounted(() => {
           tag="h1"
           align="center"
         ></StaticElement>
-        <TextareaElement name="summary" :autogrow="true"></TextareaElement>
+        <TextareaElement
+          name="summary"
+          :autogrow="true"
+          :rules="['required']"
+        ></TextareaElement>
         <GroupElement name="button_container">
           <ButtonElement
             secondary

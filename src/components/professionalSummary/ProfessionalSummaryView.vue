@@ -52,6 +52,7 @@ const showAddDialog = () => {
 };
 
 const editItem = (item) => {
+  console.log(item);
   professionalSummary.value = item;
   isVisible.value = !isVisible.value;
 };
