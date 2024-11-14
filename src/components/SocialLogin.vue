@@ -40,24 +40,12 @@ const handleCredentialResponse = async (response) => {
       Utils.setStore("user", user.value);
       fName.value = user.value.fName;
       lName.value = user.value.lName;
-      userId.value = user.value.userId
       router.push({ name: "resume" });
     })
     .catch((error) => {
       console.log("error", error);
     });
-  await userRoleServices
-    .getAllRolesForUser(user.value.userId)
-    .then((res) => {
-      test.value = res.data;
-      console.log("ROLES: ", test);
-
-    })
-    .catch((error) => {
-    console.log("error", error);
-    });
-    // Once userrole comes back 
-    // user.value.role = response.role
+  
 };
 
 onMounted(() => {

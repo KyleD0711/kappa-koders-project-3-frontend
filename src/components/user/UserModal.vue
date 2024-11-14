@@ -1,18 +1,16 @@
 <script setup>
 import { ref, defineEmits } from "vue";
 import userServices from "../../services/userServices";
-import userRoleServices from "../../services/userRoleServices";
 import { useModalStore } from "../../store/modal.store";
 import { storeToRefs } from "pinia";
 import { onMounted } from "vue";
-import { CheckboxElement } from "@vueform/vueform";
 const modalStore = useModalStore();
 const { isVisible } = storeToRefs(modalStore);
 
 const emit = defineEmits(["submitForm"]);
 
 const props = defineProps({
-    link: {
+    user: {
         type: Object,
         required: true,
     },
@@ -27,7 +25,7 @@ const closeDialog = () => {
 
 const submitForm = async () => {
   const data = {
-    id: props.link.id,
+    id: props.user.id,
     ...item.value,
   };
   if (data.id === null || data.id === undefined || data.id === "") {
@@ -38,8 +36,8 @@ const submitForm = async () => {
 };
 
 const addItem = async (data) => {
-  await linkServices
-    .createLink(data)
+  await userServices
+    .createUser(data)
     .then(() => {
       isVisible.value = !isVisible.value;
       emit("submitForm");
@@ -50,8 +48,9 @@ const addItem = async (data) => {
 };
 
 const updateItem = async (item) => {
-  await linkServices
-    .updateLink(item)
+  console.log(item);
+  await userServices
+    .updateUser(item)
     .then(() => {
       isVisible.value = !isVisible.value;
       emit("submitForm");
@@ -62,8 +61,8 @@ const updateItem = async (item) => {
 };
 
 onMounted(() => {
-  if (props.link.id != null) {
-    item.value = props.link;
+  if (props.user.id != null) {
+    item.value = props.user;
   }
 });
 
@@ -95,7 +94,6 @@ onMounted(() => {
           name="email"
           before="Email"
           :rules="['required']"
-          class="noTouch"
         />
         <CheckboxElement
             name="admin"
@@ -142,9 +140,6 @@ onMounted(() => {
 
 <style>
 
-.noTouch {
 
-    pointer-events: none;
-}
 
 </style>
