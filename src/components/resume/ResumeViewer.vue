@@ -37,9 +37,7 @@ const renderPDF = () => {
   let resume_data = props.resume_data;
   let template = props.template;
 
-  console.log(JSON.stringify(metadata, null, 2));
-  console.log(JSON.stringify(header_data, null, 2));
-  console.log(JSON.stringify(resume_data, null, 2));
+ 
 
   let title = `${header_data.fName} ${header_data.lName}`;
 
@@ -74,7 +72,6 @@ const renderPDF = () => {
 
   let body_children = [pdf_header, professional_summary];
 
-  console.log("-------------------------------");
 
 
   let renderFieldsArray = toRaw(metadata.render_fields);
@@ -94,7 +91,6 @@ const renderPDF = () => {
     rawResumeData[key] = deepToRaw(toRaw(props.resume_data[key]));
   });
 
-  console.log(rawResumeData)
   
   renderFieldsArray.forEach((render_field) => {
     let section = jsonUtils.findAndUpdateSectionByData(
@@ -105,7 +101,6 @@ const renderPDF = () => {
     body_children.push({ ...section });
   });
 
-  console.log("-------------------------------");
 
 
   full_json_object = {

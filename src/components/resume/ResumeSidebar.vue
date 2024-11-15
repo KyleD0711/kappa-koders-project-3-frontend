@@ -142,8 +142,6 @@ const getAwards = async () =>{
 const getLinks = async () =>{
   try {
     const res = await linkServices.getAllLinkForUser();
-    console.log("[ResumeSidebar] - Get Links");
-    console.log(res);
     const linkHeader = header_data_local.value.find(header => header.title === 'Link');
     if (linkHeader) {
       linkHeader.items = res.data.map(item => ({ name: item.name, selected: false, data: item }));
@@ -273,7 +271,6 @@ const showAddDialog = (section) => {
 
 onMounted(async () => {
   isLoaded.value = false;
-  console.log("[Resume Sidebar] - isLoaded is false");
   emit('dataChange', { isLoaded: isLoaded.value });
   
   await Promise.all([
@@ -285,15 +282,18 @@ onMounted(async () => {
     getSkills()
   ]);
 
+  resume_data_local.value.forEach((section) => {
+    if (section.isOpen === undefined) {
+      section.isOpen = false; // Default to closed
+    }
+  });
+
+
   isLoaded.value = true;
   handleDataChange();  // Ensure data is loaded before handling changes
 });
 
 watch([resume_data_local, header_data_local, personalInfo, metadata_local, isLoaded], () => {
-  console.clear();
-
-  console.log("LOCAL CHANGE");
-
   handleDataChange();
 }, { deep: true });
 
@@ -318,7 +318,6 @@ const handleDataChange = () => {
 
         parsedHeader_data.link = parsedHeader_data.link.map(link => {
           const plainLink = { ...link };
-          console.log("Converted link:", plainLink);
           return plainLink;
         });
     }
@@ -331,7 +330,6 @@ const handleDataChange = () => {
   changes.isLoaded = isLoaded;
 
   // Emit all changes at once as a single event
-  console.log("[Resume Sidebar] - emitted all changes:", changes);
   emit('dataChange', changes);
 };
 

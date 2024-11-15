@@ -25,29 +25,27 @@ export default {
     return null;
   },
   findAndUpdateSectionByData(template, data, section_name) {
-   
     let elements = data[section_name];
-
+  
     let header = template.structure[section_name].children[0];
-    let body = template.structure[section_name].children[1];
+    let bodyTemplate = template.structure[section_name].children[1];
     let bodyItems = [];
-
-
+  
     elements.forEach((value) => {
-      console.log(value);
+      let body = JSON.parse(JSON.stringify(bodyTemplate)); // Clone the body template
+  
       Object.entries(value).forEach((entry) => {
-        // Check if the value or template data entry is null or undefined
         if (value[entry[0]] == null || template.data[section_name][entry[0]] === undefined) {
-          return; // Skip if either is null or undefined
+          return;
         }
-    
+  
         body = this.findAndUpdateSectionByName(
           body,
           template.data[section_name][entry[0]],
           value[entry[0]]
         );
       });
-    
+  
       if (body != null) {
         bodyItems.push(body);
       }
@@ -73,5 +71,6 @@ export default {
         },
       ],
     };
-  },
+  }
+  
 };

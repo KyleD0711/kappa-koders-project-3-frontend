@@ -3,7 +3,7 @@ import ResumeViewer from "../../components/resume/ResumeViewer.vue";
 import ResumeSidebar from "../../components/resume/ResumeSidebar.vue";
 import { ref } from "vue";
 import template from "../../../templates/templates.json";
-const templateData = ref(template["template1"]);
+const templateData = ref(template["template3"]);
 
 const metadata = ref({});
 const header_data = ref({});
@@ -11,7 +11,6 @@ const resume_data = ref({});
 const isLoaded = ref({});
 
 const handleDataChange = (data) => {
-  console.log("[Resume List] - Data Change");
   
   if (data.metadata) {
     metadata.value = data.metadata
@@ -19,9 +18,7 @@ const handleDataChange = (data) => {
   }
 
   if (data.resume_data) {
-    console.log("resume data changed");
     resume_data.value = data.resume_data;
-    console.log(resume_data);
   }
 
   if (data.header_data) {
