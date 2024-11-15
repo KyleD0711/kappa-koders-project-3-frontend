@@ -142,6 +142,8 @@ const getAwards = async () =>{
 const getLinks = async () =>{
   try {
     const res = await linkServices.getAllLinkForUser();
+    console.log("[ResumeSidebar] - Get Links");
+    console.log(res);
     const linkHeader = header_data_local.value.find(header => header.title === 'Link');
     if (linkHeader) {
       linkHeader.items = res.data.map(item => ({ name: item.name, selected: true, data: item }));
@@ -269,28 +271,33 @@ const showAddDialog = (section) => {
   }
 };
 
-onMounted(() => {
+onMounted(async () => {
   isLoaded.value = false;
   console.log("[Resume Sidebar] - isLoaded is false");
-  emit('dataChange', {isLoaded: isLoaded.value});
+  emit('dataChange', { isLoaded: isLoaded.value });
+  
+  await Promise.all([
+    getEducation(),
+    getExperience(),
+    getProject(),
+    getAwards(),
+    getLinks(),
+    getSkills()
+  ]);
 
-  getEducation();
-  getExperience();
-  getProject();
-  getAwards();
-  getLinks();
-  getSkills();
-
-  handleDataChange();
+  isLoaded.value = true;
+  handleDataChange();  // Ensure data is loaded before handling changes
 });
 
 watch([resume_data_local, header_data_local, personalInfo, metadata_local, isLoaded], () => {
+  console.clear();
+
+  console.log("LOCAL CHANGE");
+
   handleDataChange();
 }, { deep: true });
 
-const handleDataChange = () => {  
-  console.clear();
-
+const handleDataChange = () => {
   const changes = {};
 
   if (resume_data_local.value) {
@@ -305,17 +312,33 @@ const handleDataChange = () => {
 
   if (header_data_local.value || personalInfo.value) {
     const parsedHeader_data = parseHeader_data(header_data_local.value, personalInfo.value);
+    
+    // If 'links' exists, manually convert the Proxy objects to plain objects
+    if (parsedHeader_data.link && Array.isArray(parsedHeader_data.link)) {
+
+        parsedHeader_data.link = parsedHeader_data.link.map(link => {
+          const plainLink = { ...link };
+          console.log("Converted link:", plainLink);
+          return plainLink;
+        });
+    }
+
     header_data.value = parsedHeader_data;
     changes.header_data = header_data.value;
   }
-  
-  isLoaded.value = true;
-  changes.isLoaded = isLoaded.value;
 
-  // Emit all changes at once
+  isLoaded.value = true;
+  changes.isLoaded = isLoaded;
+
+  // Emit all changes at once as a single event
+  console.log("[Resume Sidebar] - emitted all changes:", changes);
   emit('dataChange', changes);
-  console.log("[Resume Sidebar] - emitted changes:", changes);
 };
+
+
+
+
+
 
 const parseResumeData = (resumeData) => {
   const result = {};

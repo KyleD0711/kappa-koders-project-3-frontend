@@ -11,28 +11,29 @@ const resume_data = ref({});
 const isLoaded = ref({});
 
 const handleDataChange = (data) => {
-  // console.clear();
   console.log("[Resume List] - Data Change");
+  
   if (data.metadata) {
-    console.log("[Resume List] - metadata has been changed");
-    metadata.value = data.metadata;
+    metadata.value = data.metadata
+
   }
-  
+
   if (data.resume_data) {
-    console.log("[Resume List] - resume_data has been changed");
+    console.log("resume data changed");
     resume_data.value = data.resume_data;
+    console.log(resume_data);
   }
-  
+
   if (data.header_data) {
-    console.log("[Resume List] - header_data has been changed");
+    
+
     header_data.value = data.header_data;
   }
-  
-  if (data.isLoaded){
-    console.log("[Resume List] - isLoaded has been changed to " + data.isLoaded);
+
+  if (data.isLoaded) {
     isLoaded.value = data.isLoaded;
   }
-}
+};
 
 
 
