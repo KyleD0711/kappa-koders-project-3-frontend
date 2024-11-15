@@ -65,11 +65,11 @@ const renderPDF = () => {
 
   let body_children = [pdf_header, professional_summary];
 
-  metadata.render_fields.forEach((value) => {
+  metadata.render_fields.forEach((render_field) => {
     let section = jsonUtils.findAndUpdateSectionByData(
       template,
       resume_data,
-      value
+      render_field
     );
     body_children.push({ ...section });
   });

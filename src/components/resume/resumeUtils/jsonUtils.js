@@ -41,7 +41,9 @@ export default {
           value[entry[0]]
         );
       });
-      bodyItems.push(body);
+      if (body != null) {
+        bodyItems.push(body);
+      }
     });
 
     return {

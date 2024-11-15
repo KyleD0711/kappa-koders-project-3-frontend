@@ -66,6 +66,7 @@ const handleDataChange = (data) => {
 
 <style scoped>
 .white {
+.white {
   color: #737373;
   padding-left: 1%;
 }
