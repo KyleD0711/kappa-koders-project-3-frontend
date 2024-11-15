@@ -51,7 +51,7 @@ const personalInfo = ref({
   lName: 'Veit',
   email: 'jonah@gmail.com',
   phone_number: '999-888-77777',
-  prof_sum: 'Bachelor of Arts degree candidate, with a major in Economics, and experience developing and analyzing cost models, providing quality assurance reviews, and creating process solutions to improve financial forecasts for clients. Looking to continue the development of risk management, audit, and compliance skills in a team-centered environment.',
+  professional_summary: 'Bachelor of Arts degree candidate, with a major in Economics, and experience developing and analyzing cost models, providing quality assurance reviews, and creating process solutions to improve financial forecasts for clients. Looking to continue the development of risk management, audit, and compliance skills in a team-centered environment.',
 });
 
 const resumeTitle = ref("Resume Name");
@@ -378,7 +378,7 @@ const parseHeader_data = (header_data, personalInfo) => {
   result.lName = personalInfo.lName || '';
   result.email = personalInfo.email || '';
   result.phone_number = personalInfo.phone_number || '';
-  result.prof_sum = personalInfo.prof_sum || '';
+  result.professional_summary = personalInfo.professional_summary || '';
 
   return result;
 };
@@ -457,7 +457,7 @@ const parseMetadata = (metadata_local, resume_data) => {
               ></v-text-field>
 
               <v-textarea
-                v-model="personalInfo.prof_sum"
+                v-model="personalInfo.professional_summary"
                 label="Professional Summary"
               ></v-textarea>
             </v-form>

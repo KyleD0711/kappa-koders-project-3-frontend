@@ -281,8 +281,8 @@
           }
         ]
       },
-      "skills": {
-        "section_name": "skills",
+      "skill": {
+        "section_name": "skill",
         "style": {},
         "content": "",
         "children": [
@@ -462,8 +462,8 @@
           }
         ]
       },
-      "awards": {
-        "section_name": "awards",
+      "award": {
+        "section_name": "award",
         "style": {},
         "content": "",
         "children": [
@@ -625,7 +625,7 @@
           "optional": true
         }
       },
-      "skills": {
+      "skill": {
         "name": {
           "section_name": "name",
           "optional": true
@@ -639,7 +639,7 @@
           "optional": true
         }
       },
-      "awards": {
+      "award": {
         "institution": {
           "section_name": "institution",
           "optional": true
@@ -906,8 +906,8 @@
           }
         ]
       },
-      "skills": {
-        "section_name": "skills",
+      "skill": {
+        "section_name": "skill",
         "style": {
           "margin": "20px 0px"
         },
@@ -1054,8 +1054,8 @@
           }
         ]
       },
-      "awards": {
-        "section_name": "awards",
+      "award": {
+        "section_name": "award",
         "style": {
           "margin": "20px 0px"
         },
@@ -1202,7 +1202,7 @@
           "optional": true
         }
       },
-      "skills": {
+      "skill": {
         "name": {
           "section_name": "name",
           "optional": true
@@ -1216,7 +1216,7 @@
           "optional": true
         }
       },
-      "awards": {
+      "award": {
         "institution": {
           "section_name": "institution",
           "optional": true
@@ -1478,8 +1478,8 @@
           }
         ]
       },
-      "skills": {
-        "section_name": "skills",
+      "skill": {
+        "section_name": "skill",
         "style": {
           "margin": "20px 0px"
         },
@@ -1614,8 +1614,8 @@
           }
         ]
       },
-      "awards": {
-        "section_name": "awards",
+      "award": {
+        "section_name": "award",
         "style": {
           "margin": "20px 0px"
         },
@@ -1756,7 +1756,7 @@
           "optional": true
         }
       },
-      "skills": {
+      "skill": {
         "name": {
           "section_name": "name",
           "optional": true
@@ -1770,7 +1770,7 @@
           "optional": true
         }
       },
-      "awards": {
+      "award": {
         "institution": {
           "section_name": "institution",
           "optional": true

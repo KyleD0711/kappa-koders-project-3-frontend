@@ -35,9 +35,6 @@ const handleDataChange = (data) => {
   }
 };
 
-
-
-
 </script>
 <template>
   <div style="display: flex">
@@ -65,7 +62,6 @@ const handleDataChange = (data) => {
 </template>
 
 <style scoped>
-.white {
 .white {
   color: #737373;
   padding-left: 1%;

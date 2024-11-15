@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, toRaw } from "vue";
 import htmlGenerator from "./resumeUtils/htmlGenerator";
 import jsonUtils from "./resumeUtils/jsonUtils";
 import NoDataFound from "./NoDataFound.vue";
@@ -37,6 +37,10 @@ const renderPDF = () => {
   let resume_data = props.resume_data;
   let template = props.template;
 
+  console.log(JSON.stringify(metadata, null, 2));
+  console.log(JSON.stringify(header_data, null, 2));
+  console.log(JSON.stringify(resume_data, null, 2));
+
   let title = `${header_data.fName} ${header_data.lName}`;
 
   let pdf_header = jsonUtils.findAndUpdateSectionByName(
@@ -46,8 +50,13 @@ const renderPDF = () => {
   );
 
   let personal_info = `${header_data.email} | ${header_data.phone_number}`;
+  
+  let linkArray = (header_data.link ?? []).map((value) => ({
+    name: value.name,
+    url: value.url
+  }));
 
-  header_data.links.forEach((value) => {
+  linkArray.forEach((value) => {
     personal_info += ` | ${value.name}: ${value.url}`;
   });
 
@@ -65,14 +74,39 @@ const renderPDF = () => {
 
   let body_children = [pdf_header, professional_summary];
 
-  metadata.render_fields.forEach((render_field) => {
+  console.log("-------------------------------");
+
+
+  let renderFieldsArray = toRaw(metadata.render_fields);
+  
+  const deepToRaw = (data) => {
+    // Check if the data is an array
+    if (Array.isArray(data)) {
+      return data.map(item => toRaw(item)); // Remove reactivity from each array item
+    }
+    // If it's not an array, return as is
+    return data;
+  };
+
+  // Unwrap the object properties
+  const rawResumeData = {};
+  Object.keys(props.resume_data).forEach(key => {
+    rawResumeData[key] = deepToRaw(toRaw(props.resume_data[key]));
+  });
+
+  console.log(rawResumeData)
+  
+  renderFieldsArray.forEach((render_field) => {
     let section = jsonUtils.findAndUpdateSectionByData(
       template,
-      resume_data,
+      rawResumeData,
       render_field
     );
     body_children.push({ ...section });
   });
+
+  console.log("-------------------------------");
+
 
   full_json_object = {
     resume: {
