@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import Login from "./views/Login.vue";
-import ResumeView from "./views/Resume/ResumeList.vue";
+import ResumeView from "./views/Resume/ResumeView.vue";
 import InformationList from "./views/Information/InformationList.vue";
 import InfoExperience from "./components/InfoExperience.vue";
 import InfoSkills from "./components/InfoSkills.vue";

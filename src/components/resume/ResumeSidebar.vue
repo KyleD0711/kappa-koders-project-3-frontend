@@ -44,7 +44,7 @@ const resume_data_local = ref([]);
 const header_data_local = ref([]);
 const metadata_local = ref({
   render_fields: [],
-  section_dividers: true,
+  section_dividers: false,
 });
 const personalInfo = ref({
   fName: 'Jonah',
@@ -76,11 +76,11 @@ const getEducation = async () => {
     const res = await educationServices.getAllEducationForUser();
     const educationSection = resume_data_local.value.find(section => section.title === 'Education');
     if (educationSection) {
-      educationSection.items = res.data.map(item => ({ name: item.institution, selected: true, data: item }));
+      educationSection.items = res.data.map(item => ({ name: item.institution, selected: false, data: item }));
     } else {
       resume_data_local.value.push({
         title: 'Education',
-        items: res.data.map(item => ({ name: item.institution, selected: true, data: item })),
+        items: res.data.map(item => ({ name: item.institution, selected: false, data: item })),
       });
     }
   } catch (err) {
@@ -93,11 +93,11 @@ const getExperience = async () => {
     const res = await experienceServices.getAllExperienceForUser();
     const experienceSection = resume_data_local.value.find(section => section.title === 'Experience');
     if (experienceSection) {
-      experienceSection.items = res.data.map(item => ({ name: item.employer, selected: true, data: item }));
+      experienceSection.items = res.data.map(item => ({ name: item.employer, selected: false, data: item }));
     } else {
       resume_data_local.value.push({
         title: 'Experience',
-        items: res.data.map(item => ({ name: item.employer, selected: true, data: item })),
+        items: res.data.map(item => ({ name: item.employer, selected: false, data: item })),
       });
     }
   } catch (err) {
@@ -110,11 +110,11 @@ const getProject = async () => {
     const res = await projectServices.getAllProjectForUser();
     const projectSection = resume_data_local.value.find(section => section.title === 'Project');
     if (projectSection) {
-      projectSection.items = res.data.map(item => ({ name: item.name, selected: true, data: item }));
+      projectSection.items = res.data.map(item => ({ name: item.name, selected: false, data: item }));
     } else {
       resume_data_local.value.push({
         title: 'Project',
-        items: res.data.map(item => ({ name: item.name, selected: true, data: item })),
+        items: res.data.map(item => ({ name: item.name, selected: false, data: item })),
       });
     }
   } catch (err) {
@@ -127,11 +127,11 @@ const getAwards = async () =>{
     const res = await awardServices.getAllAwards();
     const awardSection = resume_data_local.value.find(section => section.title === 'Award');
     if (awardSection) {
-      awardSection.items = res.data.map(item => ({ name: item.institution, selected: true, data: item }));
+      awardSection.items = res.data.map(item => ({ name: item.institution, selected: false, data: item }));
     } else {
       resume_data_local.value.push({
         title: 'Award',
-        items: res.data.map(item => ({ name: item.institution, selected: true, data: item })),
+        items: res.data.map(item => ({ name: item.institution, selected: false, data: item })),
       });
     }
   } catch (err) {
@@ -146,11 +146,11 @@ const getLinks = async () =>{
     console.log(res);
     const linkHeader = header_data_local.value.find(header => header.title === 'Link');
     if (linkHeader) {
-      linkHeader.items = res.data.map(item => ({ name: item.name, selected: true, data: item }));
+      linkHeader.items = res.data.map(item => ({ name: item.name, selected: false, data: item }));
     } else {
       header_data_local.value.push({
         title: 'Link',
-        items: res.data.map(item => ({ name: item.name, selected: true, data: item })),
+        items: res.data.map(item => ({ name: item.name, selected: false, data: item })),
       });
     }
   } catch (err) {
@@ -163,11 +163,11 @@ const getSkills = async () =>{
     const res = await skillServices.getAllSkillForUser();
     const skillSection = resume_data_local.value.find(section => section.title === 'Skill');
     if (skillSection) {
-      skillSection.items = res.data.map(item => ({ name: item.name, selected: true, data: item }));
+      skillSection.items = res.data.map(item => ({ name: item.name, selected: false, data: item }));
     } else {
       resume_data_local.value.push({
         title: 'Skill',
-        items: res.data.map(item => ({ name: item.name, selected: true, data: item })),
+        items: res.data.map(item => ({ name: item.name, selected: false, data: item })),
       });
     }
   } catch (err) {
