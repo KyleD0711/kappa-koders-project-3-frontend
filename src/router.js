@@ -10,6 +10,7 @@ import InfoLinks from "./components/InfoLinks.vue";
 import InfoEducation from "./components/InfoEducation.vue";
 import InfoProjects from "./components/InfoProjects.vue";
 import InfoUsers from "./components/InfoUsers.vue";
+import ProfessionalSummaryView from "./components/professionalSummary/ProfessionalSummaryView.vue";
 
 import RouterStateController from "./utils/routerStateController.js";
 
@@ -69,6 +70,11 @@ const router = createRouter({
           path: "users",
           name: "users",
           component: InfoUsers,
+        },
+        {
+          path: "professionalSummaries",
+          name: "professionalSummaries",
+          component: ProfessionalSummaryView,
         },
       ],
     },

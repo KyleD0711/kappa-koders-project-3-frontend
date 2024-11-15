@@ -1,21 +1,17 @@
 <script setup>
 import { onMounted, ref } from "vue";
-import linkServices from "../../services/linkServices";
 import { useModalStore } from "../../store/modal.store";
 import { storeToRefs } from "pinia";
-import LinkModal from "./LinkModal.vue";
+import ProfessionalSummaryModal from "./ProfessionalSummaryModal.vue";
+import professionalSummaryServices from "../../services/professionalSummaryServices";
 
 const modalStore = useModalStore();
 const { isVisible } = storeToRefs(modalStore);
 
 const headers = [
   {
-    title: "Name",
-    key: "name",
-  },
-  {
-    title: "URL",
-    key: "url",
+    title: "Professional Summary",
+    key: "summary",
   },
   {
     title: "Actions",
@@ -24,12 +20,12 @@ const headers = [
 ];
 
 const items = ref([]);
-const link = ref({});
+const professionalSummary = ref({});
 const isLoaded = ref(false);
 
-const getLinks = async () => {
-  await linkServices
-    .getAllLinkForUser()
+const getProfesionalSummarys = async () => {
+  await professionalSummaryServices
+    .getAllProfessionalSummaryForUser()
     .then((res) => {
       items.value = res.data;
       isLoaded.value = true;
@@ -37,11 +33,11 @@ const getLinks = async () => {
     .catch((err) => console.log(err));
 };
 
-const deleteLink = async (item) => {
-  await linkServices
-    .deleteLink(item.id)
+const deleteProfessionalSummary = async (item) => {
+  await professionalSummaryServices
+    .deleteProfessionalSummary(item.id)
     .then((_) => {
-      getLinks();
+      getProfesionalSummarys();
     })
     .catch((err) => {
       console.log(err);
@@ -49,20 +45,20 @@ const deleteLink = async (item) => {
 };
 
 const showAddDialog = () => {
-  link.value = {
-    name: "",
-    url: "",
+  professionalSummary.value = {
+    summary: "",
   };
   isVisible.value = !isVisible.value;
 };
 
 const editItem = (item) => {
-  link.value = item;
+  console.log(item);
+  professionalSummary.value = item;
   isVisible.value = !isVisible.value;
 };
 
 onMounted(() => {
-  getLinks();
+  getProfesionalSummarys();
 });
 </script>
 
@@ -70,7 +66,7 @@ onMounted(() => {
   <div style="margin: 10px">
     <div style="display: flex">
       <p style="align-self: center; margin: 10px, 20px; color: #d9d9d9">
-        Links
+        Professional Summary
       </p>
       <v-btn
         variant="elevated"
@@ -86,11 +82,17 @@ onMounted(() => {
         <v-icon class="me-2" size="small" @click="editItem(item)">
           mdi-pencil
         </v-icon>
-        <v-icon size="small" @click="deleteLink(item)"> mdi-delete </v-icon>
+        <v-icon size="small" @click="deleteProfessionalSummary(item)">
+          mdi-delete
+        </v-icon>
       </template>
       <template v-slot:no-data> No data found! </template>
     </v-data-table>
   </div>
 
-  <LinkModal v-if="isVisible" :link="link" @submit-form="getLinks"></LinkModal>
+  <ProfessionalSummaryModal
+    v-if="isVisible"
+    :professional-summary="professionalSummary"
+    @submit-form="getProfesionalSummarys"
+  ></ProfessionalSummaryModal>
 </template>
