@@ -1,6 +1,5 @@
 name: Deploy dev to AWS
 
-#turn off deploy to AWS
 on:
   pull_request:
     types: [closed]
@@ -25,8 +24,8 @@ jobs:
           touch .env
           echo VITE_APP_CLIENT_ID="$VITE_APP_CLIENT_ID" >> .env
           echo VITE_APP_API_URL="$VITE_APP_API_URL" >> .env
-          echo VITE_APP_CLIENT_URL=tutorial.eaglesoftwareteam.com >> .env
-          echo VITE_APP_SITE_URL=tutorial.eaglesoftwareteam.com >> .env
+          echo VITE_APP_CLIENT_URL=project3.eaglesoftwareteam.com >> .env
+          echo VITE_APP_SITE_URL=project3.eaglesoftwareteam.com >> .env
 
       - run: npm install
       - run: npm run build
@@ -38,6 +37,6 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
           ARGS: "-rltgoDzvO --delete"
           SOURCE: "dist/"
-          REMOTE_HOST: "tutorial.eaglesoftwareteam.com"
+          REMOTE_HOST: "project3.eaglesoftwareteam.com"
           REMOTE_USER: ubuntu
-          TARGET: "/var/www/html/tutorial-frontend-vue3"
+          TARGET: "/var/www/html/2024/project3/t1"
