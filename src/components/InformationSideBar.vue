@@ -48,29 +48,24 @@ export default {
       router.push({ name: "professionalSummaries" });
     };
 
-        const items = ref({});
+    const items = ref({});
 
-        const isAdmin = async () => {
-            showUser.value = false;
-            await userServices
-            .getAllUser()
-            .then((res) => {
-                curUser.value = Utils.getStore("user");
-                console.log(curUser.value);
-                items.value = res.data;
-                items.value.forEach(user => {
-                    user.userRole.forEach(role => {
-                        console.log(curUser.value.userId);
-                        console.log(user.id)
-
-                        if (role.role.type === "admin" && user.id == curUser.value.userId) {
-                            showUser.value = true;
-                            console.log("HERE")
-                        } 
-                    })
+    const isAdmin = async () => {
+        showUser.value = false;
+        await userServices
+        .getAllUser()
+        .then((res) => {
+            curUser.value = Utils.getStore("user");
+            items.value = res.data;
+            items.value.forEach(user => {
+                user.userRole.forEach(role => {
+                    if (role.role.type === "admin" && user.id == curUser.value.userId) {
+                        showUser.value = true;
+                    } 
                 })
             })
-        }
+        })
+    }
 
         onMounted(() => {
             isAdmin();
