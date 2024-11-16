@@ -9,7 +9,6 @@ const router = useRouter();
 const fName = ref("");
 const lName = ref("");
 const user = ref({});
-const test = ref({});
 
 const loginWithGoogle = () => {
   window.handleCredentialResponse = handleCredentialResponse;
@@ -36,6 +35,7 @@ const handleCredentialResponse = async (response) => {
   };
   await AuthServices.loginUser(token)
     .then((response) => {
+    
       user.value = response.data;
       Utils.setStore("user", user.value);
       fName.value = user.value.fName;
