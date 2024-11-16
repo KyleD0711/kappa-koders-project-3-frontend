@@ -36,7 +36,7 @@ const props = defineProps({
     padding: 10px;
     border-radius: 10px;
     margin: 5px 0;
-    background-color: #656565;
+    background-color: #262626  ;
     color: #ffffff;
 }
 

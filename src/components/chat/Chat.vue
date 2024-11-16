@@ -33,8 +33,6 @@ const userMessage = ref({})
 const messageHistory = ref([])
 const responseHistory = ref([])
 
-const responseText = ref("")
-
 const scrollPane = ref()
 
 const scrollToBottom = () => {
@@ -43,73 +41,77 @@ const scrollToBottom = () => {
 </script>
 
 <template>
-    <v-col cols="4">
-        <div>
-            <div ref="scrollPane" class="scroll-pane">
-                <v-col
-                    v-for="(message, index) in messageHistory"
-                    :key="index"
-                    class="w-100 d-flex flex-column pa-0"
-                >
-                    <div class="d-flex justify-end">
-                        <!-- User message on the right -->
-                        <v-card class="chat-bubble user-message w-75 text-start">
-                                {{ message }}
-                        </v-card>
-                    </div>
-                    <ResponseBubble :text="responseHistory[messageHistory.indexOf(message)]"/>
-                    
-                </v-col>
-            </div>
-    
-    
-            <Vueform
-                size="md"
-                :endpoint="false"
-                @submit="handleSendMessage()"
-                :display-errors="false"
-                v-model="userMessage"
-                sync
+    <div>
+        <v-row no-gutters class="align-center ma-4">
+            <p class="text-h5">Ask AI</p>
+            <v-icon class="ml-3">
+                mdi-shimmer
+            </v-icon>
+        </v-row>
+        <div ref="scrollPane" class="scroll-pane">
+            <v-col
+                v-for="(message, index) in messageHistory"
+                :key="index"
+                class="w-100 d-flex flex-column pa-0 px-4"
             >
-                <GroupElement name="message-send-row">
+                <div class="d-flex justify-end">
+                    <!-- User message on the right -->
+                    <v-card class="chat-bubble user-message w-75 text-start">
+                            {{ message }}
+                    </v-card>
+                </div>
+                <ResponseBubble :text="responseHistory[messageHistory.indexOf(message)]"/>
+                
+            </v-col>
+        </div>
 
-                    <TextElement
-                        name="message"
-                        :columns="{
-                        container: 10,
+
+        <Vueform
+            size="md"
+            :endpoint="false"
+            @submit="handleSendMessage()"
+            :display-errors="false"
+            v-model="userMessage"
+            class="mx-4"
+            sync
+        >
+            <GroupElement name="message-send-row">
+
+                <TextElement
+                    name="message"
+                    :columns="{
+                    container: 10,
+                    label: 12,
+                    wrapper: 12,
+                    }"
+                />
+                <ButtonElement
+                    name="Submit"
+                    :submits="true"
+                    button-label="Send"
+                    :columns="{
+                        container: 2,
                         label: 12,
                         wrapper: 12,
-                        }"
-                    />
-                    <ButtonElement
-                        name="Submit"
-                        :submits="true"
-                        button-label="Send"
-                        :columns="{
-                            container: 2,
-                            label: 12,
-                            wrapper: 12,
-                        }"
-                    />
-                </GroupElement>
-            </Vueform>
-        </div>
-    </v-col>
-    
+                    }"
+                />
+            </GroupElement>
+        </Vueform>
+    </div>    
 </template>
 
 <style scoped>
 .chat-bubble {
     padding: 10px;
     border-radius: 10px;
-    margin: 5px 0;
     background-color: #E1E1E1; /* Light blue */
-    margin-bottom: 28px;
+    margin-bottom: 16px;
+    margin-top: 16px;
 }
 
 .scroll-pane {
   width: 100%;          /* Adjust width as needed */
-  height: 80vh;    /* Sets the height limit for scroll */
+  height: 72vh;    /* Sets the height limit for scroll */
   overflow-y: auto;     /* Enables vertical scrolling */
   overflow-x: hidden;   /* Hides horizontal scrolling */
   box-sizing: border-box; /* Ensures padding is within total width/height */
