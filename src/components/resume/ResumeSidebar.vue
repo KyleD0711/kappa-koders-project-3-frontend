@@ -288,10 +288,10 @@ onMounted(async () => {
     }
   });
 
-
   isLoaded.value = true;
   handleDataChange();  // Ensure data is loaded before handling changes
 });
+
 
 watch([resume_data_local, header_data_local, personalInfo, metadata_local, isLoaded], () => {
   handleDataChange();
@@ -332,11 +332,6 @@ const handleDataChange = () => {
   // Emit all changes at once as a single event
   emit('dataChange', changes);
 };
-
-
-
-
-
 
 const parseResumeData = (resumeData) => {
   const result = {};
@@ -504,10 +499,10 @@ const parseMetadata = (metadata_local, resume_data) => {
     <hr class="light-breakline" />
 
     <draggable v-model="resume_data_local" tag="ul">
-      <template #item="{ element: section }">
+      <template #item="{ element: section, index }">
         <v-card class="mb-3">
-          <v-expansion-panels>
-            <v-expansion-panel class="section-0" :key="section.title">
+          <v-expansion-panels v-model="resume_data_local[index].isOpen">
+            <v-expansion-panel class="section-0">
               <v-expansion-panel-title>
                 <v-icon class="mr-2">mdi-drag</v-icon>
                 {{ section.title }}
@@ -540,6 +535,7 @@ const parseMetadata = (metadata_local, resume_data) => {
         </v-card>
       </template>
     </draggable>
+
 
     <!-- Conditionally render the correct modal based on modalType -->
     <EducationModal v-if="isVisible && modalStore.modalType === 'education'" :education="modalStore.education" @submit-form="getEducation" />
