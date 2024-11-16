@@ -28,6 +28,9 @@ import linkServices from '../../services/linkServices';
 import SkillModal from '../skill/SkillModal.vue';
 import skillServices from '../../services/skillServices';
 
+// professional summaries
+import professionalSummaryServices from '../../services/professionalSummaryServices';
+
 import { storeToRefs } from 'pinia';
 
 const modalStore = useModalStore();
@@ -53,6 +56,11 @@ const personalInfo = ref({
   phone_number: '999-888-77777',
   professional_summary: 'Bachelor of Arts degree candidate, with a major in Economics, and experience developing and analyzing cost models, providing quality assurance reviews, and creating process solutions to improve financial forecasts for clients. Looking to continue the development of risk management, audit, and compliance skills in a team-centered environment.',
 });
+
+const isEditing = ref(false); 
+const selectedSummaryOption = ref(null);  
+let professionalSummaries = [];  
+let summariesOptions = [];  
 
 const resumeTitle = ref("Resume Name");
 const isEditingTitle = ref(false);
@@ -173,6 +181,22 @@ const getSkills = async () =>{
   }
 }
 
+const getProf_sums = async () => {
+  try {
+    const res = await professionalSummaryServices.getAllProfessionalSummaryForUser();  // Example API call
+    professionalSummaries = res.data || [];  
+    summariesOptions = professionalSummaries.map(item => ({
+      id: item.id,
+      summary: item.summary.slice(0, 50) + "...",  
+    }));
+
+    summariesOptions.unshift("");
+  } catch (err) {
+    console.error('Error fetching professional summaries:', err);
+  }
+};
+
+
 const editLinkItem = (item) => {
   modalStore.link = item.data;
   modalStore.modalType = 'link';
@@ -279,9 +303,11 @@ onMounted(async () => {
     getProject(),
     getAwards(),
     getLinks(),
-    getSkills()
+    getSkills(),
+    getProf_sums()
   ]);
 
+ 
   resume_data_local.value.forEach((section) => {
     if (section.isOpen === undefined) {
       section.isOpen = false; // Default to closed
@@ -291,7 +317,6 @@ onMounted(async () => {
   isLoaded.value = true;
   handleDataChange();  // Ensure data is loaded before handling changes
 });
-
 
 watch([resume_data_local, header_data_local, personalInfo, metadata_local, isLoaded], () => {
   handleDataChange();
@@ -385,6 +410,39 @@ const parseMetadata = (metadata_local, resume_data) => {
   return result;
 };
 
+// Select a professional summary to edit
+const selectSummary = (id) => {
+  const selected = professionalSummaries.find(summary => summary.id === id);
+  if (selected) {
+    personalInfo.value.professional_summary = selected.summary;
+  }
+};
+
+// Toggle editing mode for the professional summary
+const toggleSummaryEdit = () => {
+  isEditing.value = !isEditing.value;
+};
+
+// Cancel the editing of the professional summary
+const cancelSummaryEdit = () => {
+  isEditing.value = false;
+  
+};
+
+// Submit the edited summary
+const submitSummaryEdit = () => {
+  isEditing.value = false;
+  
+};
+
+watch(selectedSummaryOption, (newVal, oldVal) => {
+  if (newVal) {
+    // Update the professional summary if an option is selected
+    selectSummary(newVal);
+  }
+});
+
+
 
 </script>
 
@@ -423,37 +481,61 @@ const parseMetadata = (metadata_local, resume_data) => {
         <v-expansion-panel-text  class="panel-background">
           <div class="option-checkboxes">
             <v-form>
-              <v-row>
-                <v-col cols="6">
-                  <v-text-field
-                    v-model="personalInfo.fName"
-                    label="First Name"
-                  ></v-text-field>
-                </v-col>
-
-                <v-col cols="6">
-                  <v-text-field
-                    v-model="personalInfo.lName"
-                    label="Last Name"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-
-              <v-text-field
-                v-model="personalInfo.email"
-                label="Email"
-              ></v-text-field>
-
-              <v-text-field
-                v-model="personalInfo.phone_number"
-                label="Phone Number"
-              ></v-text-field>
-
-              <v-textarea
-                v-model="personalInfo.professional_summary"
+            <!-- Name, email, phone, etc. -->
+            <v-row>
+              <v-col cols="6">
+                <v-text-field v-model="personalInfo.fName" label="First Name"></v-text-field>
+              </v-col>
+              <v-col cols="6">
+                <v-text-field v-model="personalInfo.lName" label="Last Name"></v-text-field>
+              </v-col>
+            </v-row>
+            <v-text-field v-model="personalInfo.email" label="Email"></v-text-field>
+            <v-text-field v-model="personalInfo.phone_number" label="Phone Number"></v-text-field>
+            
+            <!-- Professional Summary -->
+            <div class="d-flex align-items-center">
+              <!-- Dropdown to select summary -->
+              <v-autocomplete
+                v-if="!isEditing"
+                v-model="selectedSummaryOption"
+                :items="summariesOptions"
                 label="Professional Summary"
-              ></v-textarea>
-            </v-form>
+                item-value="id"
+                item-title="summary"
+                @change="selectSummary"
+              ></v-autocomplete>
+
+              <!-- Edit button for summary -->
+              <v-icon 
+                v-if="selectedSummaryOption && !isEditing" small 
+                @click="toggleSummaryEdit" 
+                class="ms-2 edit-pencil-summary"
+                >
+                mdi-pencil
+              </v-icon>
+            </div>
+
+            <!-- Textarea to edit summary -->
+            <v-textarea
+              v-if="isEditing"
+              v-model="personalInfo.professional_summary"
+              label="Professional Summary"
+              rows="4"
+              outlined
+              class="mt-4"
+            ></v-textarea>
+
+            <!-- Edit/Cancel buttons for summary -->
+            <div v-if="isEditing" class="d-flex">
+              <v-btn @click="cancelSummaryEdit" class="text-none text-subtitle-1" size="small" color="#E9E9E9" style="color: #374151; flex: 1; margin-right: 8px;">
+                Cancel
+              </v-btn>
+              <v-btn @click="submitSummaryEdit" class="text-none text-subtitle-1" size="small" color="#07BF9B" style="flex: 1;">
+                Submit
+              </v-btn>
+            </div>
+          </v-form>
             <v-checkbox v-model="metadata_local.section_dividers" label="Include section dividers" />
             <draggable v-model="header_data_local" tag="ul">
               <template #item="{ element: header }">
@@ -548,6 +630,12 @@ const parseMetadata = (metadata_local, resume_data) => {
 </template>
 
 <style>
+
+.edit-pencil-summary{
+  cursor: pointer;
+  padding-top: 13%;
+}
+
 .text-field-wrapper {
   position: relative;
 }
