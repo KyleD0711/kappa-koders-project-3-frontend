@@ -119,7 +119,7 @@ const setPDFWidth = () => {
 
   if (pdf.value) {
     pdf.value.style.width = `${pdfWidth}px`;
-    pdf.value.style.height = `${pdfHeight}px`;
+    pdf.value.style["min-height"] = `${pdfHeight}px`;
   }
 };
 
