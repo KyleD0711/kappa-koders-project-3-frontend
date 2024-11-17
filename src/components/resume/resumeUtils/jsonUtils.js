@@ -45,7 +45,8 @@ export default {
           value[entry[0]]
         );
       });
-  
+
+      // Make sure to handle case where it can't find section name
       if (body != null) {
         bodyItems.push(body);
       }

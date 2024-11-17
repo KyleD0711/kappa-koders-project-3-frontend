@@ -1,28 +1,35 @@
 <script setup>
-import { ref, watch, onMounted } from 'vue';
-import draggable from 'vuedraggable';
-import { VCard, VExpansionPanels, VExpansionPanel, VExpansionPanelTitle, VExpansionPanelText, VIcon } from 'vuetify/components';
+import { ref, watch, onMounted } from "vue";
+import draggable from "vuedraggable";
+import {
+  VCard,
+  VExpansionPanels,
+  VExpansionPanel,
+  VExpansionPanelTitle,
+  VExpansionPanelText,
+  VIcon,
+} from "vuetify/components";
 import { useModalStore } from "../../store/modal.store";
 
 // Education:
-import EducationModal from '../education/EducationModal.vue';
-import educationServices from '../../services/educationServices';
+import EducationModal from "../education/EducationModal.vue";
+import educationServices from "../../services/educationServices";
 
 // Experience:
-import ExperienceModal from '../experience/ExperienceModal.vue';
-import experienceServices from '../../services/experienceServices';
+import ExperienceModal from "../experience/ExperienceModal.vue";
+import experienceServices from "../../services/experienceServices";
 
 // Project:
-import ProjectModal from '../project/ProjectModal.vue';
-import projectServices from '../../services/projectServices';
+import ProjectModal from "../project/ProjectModal.vue";
+import projectServices from "../../services/projectServices";
 
 // award:
-import AwardModal from '../award/AwardModal.vue';
-import awardServices from '../../services/awardServices'; 
+import AwardModal from "../award/AwardModal.vue";
+import awardServices from "../../services/awardServices";
 
 // Links:
-import LinkModal from '../links/LinkModal.vue';
-import linkServices from '../../services/linkServices';
+import LinkModal from "../links/LinkModal.vue";
+import linkServices from "../../services/linkServices";
 
 // Skills
 import SkillModal from '../skill/SkillModal.vue';
@@ -32,7 +39,7 @@ import skillServices from '../../services/skillServices';
 import professionalSummaryServices from '../../services/professionalSummaryServices';
 import ProfessionalSummaryModal from '../professionalSummary/ProfessionalSummaryModal.vue';
 
-import { storeToRefs } from 'pinia';
+import { storeToRefs } from "pinia";
 
 const modalStore = useModalStore();
 const { isVisible } = storeToRefs(modalStore);
@@ -82,7 +89,9 @@ const cancelEditTitle = () => {
 const getEducation = async () => {
   try {
     const res = await educationServices.getAllEducationForUser();
-    const educationSection = resume_data_local.value.find(section => section.title === 'Education');
+    const educationSection = resume_data_local.value.find(
+      (section) => section.title === "Education"
+    );
     if (educationSection) {
       educationSection.items = res.data.map(item => ({ name: item.institution, selected: false, data: item }));
     } else {
@@ -99,7 +108,9 @@ const getEducation = async () => {
 const getExperience = async () => {
   try {
     const res = await experienceServices.getAllExperienceForUser();
-    const experienceSection = resume_data_local.value.find(section => section.title === 'Experience');
+    const experienceSection = resume_data_local.value.find(
+      (section) => section.title === "Experience"
+    );
     if (experienceSection) {
       experienceSection.items = res.data.map(item => ({ name: item.employer, selected: false, data: item }));
     } else {
@@ -116,7 +127,9 @@ const getExperience = async () => {
 const getProject = async () => {
   try {
     const res = await projectServices.getAllProjectForUser();
-    const projectSection = resume_data_local.value.find(section => section.title === 'Project');
+    const projectSection = resume_data_local.value.find(
+      (section) => section.title === "Project"
+    );
     if (projectSection) {
       projectSection.items = res.data.map(item => ({ name: item.name, selected: false, data: item }));
     } else {
@@ -130,10 +143,12 @@ const getProject = async () => {
   }
 };
 
-const getAwards = async () =>{
+const getAwards = async () => {
   try {
     const res = await awardServices.getAllAwards();
-    const awardSection = resume_data_local.value.find(section => section.title === 'Award');
+    const awardSection = resume_data_local.value.find(
+      (section) => section.title === "Award"
+    );
     if (awardSection) {
       awardSection.items = res.data.map(item => ({ name: item.institution, selected: false, data: item }));
     } else {
@@ -145,9 +160,9 @@ const getAwards = async () =>{
   } catch (err) {
     console.error(err);
   }
-}
+};
 
-const getLinks = async () =>{
+const getLinks = async () => {
   try {
     const res = await linkServices.getAllLinkForUser();
     const linkHeader = header_data_local.value.find(header => header.title === 'Link');
@@ -166,10 +181,12 @@ const getLinks = async () =>{
 
 }
 
-const getSkills = async () =>{
+const getSkills = async () => {
   try {
     const res = await skillServices.getAllSkillForUser();
-    const skillSection = resume_data_local.value.find(section => section.title === 'Skill');
+    const skillSection = resume_data_local.value.find(
+      (section) => section.title === "Skill"
+    );
     if (skillSection) {
       skillSection.items = res.data.map(item => ({ name: item.name, selected: false, data: item }));
     } else {
@@ -211,34 +228,33 @@ const editProfessionalSummary = (item) => {
 
 // edits
 const editItem = (item, sectionTitle) => {
-  if (sectionTitle === 'Education') {
+  if (sectionTitle === "Education") {
     modalStore.education = item.data;
-    modalStore.modalType = 'education';
-  } else if (sectionTitle === 'Experience') {
-    modalStore.experience = item.data; 
-    modalStore.modalType = 'experience';
-  } else if (sectionTitle === 'Project') {
-    modalStore.project = item.data; 
-    modalStore.modalType = 'project'; 
-  } else if (sectionTitle === 'Award') {
-    modalStore.award = item.data; 
-    modalStore.modalType = 'award'; 
-  } else if (sectionTitle === 'Skill') {
-    modalStore.skill = item.data; 
-    modalStore.modalType = 'skill'; 
-  }
-  else {
-   console.error('Unsupported section:', sectionTitle);
+    modalStore.modalType = "education";
+  } else if (sectionTitle === "Experience") {
+    modalStore.experience = item.data;
+    modalStore.modalType = "experience";
+  } else if (sectionTitle === "Project") {
+    modalStore.project = item.data;
+    modalStore.modalType = "project";
+  } else if (sectionTitle === "Award") {
+    modalStore.award = item.data;
+    modalStore.modalType = "award";
+  } else if (sectionTitle === "Skill") {
+    modalStore.skill = item.data;
+    modalStore.modalType = "skill";
+  } else {
+    console.error("Unsupported section:", sectionTitle);
   }
 
-  modalStore.isVisible = true; 
+  modalStore.isVisible = true;
 };
 
 // add link
 const showAddLinkDialog = () => {
   modalStore.link = {
     name: "",
-    url: ""
+    url: "",
   };
   modalStore.isVisible = true; 
   modalStore.modalType = 'link'; 
@@ -254,7 +270,7 @@ const showAddSummaryDialog = () => {
 
 // add
 const showAddDialog = (section) => {
-  if (section === 'Education') {
+  if (section === "Education") {
     modalStore.education = {
       institution: "",
       credential_earned: "",
@@ -263,27 +279,27 @@ const showAddDialog = (section) => {
       gpa: "",
       coursework: null,
     };
-    modalStore.isVisible = true; 
-    modalStore.modalType = 'education'; 
-  } else if (section === 'Experience') {
+    modalStore.isVisible = true;
+    modalStore.modalType = "education";
+  } else if (section === "Experience") {
     modalStore.experience = {
       employer: "",
       position_title: "",
       date_start: "",
       date_end: "",
     };
-    modalStore.isVisible = true; 
-    modalStore.modalType = 'experience'; 
-  } else if (section === 'Project') {
+    modalStore.isVisible = true;
+    modalStore.modalType = "experience";
+  } else if (section === "Project") {
     modalStore.project = {
       name: "",
       description: "",
       date_start: "",
       date_completed: "",
     };
-    modalStore.isVisible = true; 
-    modalStore.modalType = 'project'; 
-  } else if (section === 'Award') {
+    modalStore.isVisible = true;
+    modalStore.modalType = "project";
+  } else if (section === "Award") {
     modalStore.award = {
       institution: "",
       credential_earned: "",
@@ -292,18 +308,18 @@ const showAddDialog = (section) => {
       gpa: "",
       coursework: null,
     };
-    modalStore.isVisible = true; 
-    modalStore.modalType = 'award'; 
-  } else if (section === 'Skill') {
+    modalStore.isVisible = true;
+    modalStore.modalType = "award";
+  } else if (section === "Skill") {
     modalStore.skill = {
       name: "",
       description: "",
       proficiency_level: "",
     };
-    modalStore.isVisible = true; 
-    modalStore.modalType = 'skill'; 
+    modalStore.isVisible = true;
+    modalStore.modalType = "skill";
   } else {
-    console.error('Unsupported section:', section);
+    console.error("Unsupported section:", section);
   }
 };
 
@@ -375,11 +391,11 @@ const handleDataChange = () => {
 const parseResumeData = (resumeData) => {
   const result = {};
 
-  resumeData.forEach(section => {
+  resumeData.forEach((section) => {
     if (section.items && Array.isArray(section.items)) {
       const selectedItems = section.items
-        .filter(item => item.selected === true)
-        .map(item => item.data || {});
+        .filter((item) => item.selected === true)
+        .map((item) => item.data || {});
 
       if (selectedItems.length > 0) {
         result[section.title.toLowerCase()] = selectedItems;
@@ -458,7 +474,7 @@ const updateSummary = (summary) => {
 
 <template>
   <div>
-    <div class="resumeTitle" style="padding-top: 2%;">
+    <div class="resumeTitle" style="padding-top: 2%">
       <template v-if="isEditingTitle">
         <div class="text-field-wrapper">
           <v-text-field
@@ -469,26 +485,28 @@ const updateSummary = (summary) => {
             @blur="saveTitle"
             @keyup.enter="saveTitle"
           ></v-text-field>
-          <v-icon
-            class="close-icon"
-            @click="cancelEditTitle"
-          >
+          <v-icon class="close-icon" @click="cancelEditTitle">
             mdi-close
           </v-icon>
         </div>
       </template>
       <template v-else>
         <span @click="toggleEditTitle">{{ resumeTitle }}</span>
-        <v-icon style="font-size: 30px; padding-left: 5%" class="edit-icon" @click="toggleEditTitle">mdi-pencil</v-icon>
+        <v-icon
+          style="font-size: 30px; padding-left: 5%"
+          class="edit-icon"
+          @click="toggleEditTitle"
+          >mdi-pencil</v-icon
+        >
       </template>
     </div>
 
-    <v-expansion-panels style="padding-bottom: 2%;">
+    <v-expansion-panels style="padding-bottom: 2%">
       <v-expansion-panel class="section-0">
-        <v-expansion-panel-title style="font-size:20px">
+        <v-expansion-panel-title style="font-size: 20px">
           Header
         </v-expansion-panel-title>
-        <v-expansion-panel-text  class="panel-background">
+        <v-expansion-panel-text class="panel-background">
           <div class="option-checkboxes">
             <v-form>
             <!-- Name, email, phone, etc. -->
@@ -544,11 +562,13 @@ const updateSummary = (summary) => {
                 <v-card class="mb-3">
                   <v-expansion-panels>
                     <v-expansion-panel class="section-0" :key="header.title">
-                      <v-expansion-panel-title>
-                        Links
-                      </v-expansion-panel-title>
+                      <v-expansion-panel-title> Links </v-expansion-panel-title>
                       <v-expansion-panel-text>
-                        <draggable class="item-list" v-model="header.items" tag="ul">
+                        <draggable
+                          class="item-list"
+                          v-model="header.items"
+                          tag="ul"
+                        >
                           <template #item="{ element: item }">
                             <v-card class="mb-3">
                               <li :key="item.name" class="list-item">
@@ -557,16 +577,24 @@ const updateSummary = (summary) => {
                                   <span>{{ item.name }}</span>
                                 </div>
                                 <div class="right-icons">
-                                  <v-icon @click="editLinkItem(item)" class="edit-icon">mdi-pencil</v-icon>
-                                  <v-checkbox v-model="item.selected" class="v-checkbox pa-0 ma-0" />
+                                  <v-icon
+                                    @click="editLinkItem(item)"
+                                    class="edit-icon"
+                                    >mdi-pencil</v-icon
+                                  >
+                                  <v-checkbox
+                                    v-model="item.selected"
+                                    class="v-checkbox pa-0 ma-0"
+                                  />
                                 </div>
                               </li>
                             </v-card>
                           </template>
                         </draggable>
-                        <v-card @click="showAddLinkDialog()">  
+                        <v-card @click="showAddLinkDialog()">
                           <div class="addSection">
-                            Add {{header.title}} <v-icon style="padding-bottom: 1%;">mdi-plus</v-icon>
+                            Add {{ header.title }}
+                            <v-icon style="padding-bottom: 1%">mdi-plus</v-icon>
                           </div>
                         </v-card>
                       </v-expansion-panel-text>
@@ -607,16 +635,24 @@ const updateSummary = (summary) => {
                           <span>{{ item.name }}</span>
                         </div>
                         <div class="right-icons">
-                          <v-icon @click="editItem(item, section.title)" class="edit-icon">mdi-pencil</v-icon>
-                          <v-checkbox v-model="item.selected" class="v-checkbox pa-0 ma-0" />
+                          <v-icon
+                            @click="editItem(item, section.title)"
+                            class="edit-icon"
+                            >mdi-pencil</v-icon
+                          >
+                          <v-checkbox
+                            v-model="item.selected"
+                            class="v-checkbox pa-0 ma-0"
+                          />
                         </div>
                       </li>
                     </v-card>
                   </template>
                 </draggable>
-                <v-card @click="showAddDialog(section.title)">  
+                <v-card @click="showAddDialog(section.title)">
                   <div class="addSection">
-                    Add {{section.title}} <v-icon style="padding-bottom: 1%;">mdi-plus</v-icon>
+                    Add {{ section.title }}
+                    <v-icon style="padding-bottom: 1%">mdi-plus</v-icon>
                   </div>
                 </v-card>
               </v-expansion-panel-text>
@@ -670,27 +706,27 @@ const updateSummary = (summary) => {
   color: white;
 }
 
-.resumeTitle{
-    color: white;
-    padding-left: 2%;
-    padding-bottom: 2%;
-    font-size: 30px;
+.resumeTitle {
+  color: white;
+  padding-left: 2%;
+  padding-bottom: 2%;
+  font-size: 30px;
 }
 
-.addSection{ 
+.addSection {
   text-align: center;
 }
 
 .section-1 {
   background-color: #575757;
   display: block;
-  color:white;
+  color: white;
   flex-direction: column;
 }
 
 .section-0 {
-    background-color: #403F3F;
-    color:white;
+  background-color: #403f3f;
+  color: white;
 }
 
 .option-checkboxes {
@@ -710,32 +746,30 @@ const updateSummary = (summary) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 8px; 
+  gap: 8px;
 }
 
 .right-icons {
   display: flex;
   align-items: center;
-  gap: 8px; 
+  gap: 8px;
 }
 
 .v-card {
-  background-color: #D9D9D9;
+  background-color: #d9d9d9;
 }
 
 .panel-background {
   background-color: #575757;
-  color: white; 
-  padding: 16px; 
-  border-radius: 4px; 
+  color: white;
+  padding: 16px;
+  border-radius: 4px;
 }
 
 .light-breakline {
   border: none;
   border-top: 3px solid #737373;
-  margin: 10px 0; 
+  margin: 10px 0;
   padding-bottom: 3%;
 }
-
-
 </style>
