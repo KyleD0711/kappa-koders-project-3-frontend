@@ -4,10 +4,13 @@ import userServices from "../../services/userServices";
 import { useModalStore } from "../../store/modal.store";
 import { storeToRefs } from "pinia";
 import UserModal from "./UserModal.vue";
+import Utils from "../../config/utils";
+
 // import { userRole } from "../../../../kappakoders-project3-backend/app/models";
 
 const modalStore = useModalStore();
 const { isVisible } = storeToRefs(modalStore);
+const curUser = ref(null);
 
 const headers = [
     {
@@ -37,7 +40,9 @@ const user = ref({});
 const isLoaded = ref(false);
 
 const getUsers = async () => {
-    await userServices
+  curUser.value = Utils.getStore("user");
+
+  await userServices
     .getAllUser()
     .then((res) => {
         items.value = res.data;
@@ -88,10 +93,10 @@ onMounted(() => {
 
     <v-data-table :headers="headers" :items="items" v-if="isLoaded">
       <template v-slot:item.actions="{ item }">
-        <v-icon class="me-2" size="small" @click="editUser(item)">
+        <v-icon class="me-2" size="small" v-if="item.id !== curUser.value.id" @click="editUser(item)">
           mdi-pencil
         </v-icon>
-        <v-icon size="small" @click="deleteUser(item)"> mdi-delete </v-icon>
+        <v-icon size="small" v-if="item.id !== curUser.value.id" @click="deleteUser(item)"> mdi-delete </v-icon>
       </template>
       <template v-slot:no-data> No data found! </template>
     </v-data-table>
