@@ -30,6 +30,7 @@ import skillServices from '../../services/skillServices';
 
 // professional summaries
 import professionalSummaryServices from '../../services/professionalSummaryServices';
+import ProfessionalSummaryModal from '../professionalSummary/ProfessionalSummaryModal.vue';
 
 import { storeToRefs } from 'pinia';
 
@@ -54,13 +55,13 @@ const personalInfo = ref({
   lName: 'Veit',
   email: 'jonah@gmail.com',
   phone_number: '999-888-77777',
-  professional_summary: 'Bachelor of Arts degree candidate, with a major in Economics, and experience developing and analyzing cost models, providing quality assurance reviews, and creating process solutions to improve financial forecasts for clients. Looking to continue the development of risk management, audit, and compliance skills in a team-centered environment.',
+  professional_summary: null,
 });
 
 const isEditing = ref(false); 
-const selectedSummaryOption = ref(null);  
-let professionalSummaries = [];  
-let summariesOptions = [];  
+const selectedSummaryOption = ref();  
+const professionalSummaries = ref([]);  
+
 
 const resumeTitle = ref("Resume Name");
 const isEditingTitle = ref(false);
@@ -75,8 +76,7 @@ const saveTitle = () => {
 
 const cancelEditTitle = () => {
   isEditingTitle.value = false;
-  // Reset title or do something else if needed
-  resumeTitle.value = "Resume Name"; // Use the initial title or previous value
+  resumeTitle.value = "Resume Name"; 
 };
 
 const getEducation = async () => {
@@ -162,6 +162,8 @@ const getLinks = async () =>{
   } catch (err) {
     console.error(err);
   }
+
+
 }
 
 const getSkills = async () =>{
@@ -181,27 +183,31 @@ const getSkills = async () =>{
   }
 }
 
+
 const getProf_sums = async () => {
   try {
-    const res = await professionalSummaryServices.getAllProfessionalSummaryForUser();  // Example API call
-    professionalSummaries = res.data || [];  
-    summariesOptions = professionalSummaries.map(item => ({
-      id: item.id,
-      summary: item.summary.slice(0, 50) + "...",  
+    const res = await professionalSummaryServices.getAllProfessionalSummaryForUser();  // API call for professional summaries
+    professionalSummaries.value = res.data.map(item => ({
+      summary: item.summary,
+      selected: false,
+      data: item
     }));
-
-    summariesOptions.unshift("");
   } catch (err) {
     console.error('Error fetching professional summaries:', err);
   }
 };
-
 
 const editLinkItem = (item) => {
   modalStore.link = item.data;
   modalStore.modalType = 'link';
   modalStore.isVisible = true; 
 }
+
+const editProfessionalSummary = (item) => {
+  modalStore.professionalSummary = item.data;  // Pass the full data of the item to the modal
+  modalStore.modalType = 'professionalSummary';
+  modalStore.isVisible = true;
+};
 
 // edits
 const editItem = (item, sectionTitle) => {
@@ -236,7 +242,15 @@ const showAddLinkDialog = () => {
   };
   modalStore.isVisible = true; 
   modalStore.modalType = 'link'; 
-}
+};
+
+const showAddSummaryDialog = () => {
+  modalStore.professionalSummary = {
+    summary: "",  // Empty data for a new summary
+  };
+  modalStore.isVisible = true;
+  modalStore.modalType = 'professionalSummary';
+};
 
 // add
 const showAddDialog = (section) => {
@@ -410,37 +424,33 @@ const parseMetadata = (metadata_local, resume_data) => {
   return result;
 };
 
-// Select a professional summary to edit
 const selectSummary = (id) => {
-  const selected = professionalSummaries.find(summary => summary.id === id);
-  if (selected) {
-    personalInfo.value.professional_summary = selected.summary;
+  if (id === -1) {
+    isEditing.value = true;
+    personalInfo.value.professional_summary = null;
+  } else {
+    isEditing.value = true;
+    const selected = professionalSummaries.find(summary => summary.id === id);
+    personalInfo.value.professionalSummary = selected ? selected.summary : null;
   }
 };
 
-// Toggle editing mode for the professional summary
-const toggleSummaryEdit = () => {
-  isEditing.value = !isEditing.value;
-};
 
-// Cancel the editing of the professional summary
-const cancelSummaryEdit = () => {
-  isEditing.value = false;
-  
-};
+const updateSummary = (summary) => {
+  // Deselect all other summaries
+  professionalSummaries.value.forEach(item => {
+    if (item !== summary) {
+      item.selected = false;
+    }
+  });
 
-// Submit the edited summary
-const submitSummaryEdit = () => {
-  isEditing.value = false;
-  
-};
-
-watch(selectedSummaryOption, (newVal, oldVal) => {
-  if (newVal) {
-    // Update the professional summary if an option is selected
-    selectSummary(newVal);
+  // If the current summary is selected, set it to professional_summary
+  if (summary.selected) {
+    personalInfo.value.professional_summary = summary.summary;
+  } else {
+    personalInfo.value.professional_summary = null;  // Clear if the summary is deselected
   }
-});
+};
 
 
 
@@ -492,51 +502,43 @@ watch(selectedSummaryOption, (newVal, oldVal) => {
             </v-row>
             <v-text-field v-model="personalInfo.email" label="Email"></v-text-field>
             <v-text-field v-model="personalInfo.phone_number" label="Phone Number"></v-text-field>
-            
-            <!-- Professional Summary -->
-            <div class="d-flex align-items-center">
-              <!-- Dropdown to select summary -->
-              <v-autocomplete
-                v-if="!isEditing"
-                v-model="selectedSummaryOption"
-                :items="summariesOptions"
-                label="Professional Summary"
-                item-value="id"
-                item-title="summary"
-                @change="selectSummary"
-              ></v-autocomplete>
-
-              <!-- Edit button for summary -->
-              <v-icon 
-                v-if="selectedSummaryOption && !isEditing" small 
-                @click="toggleSummaryEdit" 
-                class="ms-2 edit-pencil-summary"
-                >
-                mdi-pencil
-              </v-icon>
-            </div>
-
-            <!-- Textarea to edit summary -->
-            <v-textarea
-              v-if="isEditing"
-              v-model="personalInfo.professional_summary"
-              label="Professional Summary"
-              rows="4"
-              outlined
-              class="mt-4"
-            ></v-textarea>
-
-            <!-- Edit/Cancel buttons for summary -->
-            <div v-if="isEditing" class="d-flex">
-              <v-btn @click="cancelSummaryEdit" class="text-none text-subtitle-1" size="small" color="#E9E9E9" style="color: #374151; flex: 1; margin-right: 8px;">
-                Cancel
-              </v-btn>
-              <v-btn @click="submitSummaryEdit" class="text-none text-subtitle-1" size="small" color="#07BF9B" style="flex: 1;">
-                Submit
-              </v-btn>
-            </div>
           </v-form>
-            <v-checkbox v-model="metadata_local.section_dividers" label="Include section dividers" />
+
+          <v-card class="mb-3">
+              <v-expansion-panels>
+                <v-expansion-panel class="section-0">
+                  <v-expansion-panel-title>
+                    Professional Summaries
+                  </v-expansion-panel-title>
+                  <v-expansion-panel-text>
+                    <!-- Professional Summaries List -->
+                    <ul>
+                      <template v-for="summary in professionalSummaries" :key="summary.data.id">
+                        <v-card class="mb-3">
+                          <li class="list-item">
+                            <div class="left-icons">
+                              <span>{{ summary.summary.substring(0, 30) }}...</span> <!-- Show first 30 characters of the summary -->
+                            </div>
+                            <div class="right-icons">
+                              <v-icon @click="editProfessionalSummary(summary)" class="edit-icon">mdi-pencil</v-icon>
+                              <v-switch v-model="summary.selected" @change="updateSummary(summary)" class="v-checkbox pa-0 ma-0" />
+                            </div>
+                          </li>
+                        </v-card>
+                      </template>
+                    </ul>
+  
+                    <!-- Add Professional Summary Card -->
+                    <v-card @click="showAddSummaryDialog()">  
+                      <div class="addSection">
+                        Add Professional Summary <v-icon style="padding-bottom: 1%;">mdi-plus</v-icon>
+                      </div>
+                    </v-card>
+                  </v-expansion-panel-text>
+                </v-expansion-panel>
+              </v-expansion-panels>
+            </v-card>
+
             <draggable v-model="header_data_local" tag="ul">
               <template #item="{ element: header }">
                 <v-card class="mb-3">
@@ -573,7 +575,13 @@ watch(selectedSummaryOption, (newVal, oldVal) => {
                 </v-card>
               </template>
             </draggable>
+            
+            <v-checkbox v-model="metadata_local.section_dividers" label="Include section dividers" />
+
+            
           </div>
+          
+          
         </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
@@ -626,6 +634,7 @@ watch(selectedSummaryOption, (newVal, oldVal) => {
     <AwardModal v-if="isVisible && modalStore.modalType === 'award'" :award="modalStore.award" @submit-form="getAwards" />
     <LinkModal v-if="isVisible && modalStore.modalType === 'link'" :link="modalStore.link" @submit-form="getLinks" />
     <SkillModal v-if="isVisible && modalStore.modalType === 'skill'" :skill="modalStore.skill" @submit-form="getSkills" />
+    <ProfessionalSummaryModal v-if="isVisible && modalStore.modalType === 'professionalSummary'" :professionalSummary="modalStore.professionalSummary" @submit-form="getProf_sums"></ProfessionalSummaryModal>
   </div>
 </template>
 
