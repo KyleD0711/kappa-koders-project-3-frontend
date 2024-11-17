@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted, onBeforeUnmount } from "vue";
 import htmlGenerator from "./resumeUtils/htmlGenerator";
 import jsonUtils from "./resumeUtils/jsonUtils";
 import NoDataFound from "./NoDataFound.vue";
@@ -95,15 +95,53 @@ watch(props, () => {
     renderPDF();
   }
 });
+
+const pdf = ref(null);
+
+const getScreenDPI = () => {
+  // Create a temporary element to calculate DPI
+  const dpiTest = document.createElement("div");
+  dpiTest.style.width = "1in";
+  dpiTest.style.height = "1in";
+  dpiTest.style.position = "absolute";
+  dpiTest.style.top = "-9999px"; // Hide it off-screen
+  document.body.appendChild(dpiTest);
+
+  // Measure the DPI
+  const dpi = dpiTest.offsetWidth;
+  document.body.removeChild(dpiTest);
+  return dpi;
+};
+const setPDFWidth = () => {
+  const dpi = getScreenDPI(); // Get screen DPI
+  const pdfWidth = 8.5 * dpi; // Calculate width for 8.5 inches
+  const pdfHeight = 11 * dpi; // Calculate height for 11 inches
+
+  if (pdf.value) {
+    pdf.value.style.width = `${pdfWidth}px`;
+    pdf.value.style["min-height"] = `${pdfHeight}px`;
+  }
+};
+
+onMounted(() => {
+  setPDFWidth(); // Set the paper width when the component is mounted
+  window.addEventListener("resize", setPDFWidth); // Update on window resize
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", setPDFWidth);
+});
 </script>
 <template>
   <div
-    name="pdf-body"
+    ref="pdf"
+    name="pdf"
     style="
       background-color: white;
-      margin: 25px 50px;
       padding: 10px 10px;
-      border-radius: 10px;
+      border: 1px solid #ccc; /* Subtle border to mimic a physical paper edge */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a slight shadow for realism */
+      margin: 20px 10px; /* Center the paper on the page */
     "
   >
     <NoDataFound v-if="!props.isLoaded"></NoDataFound>
