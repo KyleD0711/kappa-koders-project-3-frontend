@@ -39,12 +39,24 @@ const items = ref([]);
 const user = ref({});
 const isLoaded = ref(false);
 
+
+const setCurUser = async () => {
+  try {
+    curUser.value = Utils.getStore("user");
+    console.log("Stored user:", Utils.getStore("user"));
+    console.log(curUser.value);
+    curUser.value.userId = 1;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+}
+
 const getUsers = async () => {
-  curUser.value = Utils.getStore("user");
 
   await userServices
     .getAllUser()
     .then((res) => {
+      curUser.value = Utils.getStore("user");
         items.value = res.data;
         items.value.forEach(user => {
           user.userRole.forEach(role => {
@@ -78,6 +90,7 @@ const deleteUser = async (item) => {
 }
 
 onMounted(() => {
+    setCurUser();
     getUsers();
 })
 </script>
@@ -85,18 +98,18 @@ onMounted(() => {
 <template>
   <div style="margin: 10px">
     <div style="display: flex">
-      <p style="align-self: center; margin: 10px, 20px; color: #d9d9d9">
+      <p style="align-self: center; margin: 10px 20px; color: #d9d9d9">
         Users
       </p>
-      >
+      
     </div>
 
     <v-data-table :headers="headers" :items="items" v-if="isLoaded">
       <template v-slot:item.actions="{ item }">
-        <v-icon class="me-2" size="small" v-if="item.id !== curUser.value.id" @click="editUser(item)">
+        <v-icon v-if="curUser && item.id !== curUser.value.userId" class="me-2" size="small" @click="editUser(item)"> <!-- Why is curUser not holding a value?>-->
           mdi-pencil
         </v-icon>
-        <v-icon size="small" v-if="item.id !== curUser.value.id" @click="deleteUser(item)"> mdi-delete </v-icon>
+        <v-icon  v-if="curUser?.value && item.id !== curUser.value.userId" size="small" @click="deleteUser(item)"> mdi-delete </v-icon>
       </template>
       <template v-slot:no-data> No data found! </template>
     </v-data-table>

@@ -18,6 +18,7 @@ const props = defineProps({
 
  item = ref({}); 
 const errorMsg = ref("");
+let showUser = ref(false);
 
 const closeDialog = () => {
   isVisible.value = !isVisible.value;
