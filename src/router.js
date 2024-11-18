@@ -11,6 +11,8 @@ import InfoEducation from "./components/InfoEducation.vue";
 import InfoProjects from "./components/InfoProjects.vue";
 import InfoUsers from "./components/InfoUsers.vue";
 import ProfessionalSummaryView from "./components/professionalSummary/ProfessionalSummaryView.vue";
+import AdminUserView from "./views/Admin/AdminUserView.vue";
+import ReviewResumes from "./views/Admin/ReviewResumes.vue";
 
 import RouterStateController from "./utils/routerStateController.js";
 
@@ -78,6 +80,24 @@ const router = createRouter({
         },
       ],
     },
+    {
+      path: "/admin",
+      name: "admin",
+      children: [
+        {
+          path: "users",
+          name: "users",
+          beforeEnter: isAdmin,
+          component: AdminUserView,
+        },
+        {
+          path: "reviewResumes",
+          name: "reviewResumes",
+          beforeEnter: isAdmin,
+          component: ReviewResumes,
+        },
+      ],
+    },
   ],
 });
 
@@ -97,5 +117,12 @@ router.beforeEach(async (to, from, next) => {
     }
   }
 });
+
+function isAdmin(to) {
+  const hasAdminPrivileges = routerState.isAdmin();
+  if (!hasAdminPrivileges) {
+    return { path: "/resume" };
+  }
+}
 
 export default router;

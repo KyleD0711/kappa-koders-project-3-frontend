@@ -3,6 +3,7 @@ import { ref, onMounted } from "vue";
 import AuthServices from "../services/authServices";
 import Utils from "../config/utils.js";
 import { useRouter } from "vue-router";
+import userRoleServices from "../services/userRoleServices.js";
 
 const router = useRouter();
 const fName = ref("");
@@ -36,9 +37,9 @@ const handleCredentialResponse = async (response) => {
     .then((response) => {
       user.value = response.data;
       Utils.setStore("user", user.value);
+      router.push({ name: "resume" });
       fName.value = user.value.fName;
       lName.value = user.value.lName;
-      router.push({ name: "resume" });
     })
     .catch((error) => {
       console.log("error", error);
