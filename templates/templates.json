@@ -1259,7 +1259,7 @@
             "section_name": "name",
             "style": {
               "text-align": "center",
-              "font-size": "2em",
+              "font-size": "24px",
               "font-weight": "bold",
               "margin-top": "0.67em",
               "line-height": "1.2"
@@ -1293,7 +1293,9 @@
       "education": {
         "section_name": "education",
         "style": {
-          "margin": "20px 0px"
+          "margin": "20px 0px",
+          "font-size": "14px",
+          "font-weight": "800"
         },
         "children": [
           {
@@ -1302,7 +1304,8 @@
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "600",
+                  "margin-bottom": "10px"
                 },
                 "content": "EDUCATION"
               },
