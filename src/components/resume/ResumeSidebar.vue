@@ -586,6 +586,7 @@ const createSkillItem = async (resumeSectionId, skillData) => {
           @click="toggleEditTitle"
           >mdi-pencil</v-icon
         >
+        
       </template>
     </div>
 
