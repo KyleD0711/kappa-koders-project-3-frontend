@@ -106,10 +106,10 @@ onMounted(() => {
 
     <v-data-table :headers="headers" :items="items" v-if="isLoaded">
       <template v-slot:item.actions="{ item }">
-        <v-icon v-if="curUser && item.id !== curUser.value.userId" class="me-2" size="small" @click="editUser(item)"> <!-- Why is curUser not holding a value?>-->
+        <v-icon v-if="curUser && item.id !== curUser.userId" class="me-2" size="small" @click="editUser(item)"> <!-- Why is curUser not holding a value?>-->
           mdi-pencil
         </v-icon>
-        <v-icon  v-if="curUser?.value && item.id !== curUser.value.userId" size="small" @click="deleteUser(item)"> mdi-delete </v-icon>
+        <v-icon  v-if="curUser && item.id !== curUser.userId" size="small" @click="deleteUser(item)"> mdi-delete </v-icon>
       </template>
       <template v-slot:no-data> No data found! </template>
     </v-data-table>
