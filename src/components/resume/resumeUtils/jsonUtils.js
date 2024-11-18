@@ -1,5 +1,6 @@
 export default {
   findAndUpdateSectionByName(jsonObj, targetSectionName, data) {
+    // console.log(targetSectionName);
     // Base case: Check if the current object's section_name matches the target
     if (jsonObj.section_name === targetSectionName.section_name) {
       jsonObj.content = data; // Update content with the provided data
@@ -25,16 +26,19 @@ export default {
   },
   findAndUpdateSectionByData(template, data, section_name) {
     let elements = data[section_name];
-
+  
     let header = template.structure[section_name].children[0];
-    let body = template.structure[section_name].children[1];
+    let bodyTemplate = template.structure[section_name].children[1];
     let bodyItems = [];
-
+  
     elements.forEach((value) => {
+      let body = JSON.parse(JSON.stringify(bodyTemplate)); // Clone the body template
+  
       Object.entries(value).forEach((entry) => {
-        if (value[entry[0]] == null) {
+        if (value[entry[0]] == null || template.data[section_name][entry[0]] === undefined) {
           return;
         }
+  
         body = this.findAndUpdateSectionByName(
           body,
           template.data[section_name][entry[0]],
@@ -47,7 +51,7 @@ export default {
         bodyItems.push(body);
       }
     });
-
+  
     return {
       section_name: `${section_name}`,
       style: {},
@@ -68,5 +72,6 @@ export default {
         },
       ],
     };
-  },
+  }
+  
 };
