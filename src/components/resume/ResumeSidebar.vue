@@ -465,6 +465,7 @@ const parseMetadata = (metadata_local, resume_data) => {
           @click="toggleEditTitle"
           >mdi-pencil</v-icon
         >
+        
       </template>
     </div>
 
