@@ -11,6 +11,10 @@ import {
 } from "vuetify/components";
 import { useModalStore } from "../../store/modal.store";
 
+import 'primeicons/primeicons.css'
+import jsPDF from 'jspdf'
+
+
 // Education:
 import EducationModal from "../education/EducationModal.vue";
 import educationServices from "../../services/educationServices";
@@ -437,6 +441,14 @@ const parseMetadata = (metadata_local, resume_data) => {
 
   return result;
 };
+
+
+const exportPDF = () => {
+  const doc = new jsPDF();
+  doc.text("PDF CONTENT", 20, 30);
+  doc.save('doc-name.pdf');
+
+}
 </script>
 
 <template>
@@ -465,7 +477,7 @@ const parseMetadata = (metadata_local, resume_data) => {
           @click="toggleEditTitle"
           >mdi-pencil</v-icon
         >
-        
+        <i @click="exportPDF()" style="display: flex; align-items: right; padding-left: 10px; padding-right: 5px;"class="pi pi-print"></i>
       </template>
     </div>
 
