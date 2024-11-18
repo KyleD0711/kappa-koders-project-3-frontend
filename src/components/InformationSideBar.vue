@@ -57,6 +57,7 @@ export default {
         .then((res) => {
             curUser.value = Utils.getStore("user");
             items.value = res.data;
+            console.log(items.value);
             items.value.forEach(user => {
                 user.userRole.forEach(role => {
                     if (role.role.type === "admin" && user.id == curUser.value.userId) {
@@ -95,9 +96,7 @@ export default {
     <div class="infoSection" @click="showEducation()">Education</div>
     <div class="infoSection" @click="showProjects()">Projects</div>
     <div class="infoSection" v-show="showUser"  @click="showUsers()">Users</div>
-    <div class="infoSection" @click="showProfessionalSummaries()">
-      Professional Summaries
-    </div>
+    <div class="infoSection" @click="showProfessionalSummaries()">Professional Summaries</div>
   </div>
 </template>
 

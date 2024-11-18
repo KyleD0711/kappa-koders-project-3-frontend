@@ -52,7 +52,6 @@ const setCurUser = async () => {
 }
 
 const getUsers = async () => {
-
   await userServices
     .getAllUser()
     .then((res) => {

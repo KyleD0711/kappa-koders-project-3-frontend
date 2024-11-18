@@ -18,10 +18,10 @@ const props = defineProps({
 
  item = ref({}); 
 const errorMsg = ref("");
-let showUser = ref(false);
+let showYesModal = ref(false);
 
 const closeDialog = () => {
-  isVisible.value = !isVisible.value;
+  isVisible.value = false;
 };
 
 const submitForm = async () => {
@@ -65,7 +65,23 @@ onMounted(() => {
   if (props.user.id != null) {
     item.value = props.user;
   }
+  showYesModal.value = false;
+
 });
+
+const toggleModal = () => {
+  console.log("toggledModal");
+  showYesModal.value = true;
+}
+
+const modalYes = async () => {
+  await submitForm()
+  .then(() =>  {
+  isVisible.value = false  
+  console.log(isVisible.value);  
+  })
+  showYesModal.value = false;
+}
 
 
 </script>
@@ -79,7 +95,7 @@ onMounted(() => {
       <Vueform
         size="md"
         :endpoint="false"
-        @submit="submitForm"
+        @submit="toggleModal"
         :display-errors="false"
         v-model="item"
         sync
@@ -128,7 +144,19 @@ onMounted(() => {
               label: 12,
               wrapper: 12,
             }"
+
           />
+
+        <div v-show="showYesModal" class="confirmation-modal" id="testModal">
+          <div class="modal-content">
+            <p>Are you sure?</p>
+            <button @click="modalYes">Yes</button>
+            <button @click="closeDialog">No</button>
+          </div>
+        </div>
+
+
+
         </GroupElement>
         <StaticElement name="errormsg" v-if="errorMsg"
           ><span style="color: red">{{ errorMsg }}</span></StaticElement
@@ -139,8 +167,22 @@ onMounted(() => {
 
 </template>
 
-<style>
-
-
-
+<style scoped>
+.confirmation-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+}
 </style>
