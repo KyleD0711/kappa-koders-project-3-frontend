@@ -35,7 +35,7 @@ const handleDataChange = (data) => {
 </script>
 <template>
   <div style="display: flex">
-    <div style="width: 50%">
+    <div style="width: 30%">
       <ResumeSidebar 
         :resume_data="resume_data"
         @dataChange = "handleDataChange" />
@@ -45,7 +45,7 @@ const handleDataChange = (data) => {
       :thickness="4"
       class="white border-opacity-100"
     ></v-divider>
-    <div style="flex-grow: 1">
+    <div style="flex-grow: 1; padding-left: 10%;">
       <ResumeViewer
       @dataChange="handleDataChange"
         :is-loaded="isLoaded"

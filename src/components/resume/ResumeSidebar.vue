@@ -65,11 +65,8 @@ const personalInfo = ref({
   professional_summary: null,
 });
 
-const isEditing = ref(false); 
-const selectedSummaryOption = ref();  
+
 const professionalSummaries = ref([]);  
-
-
 const resumeTitle = ref("Resume Name");
 const isEditingTitle = ref(false);
 
@@ -200,7 +197,6 @@ const getSkills = async () => {
   }
 }
 
-
 const getProf_sums = async () => {
   try {
     const res = await professionalSummaryServices.getAllProfessionalSummaryForUser();  // API call for professional summaries
@@ -262,7 +258,7 @@ const showAddLinkDialog = () => {
 
 const showAddSummaryDialog = () => {
   modalStore.professionalSummary = {
-    summary: "",  // Empty data for a new summary
+    summary: "",  
   };
   modalStore.isVisible = true;
   modalStore.modalType = 'professionalSummary';
@@ -327,6 +323,8 @@ onMounted(async () => {
   isLoaded.value = false;
   emit('dataChange', { isLoaded: isLoaded.value });
   
+  document.body.style.caretColor = 'transparent';
+
   await Promise.all([
     getEducation(),
     getExperience(),
@@ -340,12 +338,12 @@ onMounted(async () => {
  
   resume_data_local.value.forEach((section) => {
     if (section.isOpen === undefined) {
-      section.isOpen = false; // Default to closed
+      section.isOpen = false;
     }
   });
 
   isLoaded.value = true;
-  handleDataChange();  // Ensure data is loaded before handling changes
+  handleDataChange();  
 });
 
 watch([resume_data_local, header_data_local, personalInfo, metadata_local, isLoaded], () => {
@@ -368,7 +366,6 @@ const handleDataChange = () => {
   if (header_data_local.value || personalInfo.value) {
     const parsedHeader_data = parseHeader_data(header_data_local.value, personalInfo.value);
     
-    // If 'links' exists, manually convert the Proxy objects to plain objects
     if (parsedHeader_data.link && Array.isArray(parsedHeader_data.link)) {
 
         parsedHeader_data.link = parsedHeader_data.link.map(link => {
@@ -384,7 +381,6 @@ const handleDataChange = () => {
   isLoaded.value = true;
   changes.isLoaded = isLoaded;
 
-  // Emit all changes at once as a single event
   emit('dataChange', changes);
 };
 
@@ -440,18 +436,6 @@ const parseMetadata = (metadata_local, resume_data) => {
   return result;
 };
 
-const selectSummary = (id) => {
-  if (id === -1) {
-    isEditing.value = true;
-    personalInfo.value.professional_summary = null;
-  } else {
-    isEditing.value = true;
-    const selected = professionalSummaries.find(summary => summary.id === id);
-    personalInfo.value.professionalSummary = selected ? selected.summary : null;
-  }
-};
-
-
 const updateSummary = (summary) => {
   // Deselect all other summaries
   professionalSummaries.value.forEach(item => {
@@ -460,15 +444,13 @@ const updateSummary = (summary) => {
     }
   });
 
-  // If the current summary is selected, set it to professional_summary
+
   if (summary.selected) {
     personalInfo.value.professional_summary = summary.summary;
   } else {
-    personalInfo.value.professional_summary = null;  // Clear if the summary is deselected
+    personalInfo.value.professional_summary = null;  
   }
 };
-
-
 
 </script>
 
@@ -534,7 +516,7 @@ const updateSummary = (summary) => {
                       <template v-for="summary in professionalSummaries" :key="summary.data.id">
                         <v-card class="mb-3">
                           <li class="list-item">
-                            <div class="left-icons">
+                            <div style="padding-left: 2%">
                               <span>{{ summary.summary.substring(0, 30) }}...</span> <!-- Show first 30 characters of the summary -->
                             </div>
                             <div class="right-icons">
@@ -675,7 +657,6 @@ const updateSummary = (summary) => {
 </template>
 
 <style>
-
 .edit-pencil-summary{
   cursor: pointer;
   padding-top: 13%;
