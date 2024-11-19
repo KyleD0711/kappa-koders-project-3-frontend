@@ -12,13 +12,27 @@ const resume_data = ref({});
 const isLoaded = ref({});
 
 const resumeViewer = ref(null);
+const resumeSidebar = ref(null);
 
 const exportToPDF = () => {
   const pdfContent = resumeViewer.value?.pdf;
 
+  const pdfTitle = resumeSidebar.value?.resumeTitle;
+
   if (pdfContent) {
-    const pdf = new jsPDF();
+    const pdf = new jsPDF({
+      orientation: "portrait",
+      unit: "px",
+      format: [816, 1056],
+    });
+
     pdf.html(pdfContent, {
+      x: 0, // Half-inch margin
+      y: -20, // Half-inch margin
+      html2canvas: {
+        scale: 1, // Adjust scale for better fit
+        useCORS: true,
+      },
       callback: (doc) => {
         doc.save("myResume.pdf");
       },
