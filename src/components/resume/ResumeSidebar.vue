@@ -11,6 +11,8 @@ import {
 } from "vuetify/components";
 import { useModalStore } from "../../store/modal.store";
 
+import 'primeicons/primeicons.css'
+
 // Education:
 import EducationModal from "../education/EducationModal.vue";
 import educationServices from "../../services/educationServices";
@@ -70,6 +72,7 @@ const personalInfo = ref({
   phone_number: '999-888-77777',
   professional_summary: null,
 });
+
 
 
 const professionalSummaries = ref([]);  
@@ -442,6 +445,8 @@ const parseMetadata = (metadata_local, resume_data) => {
   return result;
 };
 
+
+
 const updateSummary = (summary) => {
   // Deselect all other summaries
   professionalSummaries.value.forEach(item => {
@@ -457,6 +462,12 @@ const updateSummary = (summary) => {
     personalInfo.value.professional_summary = null;  
   }
 };
+
+defineProps(['exportFunction']);
+
+defineExpose({
+  resumeTitle
+})
 
 const saveResume = async () => {
   try {
@@ -586,6 +597,13 @@ const createSkillItem = async (resumeSectionId, skillData) => {
           @click="toggleEditTitle"
           >mdi-pencil</v-icon
         >
+
+        <i 
+          @click="exportFunction" 
+          v-if="!isEditingTitle" 
+          style="margin-left: 30px; vertical-align: middle; position: relative; top: -2px;" 
+          class="pi pi-print">
+        </i>      
       </template>
     </div>
 

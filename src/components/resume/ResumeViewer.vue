@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted, onBeforeUnmount, toRaw} from "vue";
+import { ref, watch, onMounted, defineExpose, onBeforeUnmount, toRaw} from "vue";
 import htmlGenerator from "./resumeUtils/htmlGenerator";
 import jsonUtils from "./resumeUtils/jsonUtils";
 import NoDataFound from "./NoDataFound.vue";
@@ -127,6 +127,11 @@ watch(props, () => {
 
 const pdf = ref(null);
 
+defineExpose({
+  pdf,
+})
+
+
 const getScreenDPI = () => {
   // Create a temporary element to calculate DPI
   const dpiTest = document.createElement("div");
@@ -166,11 +171,16 @@ onBeforeUnmount(() => {
     ref="pdf"
     name="pdf"
     style="
+      width: 886px;
+      height: 1136px;
       background-color: white;
-      padding: 10px 10px;
-      border: 1px solid #ccc; /* Subtle border to mimic a physical paper edge */
+      overflow: hidden; /* Ensure no content spills out */
+      box-sizing: border-box; /* Include padding in the total size */
+      padding: 20px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a slight shadow for realism */
       margin: 20px 10px; /* Center the paper on the page */
+      transform: scale(0.9); /* Shrink the content */
+      transform-origin: top left; /* Anchor scaling */
     "
   >
     <NoDataFound v-if="!props.isLoaded"></NoDataFound>
