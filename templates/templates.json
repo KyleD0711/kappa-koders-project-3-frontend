@@ -17,7 +17,6 @@
               "font-size": "2em",
               "font-weight": "bold",
               "margin-top": "0.67em",
-              "margin-bottom": "0.67em",
               "line-height": "1.2"
             },
             "content": "",
@@ -42,8 +41,8 @@
             "section_name": "section_header",
             "style": {
               "font-weight": "bold",
-              "margin-top": "5px",
-              "margin-bottom": "5px"
+              "margin-top": "10px",
+              "margin-bottom": "10px"
             },
             "content": "PROFESSIONAL SUMMARY",
             "children": []
@@ -66,16 +65,16 @@
           {
             "section_name": "section_header",
             "style": {
-              "font-weight": "bold",
-              "margin-top": "5px",
-              "margin-bottom": "10px"
+              "font-weight": "bold"
             },
             "content": "",
             "children": [
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "bold",
+                  "margin-top": "10px",
+              "margin-bottom": "10px"
                 },
                 "content": "EDUCATION",
                 "children": []
@@ -142,7 +141,9 @@
               },
               {
                 "section_name": "credential_earned",
-                "style": {},
+                "style": {
+                  "font-style": "italic"
+                },
                 "content": "",
                 "children": []
               },
@@ -156,14 +157,17 @@
                   {
                     "section_name": "gpa_name",
                     "style": {
-                      "margin-right": "4px"
+                      "margin-right": "4px",
+                      "font-style": "italic"
                     },
                     "content": "GPA: ",
                     "children": []
                   },
                   {
                     "section_name": "gpa",
-                    "style": {},
+                    "style": {
+                      "font-style": "italic"
+                    },
                     "content": "",
                     "children": []
                   }
@@ -171,7 +175,9 @@
               },
               {
                 "section_name": "coursework",
-                "style": {},
+                "style": {
+                  "font-style": "italic"
+                },
                 "content": "",
                 "children": []
               }
@@ -193,7 +199,7 @@
                 "section_name": "head",
                 "style": {
                   "font-weight": "bold",
-                  "margin-top": "5px",
+                  "margin-top": "10px",
                   "margin-bottom": "10px"
                 },
                 "content": "EXPERIENCE",
@@ -303,7 +309,7 @@
                 "section_name": "head",
                 "style": {
                   "font-weight": "bold",
-                  "margin-top": "5px",
+                  "margin-top": "10px",
                   "margin-bottom": "10px"
                 },
                 "content": "SKILLS",
@@ -348,7 +354,9 @@
                         "children": [
                           {
                             "section_name": "name",
-                            "style": {},
+                            "style": {
+                              "font-weight": "600"
+                            },
                             "content": "",
                             "children": []
                           },
@@ -391,16 +399,17 @@
           {
             "section_name": "section_header",
             "style": {
-              "font-weight": "600",
-              "margin-top": "5px",
-              "margin-bottom": "10px"
+              "font-weight": "600"
+            
             },
             "content": "",
             "children": [
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "bold",
+                    "margin-top": "10px",
+              "margin-bottom": "10px"
                 },
                 "content": "PROJECTS",
                 "children": []
@@ -430,7 +439,9 @@
                 "children": [
                   {
                     "section_name": "name",
-                    "style": {},
+                    "style": {
+                      "font-weight": "600"
+                    },
                     "content": "",
                     "children": []
                   },
@@ -484,16 +495,17 @@
           {
             "section_name": "section_header",
             "style": {
-              "font-weight": "600",
-              "margin-top": "5px",
-              "margin-bottom": "10px"
+              "font-weight": "600"
+             
             },
             "content": "",
             "children": [
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "bold",
+                   "margin-top": "10px",
+              "margin-bottom": "10px"
                 },
                 "content": "AWARDS",
                 "children": []
@@ -523,7 +535,9 @@
                 "children": [
                   {
                     "section_name": "name",
-                    "style": {},
+                    "style": {
+                      "font-weight": "600"
+                    },
                     "content": "",
                     "children": []
                   },
