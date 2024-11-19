@@ -1,3 +1,22 @@
+<script>
+// import jsPDF from 'jspdf'
+import ResumeViewer from "./ResumeViewer.vue";
+
+export default {
+  components: {
+    ResumeViewer,
+  },
+  methods: {
+    exportPDF() {
+      const viewerRef = this.$refs.ResumeViewer.$refs.pdf;
+      console.log(viewerRef);
+    }
+  }
+}
+
+</script>
+
+
 <script setup>
 import { ref, watch, onMounted } from "vue";
 import draggable from "vuedraggable";
@@ -11,9 +30,7 @@ import {
 } from "vuetify/components";
 import { useModalStore } from "../../store/modal.store";
 
-import 'primeicons/primeicons.css'
-import jsPDF from 'jspdf'
-
+// import primeIcons from 'primeicons/primeicons.css'
 
 // Education:
 import EducationModal from "../education/EducationModal.vue";
@@ -68,6 +85,7 @@ const personalInfo = ref({
   phone_number: '999-888-77777',
   professional_summary: null,
 });
+
 
 
 const professionalSummaries = ref([]);  
@@ -441,12 +459,6 @@ const parseMetadata = (metadata_local, resume_data) => {
 };
 
 
-const exportPDF = () => {
-  const doc = new jsPDF();
-  doc.text("PDF CONTENT", 20, 30);
-  doc.save('doc-name.pdf');
-
-}
 
 const updateSummary = (summary) => {
   // Deselect all other summaries
