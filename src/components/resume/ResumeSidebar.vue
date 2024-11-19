@@ -39,6 +39,12 @@ import skillServices from '../../services/skillServices';
 import professionalSummaryServices from '../../services/professionalSummaryServices';
 import ProfessionalSummaryModal from '../professionalSummary/ProfessionalSummaryModal.vue';
 
+// Resume Items
+// skill
+import skillItemServices from "../../services/skillItemServices";
+import resumeSectionServices from "../../services/resumeSectionServices";
+import resumeServices from "../../services/resumeServices";
+
 import { storeToRefs } from "pinia";
 
 const modalStore = useModalStore();
@@ -452,6 +458,106 @@ const updateSummary = (summary) => {
   }
 };
 
+const saveResume = async () => {
+  try {
+    // Create a new resume if it doesn't exist
+    let resumeId = resume_data.value.resumeId;
+
+    if (!resumeId) {
+      // Create a new resume
+      console.log(resume_data.value);
+      const newResume = await createNewResume(resume_data.value);
+      resumeId = newResume.id; // Store the new resume ID
+      console.log("New Resume Created:", newResume);
+    }
+
+    // Check if ResumeSection exists
+    const sectionExists = await checkIfResumeSectionExists(resumeId);
+
+    let resumeSectionId;
+
+    if (!sectionExists) {
+      // Create new ResumeSection if it doesn't exist
+      const newResumeSection = await createNewResumeSection(resume_data.value);
+      console.log("New ResumeSection Created:", newResumeSection);
+      resumeSectionId = newResumeSection.id; // Store the new ResumeSection ID
+    } else {
+      // If the ResumeSection exists, use its ID
+      resumeSectionId = sectionExists.id;
+    }
+
+    // Now, create SkillItem and associate it with the ResumeSection
+    await createSkillItem(resumeSectionId, resume_data.value.skillItem);
+    console.log("SkillItem Created and Associated with ResumeSection:", resume_data.value.skillItem);
+
+  } catch (error) {
+    console.error("Error saving resume:", error);
+  }
+};
+
+// Create a new resume
+const createNewResume = async (resumeData) => {
+  try {
+    const resume = {
+      userId: resumeData.userId,
+      // Add other necessary fields for the new resume
+    };
+
+    const response = await resumeServices.createResume(resume);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating new Resume:", error);
+    throw error;
+  }
+};
+
+// Check if the ResumeSection exists
+const checkIfResumeSectionExists = async (resumeId) => {
+  try {
+    const response = await resumeSectionServices.getSectionsForResume(resumeId);
+    return response.data && response.data.length > 0 ? response.data[0] : null;
+  } catch (error) {
+    console.log("Error checking if ResumeSection exists:", error);
+    return null; // If the ResumeSection doesn't exist, return null
+  }
+};
+
+// Create a new ResumeSection
+const createNewResumeSection = async (resumeData) => {
+  try {
+    const sectionData = {
+      section_type: "skill", // Adjust this if needed, e.g., section type could be "experience", "education", etc.
+      section_title: "Skills", // Default title, you can customize based on the user input
+      resumeId: resumeData.resumeId, // Make sure to pass the resumeId for association
+    };
+
+    const response = await resumeSectionServices.createResumeSection(resumeData.resumeId, sectionData);
+    return response.data;
+  } catch (error) {
+    console.log("Error creating new ResumeSection:", error);
+    throw error;
+  }
+};
+
+// Create SkillItem and associate it with the ResumeSection
+const createSkillItem = async (resumeSectionId, skillData) => {
+  try {
+    const skillItem = {
+      sectionId: resumeSectionId, // Associate SkillItem with ResumeSection
+      skill_name: skillData.skill_name,
+      skill_level: skillData.skill_level,
+      skill_description: skillData.skill_description,
+    };
+
+    const response = await skillItemServices.createSkillItem(skillItem);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating SkillItem:", error);
+    throw error;
+  }
+};
+
+
 </script>
 
 <template>
@@ -644,6 +750,9 @@ const updateSummary = (summary) => {
       </template>
     </draggable>
 
+    <v-btn block style="background-color:#3D7AE2; color: white" @click="saveResume">
+      Save Resume
+    </v-btn>
 
     <!-- Conditionally render the correct modal based on modalType -->
     <EducationModal v-if="isVisible && modalStore.modalType === 'education'" :education="modalStore.education" @submit-form="getEducation" />
