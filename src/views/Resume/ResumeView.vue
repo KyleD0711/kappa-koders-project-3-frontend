@@ -3,7 +3,7 @@ import ResumeViewer from "../../components/resume/ResumeViewer.vue";
 import ResumeSidebar from "../../components/resume/ResumeSidebar.vue";
 import { ref } from "vue";
 import template from "../../../templates/templates.json";
-const templateData = ref(template["template1"]);
+const templateData = ref(template["template4"]);
 
 const metadata = ref({});
 const header_data = ref({});
