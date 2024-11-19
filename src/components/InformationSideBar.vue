@@ -45,7 +45,6 @@ export default {
       showLinks,
       showEducation,
       showProjects,
-      showUsers,
       showProfessionalSummaries,
     };
   },

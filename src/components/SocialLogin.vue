@@ -40,6 +40,7 @@ const handleCredentialResponse = async (response) => {
       router.push({ name: "resumes" });
       fName.value = user.value.fName;
       lName.value = user.value.lName;
+      router.push({ name: "resumes" });
     })
     .catch((error) => {
       console.log("error", error);
