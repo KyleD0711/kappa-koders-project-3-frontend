@@ -1285,7 +1285,7 @@
           {
             "section_name": "section_body",
             "style": {
-              "margin": "10px 0px"
+              "margin-top": "10px"
             }
           }
         ]
@@ -1305,6 +1305,7 @@
                 "section_name": "head",
                 "style": {
                   "font-weight": "600",
+                  "margin-top": "5px",
                   "margin-bottom": "10px"
                 },
                 "content": "EDUCATION"
@@ -1407,7 +1408,9 @@
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "bold",
+                  "margin-top": "5px",
+                  "margin-bottom": "10px"
                 },
                 "content": "EXPERIENCE"
               },
@@ -1493,7 +1496,9 @@
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "bold",
+                  "margin-top": "5px",
+                  "margin-bottom": "10px"
                 },
                 "content": "SKILLS"
               },
@@ -1562,7 +1567,10 @@
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "bold",
+                  "margin-top": "5px",
+                  "margin-bottom": "10px"
+
                 },
                 "content": "PROJECTS"
               },
@@ -1629,7 +1637,9 @@
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "bold",
+                  "margin-top": "5px",
+                  "margin-bottom": "10px"
                 },
                 "content": "AWARDS",
                 "children": []
