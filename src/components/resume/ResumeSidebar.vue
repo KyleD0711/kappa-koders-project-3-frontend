@@ -459,6 +459,10 @@ const updateSummary = (summary) => {
 
 defineProps(['exportFunction']);
 
+defineExpose({
+  resumeTitle
+})
+
 </script>
 
 <template>
