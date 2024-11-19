@@ -11,6 +11,23 @@ const header_data = ref({});
 const resume_data = ref({});
 const isLoaded = ref({});
 
+const resumeViewer = ref(null);
+
+const exportToPDF = () => {
+  const pdfContent = resumeViewer.value?.pdf;
+
+  if (pdfContent) {
+    const pdf = new jsPDF();
+    pdf.html(pdfContent, {
+      callback: (doc) => {
+        doc.save("myResume.pdf");
+      },
+    });
+  } else {
+    console.error("PDF content is not accessible!");
+  }
+};
+
 const handleDataChange = (data) => {
   if (data.metadata) {
     metadata.value = data.metadata;
