@@ -1,6 +1,10 @@
-<script setup></script>
+<script setup>
+
+import SkillView from './skill/SkillView.vue';
+
+</script>
 
 
 <template>
-  <div>Welcome to the Info Skills Page!</div>
+<SkillView></SkillView>
 </template>

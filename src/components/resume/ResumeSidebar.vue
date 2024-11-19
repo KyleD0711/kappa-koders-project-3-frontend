@@ -36,33 +36,41 @@ import LinkModal from "../links/LinkModal.vue";
 import linkServices from "../../services/linkServices";
 
 // Skills
-import SkillModal from "../skill/SkillModal.vue";
-import skillServices from "../../services/skillServices";
+import SkillModal from '../skill/SkillModal.vue';
+import skillServices from '../../services/skillServices';
+
+// professional summaries
+import professionalSummaryServices from '../../services/professionalSummaryServices';
+import ProfessionalSummaryModal from '../professionalSummary/ProfessionalSummaryModal.vue';
 
 import { storeToRefs } from "pinia";
 
 const modalStore = useModalStore();
 const { isVisible } = storeToRefs(modalStore);
 
+const emit = defineEmits(['dataChange']);
+
 const resume_data = ref([]);
-const headers = ref([]);
+const header_data = ref([]);
 const metadata = ref([]);
+const isLoaded = ref({});
 
 const resume_data_local = ref([]);
-const headers_local = ref([]);
+const header_data_local = ref([]);
 const metadata_local = ref({
   render_fields: [],
-  breaklines: true,
+  section_dividers: false,
 });
 const personalInfo = ref({
-  fName: "Jonah",
-  lName: "Veit",
-  email: "jonah@gmail.com",
-  phone_number: "999-888-77777",
-  prof_sum:
-    "Bachelor of Arts degree candidate, with a major in Economics, and experience developing and analyzing cost models, providing quality assurance reviews, and creating process solutions to improve financial forecasts for clients. Looking to continue the development of risk management, audit, and compliance skills in a team-centered environment.",
+  fName: 'Jonah',
+  lName: 'Veit',
+  email: 'jonah@gmail.com',
+  phone_number: '999-888-77777',
+  professional_summary: null,
 });
 
+
+const professionalSummaries = ref([]);  
 const resumeTitle = ref("Resume Name");
 const isEditingTitle = ref(false);
 
@@ -76,8 +84,7 @@ const saveTitle = () => {
 
 const cancelEditTitle = () => {
   isEditingTitle.value = false;
-  // Reset title or do something else if needed
-  resumeTitle.value = "Resume Name"; // Use the initial title or previous value
+  resumeTitle.value = "Resume Name"; 
 };
 
 const getEducation = async () => {
@@ -87,19 +94,11 @@ const getEducation = async () => {
       (section) => section.title === "Education"
     );
     if (educationSection) {
-      educationSection.items = res.data.map((item) => ({
-        name: item.institution,
-        selected: true,
-        data: item,
-      }));
+      educationSection.items = res.data.map(item => ({ name: item.institution, selected: false, data: item }));
     } else {
       resume_data_local.value.push({
-        title: "Education",
-        items: res.data.map((item) => ({
-          name: item.institution,
-          selected: true,
-          data: item,
-        })),
+        title: 'Education',
+        items: res.data.map(item => ({ name: item.institution, selected: false, data: item })),
       });
     }
   } catch (err) {
@@ -114,19 +113,11 @@ const getExperience = async () => {
       (section) => section.title === "Experience"
     );
     if (experienceSection) {
-      experienceSection.items = res.data.map((item) => ({
-        name: item.employer,
-        selected: true,
-        data: item,
-      }));
+      experienceSection.items = res.data.map(item => ({ name: item.employer, selected: false, data: item }));
     } else {
       resume_data_local.value.push({
-        title: "Experience",
-        items: res.data.map((item) => ({
-          name: item.employer,
-          selected: true,
-          data: item,
-        })),
+        title: 'Experience',
+        items: res.data.map(item => ({ name: item.employer, selected: false, data: item })),
       });
     }
   } catch (err) {
@@ -141,19 +132,11 @@ const getProject = async () => {
       (section) => section.title === "Project"
     );
     if (projectSection) {
-      projectSection.items = res.data.map((item) => ({
-        name: item.name,
-        selected: true,
-        data: item,
-      }));
+      projectSection.items = res.data.map(item => ({ name: item.name, selected: false, data: item }));
     } else {
       resume_data_local.value.push({
-        title: "Project",
-        items: res.data.map((item) => ({
-          name: item.name,
-          selected: true,
-          data: item,
-        })),
+        title: 'Project',
+        items: res.data.map(item => ({ name: item.name, selected: false, data: item })),
       });
     }
   } catch (err) {
@@ -168,19 +151,11 @@ const getAwards = async () => {
       (section) => section.title === "Award"
     );
     if (awardSection) {
-      awardSection.items = res.data.map((item) => ({
-        name: item.institution,
-        selected: true,
-        data: item,
-      }));
+      awardSection.items = res.data.map(item => ({ name: item.institution, selected: false, data: item }));
     } else {
       resume_data_local.value.push({
-        title: "Award",
-        items: res.data.map((item) => ({
-          name: item.institution,
-          selected: true,
-          data: item,
-        })),
+        title: 'Award',
+        items: res.data.map(item => ({ name: item.institution, selected: false, data: item })),
       });
     }
   } catch (err) {
@@ -191,29 +166,21 @@ const getAwards = async () => {
 const getLinks = async () => {
   try {
     const res = await linkServices.getAllLinkForUser();
-    const linkHeader = headers_local.value.find(
-      (header) => header.title === "Link"
-    );
+    const linkHeader = header_data_local.value.find(header => header.title === 'Link');
     if (linkHeader) {
-      linkHeader.items = res.data.map((item) => ({
-        name: item.name,
-        selected: true,
-        data: item,
-      }));
+      linkHeader.items = res.data.map(item => ({ name: item.name, selected: false, data: item }));
     } else {
-      headers_local.value.push({
-        title: "Link",
-        items: res.data.map((item) => ({
-          name: item.name,
-          selected: true,
-          data: item,
-        })),
+      header_data_local.value.push({
+        title: 'Link',
+        items: res.data.map(item => ({ name: item.name, selected: false, data: item })),
       });
     }
   } catch (err) {
     console.error(err);
   }
-};
+
+
+}
 
 const getSkills = async () => {
   try {
@@ -222,29 +189,40 @@ const getSkills = async () => {
       (section) => section.title === "Skill"
     );
     if (skillSection) {
-      skillSection.items = res.data.map((item) => ({
-        name: item.name,
-        selected: true,
-        data: item,
-      }));
+      skillSection.items = res.data.map(item => ({ name: item.name, selected: false, data: item }));
     } else {
       resume_data_local.value.push({
-        title: "Skill",
-        items: res.data.map((item) => ({
-          name: item.name,
-          selected: true,
-          data: item,
-        })),
+        title: 'Skill',
+        items: res.data.map(item => ({ name: item.name, selected: false, data: item })),
       });
     }
   } catch (err) {
     console.error(err);
   }
+}
+
+const getProf_sums = async () => {
+  try {
+    const res = await professionalSummaryServices.getAllProfessionalSummaryForUser();  // API call for professional summaries
+    professionalSummaries.value = res.data.map(item => ({
+      summary: item.summary,
+      selected: false,
+      data: item
+    }));
+  } catch (err) {
+    console.error('Error fetching professional summaries:', err);
+  }
 };
 
 const editLinkItem = (item) => {
   modalStore.link = item.data;
-  modalStore.modalType = "link";
+  modalStore.modalType = 'link';
+  modalStore.isVisible = true; 
+}
+
+const editProfessionalSummary = (item) => {
+  modalStore.professionalSummary = item.data;  // Pass the full data of the item to the modal
+  modalStore.modalType = 'professionalSummary';
   modalStore.isVisible = true;
 };
 
@@ -278,8 +256,16 @@ const showAddLinkDialog = () => {
     name: "",
     url: "",
   };
+  modalStore.isVisible = true; 
+  modalStore.modalType = 'link'; 
+};
+
+const showAddSummaryDialog = () => {
+  modalStore.professionalSummary = {
+    summary: "",  
+  };
   modalStore.isVisible = true;
-  modalStore.modalType = "link";
+  modalStore.modalType = 'professionalSummary';
 };
 
 // add
@@ -337,54 +323,69 @@ const showAddDialog = (section) => {
   }
 };
 
-onMounted(() => {
-  getEducation();
-  getExperience();
-  getProject();
-  getAwards();
-  getLinks();
-  getSkills();
+onMounted(async () => {
+  isLoaded.value = false;
+  emit('dataChange', { isLoaded: isLoaded.value });
+  
+  document.body.style.caretColor = 'transparent';
+
+  await Promise.all([
+    getEducation(),
+    getExperience(),
+    getProject(),
+    getAwards(),
+    getLinks(),
+    getSkills(),
+    getProf_sums()
+  ]);
+
+ 
+  resume_data_local.value.forEach((section) => {
+    if (section.isOpen === undefined) {
+      section.isOpen = false;
+    }
+  });
+
+  isLoaded.value = true;
+  handleDataChange();  
 });
 
-watch(
-  [resume_data_local, headers_local, personalInfo, metadata_local],
-  () => {
-    handleDataChange();
-  },
-  { deep: true }
-);
-watch(
-  [resume_data_local, headers_local, personalInfo, metadata_local],
-  () => {
-    handleDataChange();
-  },
-  { deep: true }
-);
+watch([resume_data_local, header_data_local, personalInfo, metadata_local, isLoaded], () => {
+  handleDataChange();
+}, { deep: true });
 
 const handleDataChange = () => {
+  const changes = {};
+
   if (resume_data_local.value) {
     const parsedResumeData = parseResumeData(resume_data_local.value);
     resume_data.value = parsedResumeData;
+    changes.resume_data = resume_data.value;
 
-    // Parse metadata after resume_data is parsed
-    const parsedMetadata = parseMetadata(
-      metadata_local.value,
-      parsedResumeData
-    );
+    const parsedMetadata = parseMetadata(metadata_local.value, parsedResumeData);
     metadata.value = parsedMetadata;
-
-    const jsonResumeDataString = JSON.stringify(resume_data.value, null, 2);
-
-    const jsonMetadataString = JSON.stringify(metadata.value, null, 2);
+    changes.metadata = metadata.value;
   }
 
-  if (headers_local.value || personalInfo.value) {
-    const parsedHeaders = parseHeaders(headers_local.value, personalInfo.value);
-    headers.value = parsedHeaders;
+  if (header_data_local.value || personalInfo.value) {
+    const parsedHeader_data = parseHeader_data(header_data_local.value, personalInfo.value);
+    
+    if (parsedHeader_data.link && Array.isArray(parsedHeader_data.link)) {
 
-    // const jsonHeadersString = JSON.stringify(headers.value, null, 2);
-    // console.log('JSON Stringified Headers:', jsonHeadersString);
+        parsedHeader_data.link = parsedHeader_data.link.map(link => {
+          const plainLink = { ...link };
+          return plainLink;
+        });
+    }
+
+    header_data.value = parsedHeader_data;
+    changes.header_data = header_data.value;
   }
+
+  isLoaded.value = true;
+  changes.isLoaded = isLoaded;
+
+  emit('dataChange', changes);
 };
 
 const parseResumeData = (resumeData) => {
@@ -405,30 +406,27 @@ const parseResumeData = (resumeData) => {
   return result;
 };
 
-const parseHeaders = (headers, personalInfo) => {
+const parseHeader_data = (header_data, personalInfo) => {
   const result = {};
 
-  headers.forEach((header) => {
+  header_data.forEach(header => {
     if (header.items && Array.isArray(header.items)) {
       const selectedItems = header.items
-        .filter((item) => item.selected === true)
-        .map((item) => ({
-          id: item.id || "",
-          name: item.name,
-          url: item.data ? item.data.url : "",
-        }));
+        .filter(item => item.selected === true) 
+        .map(item => item.data || {});
+
 
       if (selectedItems.length > 0) {
         result[header.title.toLowerCase()] = selectedItems;
       }
     }
   });
-
-  result.fName = personalInfo.fName || "";
-  result.lName = personalInfo.lName || "";
-  result.email = personalInfo.email || "";
-  result.phone_number = personalInfo.phone_number || "";
-  result.prof_sum = personalInfo.prof_sum || "";
+  
+  result.fName = personalInfo.fName || '';
+  result.lName = personalInfo.lName || '';
+  result.email = personalInfo.email || '';
+  result.phone_number = personalInfo.phone_number || '';
+  result.professional_summary = personalInfo.professional_summary || '';
 
   return result;
 };
@@ -437,8 +435,8 @@ const parseMetadata = (metadata_local, resume_data) => {
   const result = {};
 
   result.render_fields = Object.keys(resume_data);
-  result.breaklines = metadata_local.breaklines;
-
+  result.section_dividers = metadata_local.section_dividers;
+  
   return result;
 };
 
@@ -449,6 +447,23 @@ const exportPDF = () => {
   doc.save('doc-name.pdf');
 
 }
+
+const updateSummary = (summary) => {
+  // Deselect all other summaries
+  professionalSummaries.value.forEach(item => {
+    if (item !== summary) {
+      item.selected = false;
+    }
+  });
+
+
+  if (summary.selected) {
+    personalInfo.value.professional_summary = summary.summary;
+  } else {
+    personalInfo.value.professional_summary = null;  
+  }
+};
+
 </script>
 
 <template>
@@ -489,42 +504,55 @@ const exportPDF = () => {
         <v-expansion-panel-text class="panel-background">
           <div class="option-checkboxes">
             <v-form>
-              <v-row>
-                <v-col cols="6">
-                  <v-text-field
-                    v-model="personalInfo.fName"
-                    label="First Name"
-                  ></v-text-field>
-                </v-col>
+            <!-- Name, email, phone, etc. -->
+            <v-row>
+              <v-col cols="6">
+                <v-text-field v-model="personalInfo.fName" label="First Name"></v-text-field>
+              </v-col>
+              <v-col cols="6">
+                <v-text-field v-model="personalInfo.lName" label="Last Name"></v-text-field>
+              </v-col>
+            </v-row>
+            <v-text-field v-model="personalInfo.email" label="Email"></v-text-field>
+            <v-text-field v-model="personalInfo.phone_number" label="Phone Number"></v-text-field>
+          </v-form>
 
-                <v-col cols="6">
-                  <v-text-field
-                    v-model="personalInfo.lName"
-                    label="Last Name"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
+          <v-card class="mb-3">
+              <v-expansion-panels>
+                <v-expansion-panel class="section-0">
+                  <v-expansion-panel-title>
+                    Professional Summaries
+                  </v-expansion-panel-title>
+                  <v-expansion-panel-text>
+                    <!-- Professional Summaries List -->
+                    <ul>
+                      <template v-for="summary in professionalSummaries" :key="summary.data.id">
+                        <v-card class="mb-3">
+                          <li class="list-item">
+                            <div style="padding-left: 2%">
+                              <span>{{ summary.summary.substring(0, 30) }}...</span> <!-- Show first 30 characters of the summary -->
+                            </div>
+                            <div class="right-icons">
+                              <v-icon @click="editProfessionalSummary(summary)" class="edit-icon">mdi-pencil</v-icon>
+                              <v-switch v-model="summary.selected" @change="updateSummary(summary)" class="v-checkbox pa-0 ma-0" />
+                            </div>
+                          </li>
+                        </v-card>
+                      </template>
+                    </ul>
+  
+                    <!-- Add Professional Summary Card -->
+                    <v-card @click="showAddSummaryDialog()">  
+                      <div class="addSection">
+                        Add Professional Summary <v-icon style="padding-bottom: 1%;">mdi-plus</v-icon>
+                      </div>
+                    </v-card>
+                  </v-expansion-panel-text>
+                </v-expansion-panel>
+              </v-expansion-panels>
+            </v-card>
 
-              <v-text-field
-                v-model="personalInfo.email"
-                label="Email"
-              ></v-text-field>
-
-              <v-text-field
-                v-model="personalInfo.phone_number"
-                label="Phone Number"
-              ></v-text-field>
-
-              <v-textarea
-                v-model="personalInfo.prof_sum"
-                label="Professional Summary"
-              ></v-textarea>
-            </v-form>
-            <v-checkbox
-              v-model="metadata_local.breaklines"
-              label="Include Breaklines"
-            />
-            <draggable v-model="headers_local" tag="ul">
+            <draggable v-model="header_data_local" tag="ul">
               <template #item="{ element: header }">
                 <v-card class="mb-3">
                   <v-expansion-panels>
@@ -570,7 +598,13 @@ const exportPDF = () => {
                 </v-card>
               </template>
             </draggable>
+            
+            <v-checkbox v-model="metadata_local.section_dividers" label="Include section dividers" />
+
+            
           </div>
+          
+          
         </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
@@ -578,10 +612,10 @@ const exportPDF = () => {
     <hr class="light-breakline" />
 
     <draggable v-model="resume_data_local" tag="ul">
-      <template #item="{ element: section }">
+      <template #item="{ element: section, index }">
         <v-card class="mb-3">
-          <v-expansion-panels>
-            <v-expansion-panel class="section-0" :key="section.title">
+          <v-expansion-panels v-model="resume_data_local[index].isOpen">
+            <v-expansion-panel class="section-0">
               <v-expansion-panel-title>
                 <v-icon class="mr-2">mdi-drag</v-icon>
                 {{ section.title }}
@@ -623,41 +657,24 @@ const exportPDF = () => {
       </template>
     </draggable>
 
+
     <!-- Conditionally render the correct modal based on modalType -->
-    <EducationModal
-      v-if="isVisible && modalStore.modalType === 'education'"
-      :education="modalStore.education"
-      @submit-form="getEducation"
-    />
-    <ExperienceModal
-      v-if="isVisible && modalStore.modalType === 'experience'"
-      :experience="modalStore.experience"
-      @submit-form="getExperience"
-    />
-    <ProjectModal
-      v-if="isVisible && modalStore.modalType === 'project'"
-      :project="modalStore.project"
-      @submit-form="getProject"
-    />
-    <AwardModal
-      v-if="isVisible && modalStore.modalType === 'award'"
-      :award="modalStore.award"
-      @submit-form="getAwards"
-    />
-    <LinkModal
-      v-if="isVisible && modalStore.modalType === 'link'"
-      :link="modalStore.link"
-      @submit-form="getLinks"
-    />
-    <SkillModal
-      v-if="isVisible && modalStore.modalType === 'skill'"
-      :skill="modalStore.skill"
-      @submit-form="getSkills"
-    />
+    <EducationModal v-if="isVisible && modalStore.modalType === 'education'" :education="modalStore.education" @submit-form="getEducation" />
+    <ExperienceModal v-if="isVisible && modalStore.modalType === 'experience'" :experience="modalStore.experience" @submit-form="getExperience" />
+    <ProjectModal v-if="isVisible && modalStore.modalType === 'project'" :project="modalStore.project" @submit-form="getProject" />
+    <AwardModal v-if="isVisible && modalStore.modalType === 'award'" :award="modalStore.award" @submit-form="getAwards" />
+    <LinkModal v-if="isVisible && modalStore.modalType === 'link'" :link="modalStore.link" @submit-form="getLinks" />
+    <SkillModal v-if="isVisible && modalStore.modalType === 'skill'" :skill="modalStore.skill" @submit-form="getSkills" />
+    <ProfessionalSummaryModal v-if="isVisible && modalStore.modalType === 'professionalSummary'" :professionalSummary="modalStore.professionalSummary" @submit-form="getProf_sums"></ProfessionalSummaryModal>
   </div>
 </template>
 
 <style>
+.edit-pencil-summary{
+  cursor: pointer;
+  padding-top: 13%;
+}
+
 .text-field-wrapper {
   position: relative;
 }
