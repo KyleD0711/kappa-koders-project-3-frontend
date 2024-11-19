@@ -1,3 +1,20 @@
+<script>
+// import jsPDF from 'jspdf'
+import ResumeViewer from "./ResumeViewer.vue";
+
+export default {
+  components: {
+    ResumeViewer,
+  },
+  methods: {
+    exportPDF() {
+      const viewerRef = this.$refs.ResumeViewer.$refs.pdf;
+      console.log(viewerRef);
+    },
+  },
+};
+</script>
+
 <script setup>
 import { ref, watch, onMounted } from "vue";
 import draggable from "vuedraggable";
