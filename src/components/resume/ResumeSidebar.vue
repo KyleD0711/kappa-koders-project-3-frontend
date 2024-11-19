@@ -1,22 +1,3 @@
-<script>
-// import jsPDF from 'jspdf'
-import ResumeViewer from "./ResumeViewer.vue";
-
-export default {
-  components: {
-    ResumeViewer,
-  },
-  methods: {
-    exportPDF() {
-      const viewerRef = this.$refs.ResumeViewer.$refs.pdf;
-      console.log(viewerRef);
-    }
-  }
-}
-
-</script>
-
-
 <script setup>
 import { ref, watch, onMounted } from "vue";
 import draggable from "vuedraggable";
@@ -30,7 +11,7 @@ import {
 } from "vuetify/components";
 import { useModalStore } from "../../store/modal.store";
 
-// import primeIcons from 'primeicons/primeicons.css'
+import 'primeicons/primeicons.css'
 
 // Education:
 import EducationModal from "../education/EducationModal.vue";
@@ -476,6 +457,8 @@ const updateSummary = (summary) => {
   }
 };
 
+defineProps(['exportFunction']);
+
 </script>
 
 <template>
@@ -504,7 +487,7 @@ const updateSummary = (summary) => {
           @click="toggleEditTitle"
           >mdi-pencil</v-icon
         >
-        <i @click="exportPDF()" style="display: flex; align-items: right; padding-left: 10px; padding-right: 5px;"class="pi pi-print"></i>
+        <i @click="exportFunction" style="display: flex; align-items: right; padding-left: 10px; padding-right: 5px;" class="pi pi-print"></i>
       </template>
     </div>
 

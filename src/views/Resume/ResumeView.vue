@@ -11,6 +11,23 @@ const header_data = ref({});
 const resume_data = ref({});
 const isLoaded = ref({});
 
+const resumeViewer = ref(null);
+
+const exportToPDF = () => {
+  const pdfContent = resumeViewer.value?.pdf;
+
+  if (pdfContent) {
+    const pdf = new jsPDF();
+    pdf.html(pdfContent, {
+      callback: (doc) => {
+        doc.save('myResume.pdf')
+      },
+    });
+  } else {
+    console.error('PDF content is not accessible!');
+  }
+}
+
 const handleDataChange = (data) => {
   
   if (data.metadata) {
@@ -39,6 +56,7 @@ const handleDataChange = (data) => {
     <div style="width: 30%">
       <ResumeSidebar 
         :resume_data="resume_data"
+        :exportFunction="exportToPDF"
         @dataChange = "handleDataChange" />
     </div>
     <v-divider
@@ -49,6 +67,7 @@ const handleDataChange = (data) => {
     <div style="flex-grow: 1; padding-left: 10%;">
       <ResumeViewer
       @dataChange="handleDataChange"
+        ref="resumeViewer"
         :is-loaded="isLoaded"
         :template="templateData"
         :metadata="metadata"

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted, onBeforeUnmount, toRaw} from "vue";
+import { ref, watch, onMounted, defineExpose, onBeforeUnmount, toRaw} from "vue";
 import htmlGenerator from "./resumeUtils/htmlGenerator";
 import jsonUtils from "./resumeUtils/jsonUtils";
 import NoDataFound from "./NoDataFound.vue";
@@ -126,6 +126,11 @@ watch(props, () => {
 });
 
 const pdf = ref(null);
+
+defineExpose({
+  pdf,
+})
+
 
 const getScreenDPI = () => {
   // Create a temporary element to calculate DPI
