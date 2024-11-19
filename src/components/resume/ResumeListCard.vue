@@ -2,6 +2,13 @@
 
 import { ref } from 'vue';
 
+const props = defineProps({
+  resumeData: {
+    type: Object,
+    required: true,
+  },
+});
+
 const resume = ref()
 
 </script>
@@ -15,10 +22,10 @@ const resume = ref()
         <v-row>
             <v-col cols="6">     
                 <v-card-title>
-                    Resume 1
+                    {{ props.resumeData.name }}
                 </v-card-title>
                 <v-card-text class="pt-0">
-                    Last Edited
+                    Last Updated {{ props.resumeData.updatedAt }}
                 </v-card-text>
             </v-col>
             <v-col cols="6" class="align-content-center">
