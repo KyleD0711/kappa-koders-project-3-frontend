@@ -3,6 +3,7 @@
     "structure": {
       "metadata": {
         "font": "'Times New Roman', Times, serif"
+
       },
       "pdf_header": {
         "section_name": "pdf_header",
@@ -692,7 +693,7 @@
       "pdf_header": {
         "section_name": "pdf_header",
         "style": {
-          "margin-bottom": "1em"
+          "margin":"0.5em 1em 1em 1em"
         },
         "children": [
           {
@@ -702,6 +703,7 @@
               "font-size": "2em",
               "font-weight": "bold",
               "margin-top": "0.67em",
+              "margin-right": "1em",
               "line-height": "1.2"
             }
           },
@@ -719,8 +721,10 @@
           {
             "section_name": "section_header",
             "style": {
+              "font-family": "'Times New Roman', Times, serif",
               "font-weight": "600",
-              "margin-top":  "15px"
+              "font-size": "18px",
+              "margin":"15px 1em 0px 1em"
             },
             "content": "PROFESSIONAL SUMMARY"
           },
@@ -728,7 +732,10 @@
             "section_name": "divider"
           },
           {
-            "section_name": "section_body"
+            "section_name": "section_body",
+            "style": {
+              "margin":"0px 1em 10px 1em"
+            }
           }
         ]
       },
@@ -744,8 +751,10 @@
               {
                 "section_name": "head",
                 "style": {
+                  "font-family": "'Times New Roman', Times, serif",
                   "font-weight": "bold",
-                  "margin-top": "15px"
+                  "margin":"15px 1em 0px 1em",
+                  "font-size": "18px"
                 },
                 "content": "EDUCATION"
               },
@@ -757,7 +766,7 @@
           {
             "section_name": "section_item",
             "style": {
-              "margin-bottom": ".67em"
+              "margin":"0px 1em .67em 1em"
             },
             "children": [
               {
@@ -769,8 +778,7 @@
                   {
                     "section_name": "institution",
                     "style": {
-                      "font-weight": "600",
-                      "margin-top": "15px"
+                      "font-weight": "600"
                     }
                   },
                   {
@@ -828,7 +836,10 @@
                 ]
               },
               {
-                "section_name": "coursework"
+                "section_name": "coursework",
+                "style": {
+                  "font-style": "italic"
+                }
               }
             ]
           }
@@ -846,8 +857,10 @@
               {
                 "section_name": "head",
                 "style": {
+                  "font-family": "'Times New Roman', Times, serif",
                   "font-weight": "bold",
-                  "margin-top": "15px"
+                  "font-size": "18px",
+                  "margin":"15px 1em 0px 1em"
                 },
                 "content": "EXPERIENCE"
               },
@@ -859,7 +872,7 @@
           {
             "section_name": "section_item",
             "style": {
-              "margin-bottom": "10px"
+              "margin":"0px 1em 10px 1em"
             },
             "children": [
               {
@@ -940,7 +953,9 @@
                 "section_name": "head",
                 "style": {
                   "font-weight": "bold",
-                  "margin-top": "15px"
+                  "margin":"15px 1em 0px 1em",
+                  "font-size": "18px",
+                  "font-family": "'Times New Roman', Times, serif"
                 },
                 "content": "SKILLS"
               },
@@ -952,7 +967,7 @@
           {
             "section_name": "section_item",
             "style": {
-              "margin-bottom": "10px"
+              "margin":"0px 1em 10px 1em"
             },
             "children": [
               {
@@ -972,11 +987,15 @@
                         },
                         "children": [
                           {
-                            "section_name": "name"
+                            "section_name": "name",
+                            "style": {
+                              "font-weight": "600"
+                            }
                           },
                           {
                             "style": {
-                              "margin-right": "5px"
+                              "margin-right": "5px",
+                              "font-weight": "600"
                             },
                             "content": ":"
                           },
@@ -1016,7 +1035,9 @@
                 "section_name": "head",
                 "style": {
                   "font-weight": "bold",
-                  "margin-top": "15px"
+                  "margin":"15px 1em 0px 1em",
+                  "font-size": "18px",
+                  "font-family": "'Times New Roman', Times, serif"
                 },
                 "content": "PROJECTS"
               },
@@ -1028,7 +1049,7 @@
           {
             "section_name": "section_item",
             "style": {
-              "margin-bottom": "10px"
+              "margin":"0px 1em 10px 1em"
             },
             "children": [
               {
@@ -1038,7 +1059,10 @@
                 },
                 "children": [
                   {
-                    "section_name": "name"
+                    "section_name": "name",
+                    "style": {
+                      "font-weight": "600"
+                    }
                   },
                   {
                     "section_name": "bar",
@@ -1090,7 +1114,9 @@
                 "section_name": "head",
                 "style": {
                   "font-weight": "bold",
-                  "margin-top": "15px"
+                  "margin":"15px 1em 0px 1em",
+                  "font-size": "18px",
+                  "font-family": "'Times New Roman', Times, serif"
                 },
                 "content": "AWARDS",
                 "children": []
@@ -1103,7 +1129,7 @@
           {
             "section_name": "section_item",
             "style": {
-              "margin-bottom": "10px"
+              "margin":"0px 1em 10px 1em"
             },
             "children": [
               {
@@ -1113,7 +1139,10 @@
                 },
                 "children": [
                   {
-                    "section_name": "name"
+                    "section_name": "name",
+                    "style": {
+                      "font-weight": "600"
+                    }
                   },
                   {
                     "section_name": "bar",
