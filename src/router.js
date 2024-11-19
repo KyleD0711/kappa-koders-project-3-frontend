@@ -13,6 +13,7 @@ import InfoUsers from "./components/InfoUsers.vue";
 import ProfessionalSummaryView from "./components/professionalSummary/ProfessionalSummaryView.vue";
 import AdminUserView from "./views/Admin/AdminUserView.vue";
 import ReviewResumes from "./views/Admin/ReviewResumes.vue";
+import ReviewResume from "./views/Admin/ReviewResume.vue";
 
 import RouterStateController from "./utils/routerStateController.js";
 
@@ -94,7 +95,7 @@ const router = createRouter({
           path: "reviewResumes",
           name: "reviewResumes",
           beforeEnter: isAdmin,
-          component: ReviewResumes,
+          component: ReviewResume,
         },
       ],
     },
