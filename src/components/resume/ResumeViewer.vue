@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted, onBeforeUnmount, toRaw} from "vue";
+import { ref, watch, onMounted, onBeforeUnmount, toRaw } from "vue";
 import htmlGenerator from "./resumeUtils/htmlGenerator";
 import jsonUtils from "./resumeUtils/jsonUtils";
 import NoDataFound from "./NoDataFound.vue";
@@ -37,8 +37,6 @@ const renderPDF = () => {
   let resume_data = props.resume_data;
   let template = props.template;
 
- 
-
   let title = `${header_data.fName} ${header_data.lName}`;
 
   let pdf_header = jsonUtils.findAndUpdateSectionByName(
@@ -48,10 +46,10 @@ const renderPDF = () => {
   );
 
   let personal_info = `${header_data.email} | ${header_data.phone_number}`;
-  
+
   let linkArray = (header_data.link ?? []).map((value) => ({
     name: value.name,
-    url: value.url
+    url: value.url,
   }));
 
   linkArray.forEach((value) => {
@@ -64,22 +62,23 @@ const renderPDF = () => {
     personal_info
   );
 
-  let professional_summary = jsonUtils.findAndUpdateSectionByName(
-    template.structure.professional_summary,
-    template.data.professional_summary,
-    header_data.professional_summary
-  );
+  let body_children = [pdf_header];
 
-  let body_children = [pdf_header, professional_summary];
-
-
+  if (header_data.professional_summary != "") {
+    let professional_summary = jsonUtils.findAndUpdateSectionByName(
+      template.structure.professional_summary,
+      template.data.professional_summary,
+      header_data.professional_summary
+    );
+    body_children = [...body_children, professional_summary];
+  }
 
   let renderFieldsArray = toRaw(metadata.render_fields);
-  
+
   const deepToRaw = (data) => {
     // Check if the data is an array
     if (Array.isArray(data)) {
-      return data.map(item => toRaw(item)); // Remove reactivity from each array item
+      return data.map((item) => toRaw(item)); // Remove reactivity from each array item
     }
     // If it's not an array, return as is
     return data;
@@ -87,11 +86,10 @@ const renderPDF = () => {
 
   // Unwrap the object properties
   const rawResumeData = {};
-  Object.keys(props.resume_data).forEach(key => {
+  Object.keys(props.resume_data).forEach((key) => {
     rawResumeData[key] = deepToRaw(toRaw(props.resume_data[key]));
   });
 
-  
   renderFieldsArray.forEach((render_field) => {
     let section = jsonUtils.findAndUpdateSectionByData(
       template,
@@ -100,8 +98,6 @@ const renderPDF = () => {
     );
     body_children.push({ ...section });
   });
-
-
 
   full_json_object = {
     resume: {

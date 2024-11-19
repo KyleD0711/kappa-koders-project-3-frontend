@@ -3,7 +3,7 @@ import ResumeViewer from "../../components/resume/ResumeViewer.vue";
 import ResumeSidebar from "../../components/resume/ResumeSidebar.vue";
 import { ref } from "vue";
 import template from "../../../templates/templates.json";
-const templateData = ref(template["template4"]);
+const templateData = ref(template["template3"]);
 
 const metadata = ref({});
 const header_data = ref({});
@@ -11,10 +11,8 @@ const resume_data = ref({});
 const isLoaded = ref({});
 
 const handleDataChange = (data) => {
-  
   if (data.metadata) {
-    metadata.value = data.metadata
-
+    metadata.value = data.metadata;
   }
 
   if (data.resume_data) {
@@ -22,8 +20,6 @@ const handleDataChange = (data) => {
   }
 
   if (data.header_data) {
-    
-
     header_data.value = data.header_data;
   }
 
@@ -31,23 +27,23 @@ const handleDataChange = (data) => {
     isLoaded.value = data.isLoaded;
   }
 };
-
 </script>
 <template>
   <div style="display: flex">
     <div style="width: 30%">
-      <ResumeSidebar 
+      <ResumeSidebar
         :resume_data="resume_data"
-        @dataChange = "handleDataChange" />
+        @dataChange="handleDataChange"
+      />
     </div>
     <v-divider
       vertical
       :thickness="4"
       class="white border-opacity-100"
     ></v-divider>
-    <div style="flex-grow: 1; padding-left: 10%;">
+    <div style="flex-grow: 1; padding-left: 10%">
       <ResumeViewer
-      @dataChange="handleDataChange"
+        @dataChange="handleDataChange"
         :is-loaded="isLoaded"
         :template="templateData"
         :metadata="metadata"
