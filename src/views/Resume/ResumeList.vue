@@ -5,9 +5,20 @@ import { useDisplay } from 'vuetify'
 import ResumeServices from '../../services/resumeServices';
 
 import ResumeCard from '../../components/resume/ResumeListCard.vue';
+import ResumeAddModal from '../../components/resume/ResumeAddModal.vue';
+import ConfirmationDialog from '../../components/ConfirmationDialog.vue';
+
+import { useModalStore } from "../../store/modal.store";
+import { storeToRefs } from "pinia";
+
+const modalStore = useModalStore();
+const { isVisible } = storeToRefs(modalStore);
 
 const resumeList = ref([])
 const dataLoaded = ref(false)
+const showDialog = ref(false)
+
+const resumeToDelete = ref({})
 
 const { name } = useDisplay()
 
@@ -30,6 +41,20 @@ const getResumes = async () => {
     })
 }
 
+const showConfirmDelete = (resume) => {
+  resumeToDelete.value = resume;
+  console.log(resume)
+  showDialog.value = true;
+}
+
+const deleteResume = () => {
+  ResumeServices.deleteResume(resumeToDelete.value.id)
+  .then(() => {
+    getResumes()
+    showDialog.value = false;
+  })
+}
+
 onMounted(() => {
     getResumes()
 })
@@ -37,10 +62,20 @@ onMounted(() => {
 </script>
 
 <template>
-
+  <div>
     <v-col :cols="pageCols" class="mx-auto">
-        <p class="text-h4 my-4 ml-4 text-secondary">My Resumes</p>
-
+        <v-row class="w-100 justify-space-between align-center" no-gutters>
+          <p class="text-h4 my-4 ml-4 text-secondary">My Resumes</p>
+          <v-btn
+            prepend-icon="mdi-plus"
+            color="teal"
+            class="mr-6"
+            @click="isVisible = true"
+          >
+            Add Resume
+          </v-btn>
+        </v-row>
+  
         <v-container class="ma-0 pa-0 scroll-pane" fluid v-if="dataLoaded">
           <v-row justify="start" class="resume-grid">
             <v-col
@@ -50,12 +85,22 @@ onMounted(() => {
               md="4"
               class="d-flex"
             >
-              <ResumeCard :resume-data="resume" class="ma-4"/>
+              <ResumeCard :resume-data="resume" class="ma-4" @delete="showConfirmDelete"/>
             </v-col>
           </v-row>
         </v-container>
     </v-col>
-    
+
+    <ResumeAddModal />
+  
+    <ConfirmationDialog 
+      :show="showDialog" 
+      action="delete" 
+      :entity="'\'' + resumeToDelete.name +'\''" 
+      @action="deleteResume"
+      @cancel="showDialog = false"
+    />
+  </div>
 </template>
 
 <style scoped>
@@ -65,7 +110,7 @@ onMounted(() => {
 
 .scroll-pane {
   width: 100%;          /* Adjust width as needed */
-  max-height: 85vh;    /* Sets the height limit for scroll */
+  max-height: 75vh;    /* Sets the height limit for scroll */
   overflow-y: auto;     /* Enables vertical scrolling */
   overflow-x: hidden;   /* Hides horizontal scrolling */
   padding: 10px;        /* Optional padding */

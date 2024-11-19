@@ -10,4 +10,7 @@ export default {
   updateReview(reviewId, review) {
     return apiClient.put(`/admin/resume/review/${reviewId}`, review);
   },
+  deleteResume(resumeId) {
+    return apiClient.delete("/student/resume/" + resumeId);
+  },
 };
