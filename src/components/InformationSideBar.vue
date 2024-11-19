@@ -4,8 +4,8 @@ import 'primeicons/primeicons.css';
 
 
 export default {
-    setup() {
-        const router = useRouter();
+  setup() {
+    const router = useRouter();
 
         const showExperience = () => {
             router.push({name: 'experience'});
@@ -71,24 +71,22 @@ export default {
             document.getElementById('users').classList.add('active');
         }
 
-        return {
-            showExperience,
-            showSkills,
-            showAwards,
-            showLinks,
-            showEducation,
-            showProjects,
-            showUsers
-        }
-
-    }
-}
-
+    return {
+      showExperience,
+      showSkills,
+      showAwards,
+      showLinks,
+      showEducation,
+      showProjects,
+      showUsers,
+      showProfessionalSummaries,
+    };
+  },
+};
 </script>
 
 <template>
-
-<div class="infoSidebar">
+  <div class="infoSidebar">
     <div id="exp" class="infoSection" @click="showExperience()"> 
         <i class="pi pi-briefcase"></i>
         Experience
@@ -117,9 +115,10 @@ export default {
         <i class="pi pi-user"></i>
         Users
     </div>
-</div>
-
-
+    <div class="infoSection" @click="showProfessionalSummaries()">
+      Professional Summaries
+    </div>
+  </div>
 </template>
 
 <style>
@@ -135,7 +134,6 @@ export default {
 .active {
     background-color: #eee !important;
 }
-
 .infoSidebar {
     width: 20%;
     height: 100%;
