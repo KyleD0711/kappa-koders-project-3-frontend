@@ -61,14 +61,13 @@ export default {
             document.getElementById('proj').classList.add('active');
         }
 
-        const showUsers = () => {
-            router.push({name: 'users'});
-            let x = document.getElementsByClassName('infoSection');
-            console.log(x);
-            for (let item of x) {
+        const showProfessionalSummaries = () => {
+          router.push({name: 'professionalSummaries'});
+          let x = document.getElementsByClassName('infoSection');
+          for (let item of x) {
                 item.classList.remove('active');
             }
-            document.getElementById('users').classList.add('active');
+          document.getElementById('summ').classList.add('active');
         }
 
     return {
@@ -78,7 +77,6 @@ export default {
       showLinks,
       showEducation,
       showProjects,
-      showUsers,
       showProfessionalSummaries,
     };
   },
@@ -111,11 +109,8 @@ export default {
         <i class="pi pi-book"></i>
         Projects
     </div>
-    <div id="users" class="infoSection users" @click="showUsers()">
-        <i class="pi pi-user"></i>
-        Users
-    </div>
-    <div class="infoSection" @click="showProfessionalSummaries()">
+    <div id="summ" class="infoSection summ" @click="showProfessionalSummaries()">
+      <i class="pi pi-verified"></i>
       Professional Summaries
     </div>
   </div>
