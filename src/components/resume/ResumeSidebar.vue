@@ -491,7 +491,13 @@ defineExpose({
           @click="toggleEditTitle"
           >mdi-pencil</v-icon
         >
-        <i @click="exportFunction" v-if="!isEditingTitle" style="margin-left: 30px;" class="pi pi-print edit-icon"></i>
+
+        <i 
+          @click="exportFunction" 
+          v-if="!isEditingTitle" 
+          style="margin-left: 30px; vertical-align: middle; position: relative; top: -2px;" 
+          class="pi pi-print">
+        </i>      
       </template>
     </div>
 
