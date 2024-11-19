@@ -1,9 +1,10 @@
 <script setup>
 import ResumeViewer from "../../components/resume/ResumeViewer.vue";
 import ResumeSidebar from "../../components/resume/ResumeSidebar.vue";
+import jsPDF from 'jspdf'
 import { ref } from "vue";
 import template from "../../../templates/templates.json";
-const templateData = ref(template["template3"]);
+const templateData = ref(template["template2"]);
 
 const metadata = ref({});
 const header_data = ref({});
