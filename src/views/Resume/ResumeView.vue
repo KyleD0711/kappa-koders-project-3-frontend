@@ -3,8 +3,11 @@ import ResumeViewer from "../../components/resume/ResumeViewer.vue";
 import ResumeSidebar from "../../components/resume/ResumeSidebar.vue";
 import jsPDF from 'jspdf';
 import { useRoute } from 'vue-router';
-import { ref, onMounted, watch } from "vue";
+import Chat from "../../components/chat/Chat.vue"
+import { computed, ref, onMounted, watch } from "vue";
 import template from "../../../templates/templates.json";
+
+const drawerCols = 4;
 
 // Reactive variables
 const selectedTemplate = ref('template1'); // Default to 'template1'
@@ -14,52 +17,28 @@ const header_data = ref({});
 const resume_data = ref({});
 const isLoaded = ref({});
 
-const resumeViewer = ref(null);
-const resumeSidebar = ref(null);
+const leftTab = ref(null)
+const rightTab = ref(null)
 
-const route = useRoute();
-const resumeId = route.params.resumeId;
+const leftDrawer = ref(true);
+const rightDrawer = ref(false)
 
-// On mounted, log the resumeId
-onMounted(() => {
-  console.log(resumeId);
-});
-
-// Watch the selectedTemplate for changes
-watch(selectedTemplate, (newTemplateKey) => {
-  console.log('Selected template:', newTemplateKey);
-  templateData.value = template[newTemplateKey] || {}; // Dynamically select the template
-});
-
-// Export to PDF function
-const exportToPDF = () => {
-  const pdfContent = resumeViewer.value?.pdf;
-  const pdfTitle = resumeSidebar.value?.resumeTitle;
-
-  if (pdfContent) {
-    const pdf = new jsPDF({
-      orientation: 'portrait',
-      unit: 'px',
-      format: [816, 1056],
-    });
-
-    pdf.html(pdfContent, {
-      x: 0,
-      y: -20,
-      html2canvas: {
-        scale: 1,
-        useCORS: true,
-      },
-      callback: (doc) => {
-        doc.save(`${pdfTitle}.pdf`);
-      },
-    });
-  } else {
-    console.error('PDF content is not accessible!');
+watch(rightTab, (newVal) => {
+  if (newVal !== null) {
+    leftTab.value = null; // Deselect left tab when a right tab is selected
+    rightDrawer.value = true; // Open right drawer
+    leftDrawer.value = false; // Close left drawer
   }
-};
+});
 
-// Handle data change
+watch(leftTab, (newVal) => {
+  if (newVal !== null) {
+    rightTab.value = null; // Deselect right tab when a left tab is selected
+    leftDrawer.value = true; // Open left drawer
+    rightDrawer.value = false; // Close right drawer
+  }
+});
+
 const handleDataChange = (data) => {
   if (data.metadata) {
     metadata.value = data.metadata;
@@ -78,36 +57,41 @@ const handleDataChange = (data) => {
   }
 };
 
+const drawerWidth = computed(() => {
+  const totalWidth = window.innerWidth; // Get screen width
+  return (drawerCols / 12) * totalWidth;
+})
+
 // Reactive slide selection
 const templates = ['template1', 'template2', 'template3', 'template4'];
 </script>
 
 <template>
-  <div style="display: flex">
-    <div style="width: 30%">
-      <ResumeSidebar 
-        ref="resumeSidebar"
-        :resume_data="resume_data"
-        :resumeId="resumeId"
-        :templateData="selectedTemplate"
-        :exportFunction="exportToPDF"
-        @dataChange="handleDataChange" />
-    </div>
-    <v-divider
-      vertical
-      :thickness="4"
-      class="white border-opacity-100"
-    ></v-divider>
-    
-    <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; padding-left: 10%;">
-      <!-- Add the white--text class to v-tabs -->
-      <v-tabs v-model="selectedTemplate" vertical class="white-text" style="padding-right: 5%">
-        <v-tab v-for="templateKey in templates" :key="templateKey" :value="templateKey" class="white-text">
-          {{ templateKey }}
-        </v-tab>
+  <v-row class="justify-space-between" no-gutters>
+      <v-tabs
+        v-model="leftTab"
+        direction="vertical"
+        hide-slider
+      >
+        <v-card class="mt-1 tab-width tab-left" :color="leftTab == 0 ? 'teal' : ''">
+          <v-tab  height="125">
+            <v-icon size="x-large">mdi-pencil</v-icon>
+          </v-tab>
+        </v-card>
       </v-tabs>
 
-      <!-- ResumeViewer placed below tabs -->
+      <v-navigation-drawer
+        v-model="leftDrawer"
+        location="left"
+        color="#4c4c4c"
+        :width="drawerWidth"
+      >
+        <ResumeSidebar 
+          :resume_data="resume_data"
+          @dataChange = "handleDataChange" />
+      </v-navigation-drawer>
+
+    <div class="scroll-pane">
       <ResumeViewer
         @dataChange="handleDataChange"
         ref="resumeViewer"
@@ -119,7 +103,34 @@ const templates = ['template1', 'template2', 'template3', 'template4'];
         :resume_data="resume_data"
       />
     </div>
-  </div>
+    <v-tabs
+      v-model="rightTab"
+      direction="vertical"
+      hide-slider
+    >
+      <v-card class="mt-1 tab-width tab-right" :color="rightTab == 0 ? 'teal' : ''">
+        <v-tab size="large" height="125" >
+          <v-icon size="large" class="ml-n2">mdi-chat</v-icon>
+        </v-tab>
+      </v-card>
+      <v-card class="mt-1 tab-width tab-right"  :color="rightTab == 1 ? 'teal' : ''">
+        <v-tab size="large" height="125">
+          <v-icon size="large" class="ml-n2">mdi-comment-multiple</v-icon>
+        </v-tab>
+      </v-card>
+    </v-tabs>
+    <v-navigation-drawer
+      v-model="rightDrawer"
+      location="right"
+      color="#4c4c4c"
+      :width="drawerWidth"
+    >
+      <Chat v-if="rightTab == 0"/>
+      <div v-else>
+        <p class="text-h4">Comments Pane Goes Here</p>
+      </div>
+    </v-navigation-drawer>
+  </v-row>
 </template>
 
 <style scoped>
@@ -132,4 +143,36 @@ const templates = ['template1', 'template2', 'template3', 'template4'];
   padding-left: 1%;
 }
 
+.tab-width {
+  width: 50px;
+}
+.tab-right {
+  border-radius: 10px 0px 0px 10px;
+}
+.tab-left {
+  border-radius: 0px 10px 10px 0px;
+}
+
+.scroll-pane {
+  height: 85vh;    /* Sets the height limit for scroll */
+  overflow-y: auto;     /* Enables vertical scrolling */
+  overflow-x: hidden;   /* Hides horizontal scrolling */
+  box-sizing: border-box; /* Ensures padding is within total width/height */
+  margin-top: 15px; 
+  margin-bottom: 12px;
+}
+
+/* Custom scrollbar styling (works in webkit browsers like Chrome and Safari) */
+.scroll-pane::-webkit-scrollbar {
+  width: 8px;           /* Width of the scrollbar */
+}
+
+.scroll-pane::-webkit-scrollbar-thumb {
+  background-color: #888; /* Scrollbar thumb color */
+  border-radius: 4px;    /* Rounded edges */
+}
+
+.scroll-pane::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Darker color on hover */
+}
 </style>

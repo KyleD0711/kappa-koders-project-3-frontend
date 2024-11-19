@@ -2,33 +2,14 @@
 import { ref } from 'vue';
 import Chat from "./Chat.vue"
 
-const drawer = ref(true);
+const drawer = ref(false);
 </script>
 
 <template>
-  <v-row class="justify-end" no-gutters>
-    <v-col cols="1" class="px-0 mr-n9">
-      <v-tabs
-        v-model="activeTab"
-        direction="vertical"
-        hide-slider
-      >
-        <v-card class="mt-1" rounded="lg">
-          <v-tab size="large" height="125">
-            <v-icon size="large" class="ml-n2">mdi-chat</v-icon>
-          </v-tab>
-        </v-card>
-        <v-card class="mt-1" rounded="lg">
-          <v-tab size="large" height="125">
-            <v-icon size="large" class="ml-n2">mdi-comment-multiple</v-icon>
-          </v-tab>
-        </v-card>
-      </v-tabs>
-    </v-col>
-  </v-row>
-  
+    
+
       <v-navigation-drawer
-        width="500"
+        width="250"
         v-model="drawer"
         location="right"
         color="#4c4c4c"
