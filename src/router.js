@@ -29,6 +29,13 @@ const router = createRouter({
       component: ResumeList,
     },
     {
+      path: "/editResume/:resumeId",
+      alias: "/resume",
+      name: "editResume",
+      component: ResumeView,
+      props: (route) => ({ formId: Number(route.params.resumeId) })
+    },
+    {
       path: "/login",
       alias: "/login",
       name: "login",
