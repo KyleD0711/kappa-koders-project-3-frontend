@@ -41,6 +41,7 @@
             "section_name": "section_header",
             "style": {
               "font-weight": "bold",
+              "margin-top": "5px",
               "margin-bottom": "5px"
             },
             "content": "PROFESSIONAL SUMMARY",
@@ -63,7 +64,11 @@
         "children": [
           {
             "section_name": "section_header",
-            "style": {},
+            "style": {
+              "font-weight": "bold",
+              "margin-top": "5px",
+              "margin-bottom": "10px"
+            },
             "content": "",
             "children": [
               {
@@ -186,7 +191,9 @@
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "bold",
+                  "margin-top": "5px",
+                  "margin-bottom": "10px",
                 },
                 "content": "EXPERIENCE",
                 "children": []
@@ -294,7 +301,9 @@
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "bold",
+                  "margin-top": "5px",
+                  "margin-bottom": "10px"
                 },
                 "content": "SKILLS",
                 "children": []
@@ -380,7 +389,11 @@
         "children": [
           {
             "section_name": "section_header",
-            "style": {},
+            "style": {
+              "font-weight": "600",
+              "margin-top": "5px",
+              "margin-bottom": "10px"
+            },
             "content": "",
             "children": [
               {
@@ -469,7 +482,11 @@
         "children": [
           {
             "section_name": "section_header",
-            "style": {},
+            "style": {
+              "font-weight": "600",
+              "margin-top": "5px",
+              "margin-bottom": "10px"
+            },
             "content": "",
             "children": [
               {
@@ -702,7 +719,8 @@
           {
             "section_name": "section_header",
             "style": {
-              "font-weight": "bold"
+              "font-weight": "600",
+              "margin-top":  "15px"
             },
             "content": "PROFESSIONAL SUMMARY"
           },
@@ -726,7 +744,8 @@
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "bold",
+                  "margin-top": "15px"
                 },
                 "content": "EDUCATION"
               },
@@ -750,7 +769,8 @@
                   {
                     "section_name": "institution",
                     "style": {
-                      "font-weight": "bold"
+                      "font-weight": "600",
+                      "margin-top": "15px"
                     }
                   },
                   {
@@ -826,7 +846,8 @@
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "bold",
+                  "margin-top": "15px"
                 },
                 "content": "EXPERIENCE"
               },
@@ -918,7 +939,8 @@
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "bold",
+                  "margin-top": "15px"
                 },
                 "content": "SKILLS"
               },
@@ -993,7 +1015,8 @@
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "bold",
+                  "margin-top": "15px"
                 },
                 "content": "PROJECTS"
               },
@@ -1066,7 +1089,8 @@
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "bold",
+                  "margin-top": "15px"
                 },
                 "content": "AWARDS",
                 "children": []
