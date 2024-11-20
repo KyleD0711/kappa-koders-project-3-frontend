@@ -2,7 +2,8 @@
 import ResumeViewer from "../../components/resume/ResumeViewer.vue";
 import ResumeSidebar from "../../components/resume/ResumeSidebar.vue";
 import jsPDF from 'jspdf'
-import { ref } from "vue";
+import { useRoute } from 'vue-router';
+import { ref, onMounted} from "vue";
 import template from "../../../templates/templates.json";
 const templateData = ref(template["template1"]);
 
@@ -11,8 +12,18 @@ const header_data = ref({});
 const resume_data = ref({});
 const isLoaded = ref({});
 
+const route = useRoute();
+const resumeId = route.params.resumeId;
+
+onMounted(async () => {
+  console.log(resumeId);
+
+});
+
 const resumeViewer = ref(null);
 const resumeSidebar = ref(null);
+
+
 
 const exportToPDF = () => {
   const pdfContent = resumeViewer.value?.pdf;
@@ -63,6 +74,7 @@ const handleDataChange = (data) => {
   if (data.isLoaded) {
     isLoaded.value = data.isLoaded;
   }
+
 };
 
 </script>
@@ -72,6 +84,7 @@ const handleDataChange = (data) => {
       <ResumeSidebar 
         ref="resumeSidebar"
         :resume_data="resume_data"
+        :resumeId="resumeId"
         :exportFunction="exportToPDF"
         @dataChange = "handleDataChange" />
     </div>
@@ -84,6 +97,7 @@ const handleDataChange = (data) => {
       <ResumeViewer
       @dataChange="handleDataChange"
         ref="resumeViewer"
+        :resumeId="resumeId"
         :is-loaded="isLoaded"
         :template="templateData"
         :metadata="metadata"
