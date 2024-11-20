@@ -62,6 +62,8 @@ import ProfessionalSummaryModal from "../professionalSummary/ProfessionalSummary
 // Resume Items
 // skill
 import skillItemServices from "../../services/skillItemServices";
+import experienceItemServices from "../../services/experienceItemServices";
+import educationItemServices from "../../services/educationItemServices";
 
 import resumeSectionServices from "../../services/resumeSectionServices";
 import resumeServices from "../../services/resumeServices";
