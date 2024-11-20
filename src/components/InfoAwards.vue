@@ -1,6 +1,10 @@
-<script setup></script>
+<script setup>
+
+import AwardView from './award/AwardView.vue';
+
+</script>
 
 
 <template>
-  <div>Welcome to the Info Awards Page!</div>
+<AwardView></AwardView>
 </template>

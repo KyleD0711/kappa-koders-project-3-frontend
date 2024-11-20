@@ -10,3 +10,6 @@ import UserView from './user/UserView.vue';
 <UserView></UserView>
 
 </template>
+
+<style scoped>
+</style>

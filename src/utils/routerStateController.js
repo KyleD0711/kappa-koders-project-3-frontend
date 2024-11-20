@@ -21,6 +21,10 @@ export default class RouterStateController {
       return false;
     }
   }
+  isAdmin() {
+    const user = Utils.getStore("user");
+    return user.isAdmin == true;
+  }
 }
 
 // const checkAdminPriviledges = async () => {

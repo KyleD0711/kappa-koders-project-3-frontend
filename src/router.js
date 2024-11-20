@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import Login from "./views/Login.vue";
-import ResumeView from "./views/Resume/ResumeList.vue";
+import ResumeList from "./views/Resume/ResumeList.vue"
+import ResumeView from "./views/Resume/ResumeView.vue";
 import InformationList from "./views/Information/InformationList.vue";
 import InfoExperience from "./components/InfoExperience.vue";
 import InfoSkills from "./components/InfoSkills.vue";
@@ -11,6 +12,8 @@ import InfoEducation from "./components/InfoEducation.vue";
 import InfoProjects from "./components/InfoProjects.vue";
 import InfoUsers from "./components/InfoUsers.vue";
 import ProfessionalSummaryView from "./components/professionalSummary/ProfessionalSummaryView.vue";
+import AdminUserView from "./views/Admin/AdminUserView.vue";
+import ReviewResumes from "./views/Admin/ReviewResumes.vue";
 
 import RouterStateController from "./utils/routerStateController.js";
 
@@ -22,8 +25,15 @@ const router = createRouter({
     {
       path: "/",
       alias: "/resume",
-      name: "resume",
+      name: "resumes",
+      component: ResumeList,
+    },
+    {
+      path: "/editResume/:resumeId",
+      alias: "/resume",
+      name: "editResume",
       component: ResumeView,
+      props: (route) => ({ formId: Number(route.params.resumeId) })
     },
     {
       path: "/login",
@@ -78,6 +88,24 @@ const router = createRouter({
         },
       ],
     },
+    {
+      path: "/admin",
+      name: "admin",
+      children: [
+        {
+          path: "users",
+          name: "users",
+          beforeEnter: isAdmin,
+          component: AdminUserView,
+        },
+        {
+          path: "reviewResumes",
+          name: "reviewResumes",
+          beforeEnter: isAdmin,
+          component: ReviewResumes,
+        },
+      ],
+    },
   ],
 });
 
@@ -97,5 +125,12 @@ router.beforeEach(async (to, from, next) => {
     }
   }
 });
+
+function isAdmin(to) {
+  const hasAdminPrivileges = routerState.isAdmin();
+  if (!hasAdminPrivileges) {
+    return { path: "/resume" };
+  }
+}
 
 export default router;

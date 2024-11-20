@@ -3,6 +3,7 @@
     "structure": {
       "metadata": {
         "font": "'Times New Roman', Times, serif"
+
       },
       "pdf_header": {
         "section_name": "pdf_header",
@@ -16,7 +17,6 @@
               "font-size": "2em",
               "font-weight": "bold",
               "margin-top": "0.67em",
-              "margin-bottom": "0.67em",
               "line-height": "1.2"
             },
             "content": "",
@@ -41,7 +41,8 @@
             "section_name": "section_header",
             "style": {
               "font-weight": "bold",
-              "margin-bottom": "5px"
+              "margin-top": "10px",
+              "margin-bottom": "10px"
             },
             "content": "PROFESSIONAL SUMMARY",
             "children": []
@@ -63,13 +64,17 @@
         "children": [
           {
             "section_name": "section_header",
-            "style": {},
+            "style": {
+              "font-weight": "bold"
+            },
             "content": "",
             "children": [
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "bold",
+                  "margin-top": "10px",
+              "margin-bottom": "10px"
                 },
                 "content": "EDUCATION",
                 "children": []
@@ -136,7 +141,9 @@
               },
               {
                 "section_name": "credential_earned",
-                "style": {},
+                "style": {
+                  "font-style": "italic"
+                },
                 "content": "",
                 "children": []
               },
@@ -150,14 +157,17 @@
                   {
                     "section_name": "gpa_name",
                     "style": {
-                      "margin-right": "4px"
+                      "margin-right": "4px",
+                      "font-style": "italic"
                     },
                     "content": "GPA: ",
                     "children": []
                   },
                   {
                     "section_name": "gpa",
-                    "style": {},
+                    "style": {
+                      "font-style": "italic"
+                    },
                     "content": "",
                     "children": []
                   }
@@ -165,7 +175,9 @@
               },
               {
                 "section_name": "coursework",
-                "style": {},
+                "style": {
+                  "font-style": "italic"
+                },
                 "content": "",
                 "children": []
               }
@@ -186,7 +198,9 @@
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "bold",
+                  "margin-top": "10px",
+                  "margin-bottom": "10px"
                 },
                 "content": "EXPERIENCE",
                 "children": []
@@ -281,8 +295,8 @@
           }
         ]
       },
-      "skills": {
-        "section_name": "skills",
+      "skill": {
+        "section_name": "skill",
         "style": {},
         "content": "",
         "children": [
@@ -294,7 +308,9 @@
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "bold",
+                  "margin-top": "10px",
+                  "margin-bottom": "10px"
                 },
                 "content": "SKILLS",
                 "children": []
@@ -338,7 +354,9 @@
                         "children": [
                           {
                             "section_name": "name",
-                            "style": {},
+                            "style": {
+                              "font-weight": "600"
+                            },
                             "content": "",
                             "children": []
                           },
@@ -380,13 +398,18 @@
         "children": [
           {
             "section_name": "section_header",
-            "style": {},
+            "style": {
+              "font-weight": "600"
+            
+            },
             "content": "",
             "children": [
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "bold",
+                    "margin-top": "10px",
+              "margin-bottom": "10px"
                 },
                 "content": "PROJECTS",
                 "children": []
@@ -416,7 +439,9 @@
                 "children": [
                   {
                     "section_name": "name",
-                    "style": {},
+                    "style": {
+                      "font-weight": "600"
+                    },
                     "content": "",
                     "children": []
                   },
@@ -462,20 +487,25 @@
           }
         ]
       },
-      "awards": {
-        "section_name": "awards",
+      "award": {
+        "section_name": "award",
         "style": {},
         "content": "",
         "children": [
           {
             "section_name": "section_header",
-            "style": {},
+            "style": {
+              "font-weight": "600"
+             
+            },
             "content": "",
             "children": [
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "bold",
+                   "margin-top": "10px",
+              "margin-bottom": "10px"
                 },
                 "content": "AWARDS",
                 "children": []
@@ -505,7 +535,9 @@
                 "children": [
                   {
                     "section_name": "name",
-                    "style": {},
+                    "style": {
+                      "font-weight": "600"
+                    },
                     "content": "",
                     "children": []
                   },
@@ -625,7 +657,7 @@
           "optional": true
         }
       },
-      "skills": {
+      "skill": {
         "name": {
           "section_name": "name",
           "optional": true
@@ -639,7 +671,7 @@
           "optional": true
         }
       },
-      "awards": {
+      "award": {
         "institution": {
           "section_name": "institution",
           "optional": true
@@ -675,7 +707,7 @@
       "pdf_header": {
         "section_name": "pdf_header",
         "style": {
-          "margin-bottom": "1em"
+          "margin":"0.5em 1em 1em 1em"
         },
         "children": [
           {
@@ -685,6 +717,7 @@
               "font-size": "2em",
               "font-weight": "bold",
               "margin-top": "0.67em",
+              "margin-right": "1em",
               "line-height": "1.2"
             }
           },
@@ -702,7 +735,10 @@
           {
             "section_name": "section_header",
             "style": {
-              "font-weight": "bold"
+              "font-family": "'Times New Roman', Times, serif",
+              "font-weight": "600",
+              "font-size": "18px",
+              "margin":"15px 1em 0px 1em"
             },
             "content": "PROFESSIONAL SUMMARY"
           },
@@ -710,7 +746,10 @@
             "section_name": "divider"
           },
           {
-            "section_name": "section_body"
+            "section_name": "section_body",
+            "style": {
+              "margin":"0px 1em 10px 1em"
+            }
           }
         ]
       },
@@ -726,7 +765,10 @@
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-family": "'Times New Roman', Times, serif",
+                  "font-weight": "bold",
+                  "margin":"15px 1em 0px 1em",
+                  "font-size": "18px"
                 },
                 "content": "EDUCATION"
               },
@@ -738,7 +780,7 @@
           {
             "section_name": "section_item",
             "style": {
-              "margin-bottom": ".67em"
+              "margin":"0px 1em .67em 1em"
             },
             "children": [
               {
@@ -750,7 +792,7 @@
                   {
                     "section_name": "institution",
                     "style": {
-                      "font-weight": "bold"
+                      "font-weight": "600"
                     }
                   },
                   {
@@ -808,7 +850,10 @@
                 ]
               },
               {
-                "section_name": "coursework"
+                "section_name": "coursework",
+                "style": {
+                  "font-style": "italic"
+                }
               }
             ]
           }
@@ -826,7 +871,10 @@
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-family": "'Times New Roman', Times, serif",
+                  "font-weight": "bold",
+                  "font-size": "18px",
+                  "margin":"15px 1em 0px 1em"
                 },
                 "content": "EXPERIENCE"
               },
@@ -838,7 +886,7 @@
           {
             "section_name": "section_item",
             "style": {
-              "margin-bottom": "10px"
+              "margin":"0px 1em 10px 1em"
             },
             "children": [
               {
@@ -906,8 +954,8 @@
           }
         ]
       },
-      "skills": {
-        "section_name": "skills",
+      "skill": {
+        "section_name": "skill",
         "style": {
           "margin": "20px 0px"
         },
@@ -918,7 +966,10 @@
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "bold",
+                  "margin":"15px 1em 0px 1em",
+                  "font-size": "18px",
+                  "font-family": "'Times New Roman', Times, serif"
                 },
                 "content": "SKILLS"
               },
@@ -930,7 +981,7 @@
           {
             "section_name": "section_item",
             "style": {
-              "margin-bottom": "10px"
+              "margin":"0px 1em 10px 1em"
             },
             "children": [
               {
@@ -950,11 +1001,15 @@
                         },
                         "children": [
                           {
-                            "section_name": "name"
+                            "section_name": "name",
+                            "style": {
+                              "font-weight": "600"
+                            }
                           },
                           {
                             "style": {
-                              "margin-right": "5px"
+                              "margin-right": "5px",
+                              "font-weight": "600"
                             },
                             "content": ":"
                           },
@@ -993,7 +1048,10 @@
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "bold",
+                  "margin":"15px 1em 0px 1em",
+                  "font-size": "18px",
+                  "font-family": "'Times New Roman', Times, serif"
                 },
                 "content": "PROJECTS"
               },
@@ -1005,7 +1063,7 @@
           {
             "section_name": "section_item",
             "style": {
-              "margin-bottom": "10px"
+              "margin":"0px 1em 10px 1em"
             },
             "children": [
               {
@@ -1015,7 +1073,10 @@
                 },
                 "children": [
                   {
-                    "section_name": "name"
+                    "section_name": "name",
+                    "style": {
+                      "font-weight": "600"
+                    }
                   },
                   {
                     "section_name": "bar",
@@ -1054,8 +1115,8 @@
           }
         ]
       },
-      "awards": {
-        "section_name": "awards",
+      "award": {
+        "section_name": "award",
         "style": {
           "margin": "20px 0px"
         },
@@ -1066,7 +1127,10 @@
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "bold",
+                  "margin":"15px 1em 0px 1em",
+                  "font-size": "18px",
+                  "font-family": "'Times New Roman', Times, serif"
                 },
                 "content": "AWARDS",
                 "children": []
@@ -1079,7 +1143,7 @@
           {
             "section_name": "section_item",
             "style": {
-              "margin-bottom": "10px"
+              "margin":"0px 1em 10px 1em"
             },
             "children": [
               {
@@ -1089,7 +1153,10 @@
                 },
                 "children": [
                   {
-                    "section_name": "name"
+                    "section_name": "name",
+                    "style": {
+                      "font-weight": "600"
+                    }
                   },
                   {
                     "section_name": "bar",
@@ -1202,7 +1269,7 @@
           "optional": true
         }
       },
-      "skills": {
+      "skill": {
         "name": {
           "section_name": "name",
           "optional": true
@@ -1216,7 +1283,7 @@
           "optional": true
         }
       },
-      "awards": {
+      "award": {
         "institution": {
           "section_name": "institution",
           "optional": true
@@ -1259,7 +1326,7 @@
             "section_name": "name",
             "style": {
               "text-align": "center",
-              "font-size": "2em",
+              "font-size": "24px",
               "font-weight": "bold",
               "margin-top": "0.67em",
               "line-height": "1.2"
@@ -1285,7 +1352,7 @@
           {
             "section_name": "section_body",
             "style": {
-              "margin": "10px 0px"
+              "margin-top": "10px"
             }
           }
         ]
@@ -1293,7 +1360,9 @@
       "education": {
         "section_name": "education",
         "style": {
-          "margin": "20px 0px"
+          "margin": "20px 0px",
+          "font-size": "14px",
+          "font-weight": "800"
         },
         "children": [
           {
@@ -1302,7 +1371,9 @@
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "600",
+                  "margin-top": "5px",
+                  "margin-bottom": "10px"
                 },
                 "content": "EDUCATION"
               },
@@ -1404,7 +1475,9 @@
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "bold",
+                  "margin-top": "5px",
+                  "margin-bottom": "10px"
                 },
                 "content": "EXPERIENCE"
               },
@@ -1478,8 +1551,8 @@
           }
         ]
       },
-      "skills": {
-        "section_name": "skills",
+      "skill": {
+        "section_name": "skill",
         "style": {
           "margin": "20px 0px"
         },
@@ -1490,7 +1563,9 @@
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "bold",
+                  "margin-top": "5px",
+                  "margin-bottom": "10px"
                 },
                 "content": "SKILLS"
               },
@@ -1559,7 +1634,10 @@
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "bold",
+                  "margin-top": "5px",
+                  "margin-bottom": "10px"
+
                 },
                 "content": "PROJECTS"
               },
@@ -1614,8 +1692,8 @@
           }
         ]
       },
-      "awards": {
-        "section_name": "awards",
+      "award": {
+        "section_name": "award",
         "style": {
           "margin": "20px 0px"
         },
@@ -1626,7 +1704,9 @@
               {
                 "section_name": "head",
                 "style": {
-                  "font-weight": "bold"
+                  "font-weight": "bold",
+                  "margin-top": "5px",
+                  "margin-bottom": "10px"
                 },
                 "content": "AWARDS",
                 "children": []
@@ -1756,7 +1836,7 @@
           "optional": true
         }
       },
-      "skills": {
+      "skill": {
         "name": {
           "section_name": "name",
           "optional": true
@@ -1770,7 +1850,710 @@
           "optional": true
         }
       },
-      "awards": {
+      "award": {
+        "institution": {
+          "section_name": "institution",
+          "optional": true
+        },
+        "name": {
+          "section_name": "name",
+          "optional": true
+        },
+        "description": {
+          "section_name": "description",
+          "optional": true
+        },
+        "date_awarded": {
+          "section_name": "date_awarded",
+          "optional": true
+        }
+      },
+      "personal_link": {
+        "name": { "section_name": "", "optional": true },
+        "url": { "section_name": "", "optional": true }
+      },
+      "professional_summary": {
+        "section_name": "section_body",
+        "optional": false
+      }
+    }
+  },
+  "template4": {
+    "structure": {
+      "metadata": {
+        "font": "Arial, Helvetica, sans-serif"
+      },
+      "pdf_header": {
+        "section_name": "pdf_header",
+        "style": {},
+        "content": "",
+        "children": [
+          {
+            "section_name": "name",
+            "style": {
+              "text-align": "center",
+              "font-size": "2em",
+              "font-weight": "bold",
+              "margin-top": "0.67em",
+              "line-height": "1.2"
+            },
+            "content": "",
+            "children": []
+          },
+          {
+            "section_name": "personal_info",
+            "style": {
+              "text-align": "center"
+            },
+            "content": "&#9670;",
+            "children": []
+          }
+        ]
+      },
+      "professional_summary": {
+        "section_name": "professional_summary",
+        "style": {},
+        "content": "",
+        "children": [
+          {
+            "section_name": "section_header",
+            "style": {
+              "font-weight": "bold",
+              "margin-top": "10px",
+              "font-size": "20px"
+            },
+            "content": "OBJECTIVE",
+            "children": []
+          },
+          {
+            "section_name": "divider"
+          },
+          {
+            "section_name": "section_body",
+            "style": {},
+            "content": ""
+          }
+        ]
+      },
+      "education": {
+        "section_name": "education",
+        "style": {},
+        "content": "",
+        "children": [
+          {
+            "section_name": "section_header",
+            "style": {
+              "font-weight": "bold"
+            },
+            "content": "",
+            "children": [
+              {
+                "section_name": "head",
+                "style": {
+                  "font-weight": "bold",
+                  "margin-top": "10px",
+                  "font-size": "20px"
+                },
+                "content": "EDUCATION",
+                "children": []
+              },
+              {
+                "section_name": "divider",
+                "style": {},
+                "content": "",
+                "children": []
+              }
+            ]
+          },
+          {
+            "section_name": "section_item",
+            "style": {
+              "margin-bottom": "10px"
+            },
+            "content": "",
+            "children": [
+              {
+                "section_name": "section_item_header",
+                "style": {
+                  "display": "flex",
+                  "justify-content": "space-between"
+                },
+                "content": "",
+                "children": [
+                  {
+                    "section_name": "institution",
+                    "style": {
+                      "font-weight": "600"
+                    },
+                    "content": "",
+                    "children": []
+                  },
+                  {
+                    "section_name": "right",
+                    "style": {
+                      "display": "inline-flex"
+                    },
+                    "content": "",
+                    "children": [
+                      {
+                        "section_name": "date_from",
+                        "style": {},
+                        "content": "",
+                        "children": []
+                      },
+                      {
+                        "section_name": "",
+                        "style": {
+                          "margin": "0px 4px"
+                        },
+                        "content": "-",
+                        "children": []
+                      },
+                      {
+                        "section_name": "date_to",
+                        "style": {},
+                        "content": "",
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "section_name": "credential_earned",
+                "style": {
+                },
+                "content": "",
+                "children": []
+              },
+              {
+                "section_name": "gpa_field",
+                "style": {
+                  "display": "inline-flex"
+                },
+                "content": "",
+                "children": [
+                  {
+                    "section_name": "gpa_name",
+                    "style": {
+                      "margin-right": "4px"
+                    },
+                    "content": "GPA: ",
+                    "children": []
+                  },
+                  {
+                    "section_name": "gpa",
+                    "style": {
+                    },
+                    "content": "",
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "section_name": "coursework",
+                "style": {
+                },
+                "content": "",
+                "children": []
+              }
+            ]
+          }
+        ]
+      }, 
+      "experience": {
+        "section_name": "experience",
+        "style": {},
+        "content": "",
+        "children": [
+          {
+            "section_name": "section_header",
+            "style": {},
+            "content": "",
+            "children": [
+              {
+                "section_name": "head",
+                "style": {
+                  "font-weight": "bold",
+                  "margin-top": "10px",
+                  "font-size": "20px"
+
+                },
+                "content": "WORK EXPERIENCE",
+                "children": []
+              },
+              {
+                "section_name": "divider",
+                "style": {},
+                "content": "",
+                "children": []
+              }
+            ]
+          },
+          {
+            "section_name": "section_item",
+            "style": {
+              "margin-bottom": "10px"
+            },
+            "content": "",
+            "children": [
+              {
+                "section_name": "section_item_header",
+                "style": {
+                  "display": "flex",
+                  "justify-content": "space-between"
+                },
+                "content": "",
+                "children": [
+                  {
+                    "section_name": "employer_field",
+                    "style": {
+                      "display": "inline-flex"
+                    },
+                    "content": "",
+                    "children": [
+                      {
+                        "section_name": "employer",
+                        "style": {
+                          "font-weight": "bold"
+                        },
+                        "content": "",
+                        "children": []
+                      },
+                      {
+                        "section_name": "comma",
+                        "style": {
+                          "margin-right": "4px",
+                          "font-weight": "bold"
+                        },
+                        "content": ",",
+                        "children": []
+                      },
+                      {
+                        "section_name": "position_title",
+                        "style": {
+                          "font-weight": "600"
+                        },
+                        "content": "",
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "section_name": "right",
+                    "style": {
+                      "display": "inline-flex"
+                    },
+                    "content": "",
+                    "children": [
+                      {
+                        "section_name": "date_start",
+                        "style": {},
+                        "content": "",
+                        "children": []
+                      },
+                      {
+                        "section_name": "",
+                        "style": {
+                          "margin": "0px 4px"
+                        },
+                        "content": "-",
+                        "children": []
+                      },
+                      {
+                        "section_name": "date_end",
+                        "style": {},
+                        "content": "",
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "skill": {
+        "section_name": "skill",
+        "style": {},
+        "content": "",
+        "children": [
+          {
+            "section_name": "section_header",
+            "style": {},
+            "content": "",
+            "children": [
+              {
+                "section_name": "head",
+                "style": {
+                  "font-weight": "bold",
+                  "margin-top": "10px",
+                  "font-size": "20px"
+
+              },
+                "content": "SKILLS",
+                "children": []
+              },
+              {
+                "section_name": "divider",
+                "style": {},
+                "content": "",
+                "children": []
+              }
+            ]
+          },
+          {
+            "section_name": "section_item",
+            "style": {
+              "margin-bottom": "10px"
+            },
+            "content": "",
+            "children": [
+              {
+                "section_name": "section_item_body",
+                "style": {},
+                "content": "",
+                "type": "ul",
+                "children": [
+                  {
+                    "section_name": "section_item_line",
+                    "style": {
+                      "justify-content": "space-between",
+                      "display": "flex"
+                    },
+                    "type": "li",
+                    "content": "",
+                    "children": [
+                      {
+                        "section_name": "",
+                        "style": {
+                          "display": "inline-flex"
+                        },
+                        "content": "",
+                        "children": [
+                          {
+                            "section_name": "name",
+                            "style": {
+                              "font-weight": "600"
+                            },
+                            "content": "",
+                            "children": []
+                          },
+                          {
+                            "section_name": "",
+                            "style": {
+                              "margin-right": "5px"
+                            },
+                            "content": ":",
+                            "children": []
+                          },
+                          {
+                            "section_name": "description",
+                            "style": {},
+                            "content": "",
+                            "children": []
+                          }
+                        ]
+                      },
+
+                      {
+                        "section_name": "proficiency_level",
+                        "style": {},
+                        "content": "",
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "project": {
+        "section_name": "project",
+        "style": {},
+        "content": "",
+        "children": [
+          {
+            "section_name": "section_header",
+            "style": {
+              "font-weight": "600"
+            
+            },
+            "content": "",
+            "children": [
+              {
+                "section_name": "head",
+                "style": {
+                  "font-weight": "bold",
+                    "margin-top": "10px",
+                    "font-size": "20px"
+
+                },
+                "content": "PROJECTS",
+                "children": []
+              },
+              {
+                "section_name": "divider",
+                "style": {},
+                "content": "",
+                "children": []
+              }
+            ]
+          },
+          {
+            "section_name": "section_item",
+            "style": {
+              "margin-bottom": "10px"
+            },
+            "content": "",
+            "children": [
+              {
+                "section_name": "section_item_header",
+                "style": {
+                  "display": "flex",
+                  "justify-content": "space-between"
+                },
+                "content": "",
+                "children": [
+                  {
+                    "section_name": "name",
+                    "style": {
+                      "font-weight": "600"
+                    },
+                    "content": "",
+                    "children": []
+                  },
+                  {
+                    "section_name": "right",
+                    "style": {
+                      "display": "inline-flex"
+                    },
+                    "content": "",
+                    "children": [
+                      {
+                        "section_name": "date_start",
+                        "style": {},
+                        "content": "",
+                        "children": []
+                      },
+                      {
+                        "section_name": "",
+                        "style": {
+                          "margin": "0px 4px"
+                        },
+                        "content": "-",
+                        "children": []
+                      },
+                      {
+                        "section_name": "date_completed",
+                        "style": {},
+                        "content": "",
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "section_name": "description",
+                "style": {},
+                "content": "",
+                "type": "li",
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      "award": {
+        "section_name": "award",
+        "style": {},
+        "content": "",
+        "children": [
+          {
+            "section_name": "section_header",
+            "style": {
+              "font-weight": "600"
+             
+            },
+            "content": "",
+            "children": [
+              {
+                "section_name": "head",
+                "style": {
+                  "font-weight": "bold",
+                   "margin-top": "10px",
+                   "font-size": "20px"
+
+                },
+                "content": "HONORS",
+                "children": []
+              },
+              {
+                "section_name": "divider",
+                "style": {},
+                "content": "",
+                "children": []
+              }
+            ]
+          },
+          {
+            "section_name": "section_item",
+            "style": {
+              "margin-bottom": "10px"
+            },
+            "content": "",
+            "children": [
+              {
+                "section_name": "section_item_header",
+                "style": {
+                  "display": "flex",
+                  "justify-content": "space-between"
+                },
+                "content": "",
+                "children": [
+                  {
+                    "section_name": "name",
+                    "style": {
+                      "font-weight": "600"
+                    },
+                    "content": "",
+                    "children": []
+                  },
+                  {
+                    "section_name": "right",
+                    "style": {
+                      "display": "inline-flex"
+                    },
+                    "content": "",
+                    "children": [
+                      {
+                        "section_name": "institution",
+                        "style": {},
+                        "content": "",
+                        "children": []
+                      },
+                      {
+                        "section_name": "",
+                        "style": {
+                          "margin": "0px 4px"
+                        },
+                        "content": "-",
+                        "children": []
+                      },
+                      {
+                        "section_name": "date_awarded",
+                        "style": {},
+                        "content": "",
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "section_name": "description",
+                "style": {},
+                "content": "",
+                "type": "li",
+                "children": []
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "data": {
+      "pdf_header": {
+        "title": {
+          "section_name": "name",
+          "optional": false
+        },
+        "personal_info": {
+          "section_name": "personal_info",
+          "optional": false
+        }
+      },
+      "education": {
+        "institution": {
+          "section_name": "institution",
+          "optional": true
+        },
+        "credential_earned": {
+          "section_name": "credential_earned",
+          "optional": false
+        },
+        "date_to": {
+          "section_name": "date_to",
+          "optional": false
+        },
+        "date_from": {
+          "section_name": "date_from",
+          "optional": false
+        },
+        "gpa": {
+          "section_name": "gpa",
+          "optional": false
+        },
+        "coursework": {
+          "section_name": "coursework",
+          "optional": false
+        }
+      },
+      "experience": {
+        "employer": {
+          "section_name": "employer",
+          "optional": true
+        },
+        "position_title": {
+          "section_name": "position_title",
+          "optional": true
+        },
+        "date_start": {
+          "section_name": "date_start",
+          "optional": true
+        },
+        "date_end": {
+          "section_name": "date_end",
+          "optional": true
+        }
+      },
+      "project": {
+        "name": {
+          "section_name": "name",
+          "optional": true
+        },
+        "description": {
+          "section_name": "description",
+          "optional": true
+        },
+        "date_start": {
+          "section_name": "date_start",
+          "optional": true
+        },
+        "date_completed": {
+          "section_name": "date_completed",
+          "optional": true
+        }
+      },
+      "skill": {
+        "name": {
+          "section_name": "name",
+          "optional": true
+        },
+        "description": {
+          "section_name": "description",
+          "optional": true
+        },
+        "proficiency_level": {
+          "section_name": "proficiency_level",
+          "optional": true
+        }
+      },
+      "award": {
         "institution": {
           "section_name": "institution",
           "optional": true
