@@ -16,7 +16,7 @@ export default {
 </script>
 
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, defineProps } from "vue";
 import draggable from "vuedraggable";
 import {
   VCard,
@@ -62,10 +62,12 @@ import ProfessionalSummaryModal from "../professionalSummary/ProfessionalSummary
 // Resume Items
 // skill
 import skillItemServices from "../../services/skillItemServices";
+
 import resumeSectionServices from "../../services/resumeSectionServices";
 import resumeServices from "../../services/resumeServices";
 
 import { storeToRefs } from "pinia";
+import { string } from "@vueform/vueform";
 
 const modalStore = useModalStore();
 const { isVisible } = storeToRefs(modalStore);
@@ -77,12 +79,20 @@ const header_data = ref([]);
 const metadata = ref([]);
 const isLoaded = ref({});
 
+const props = defineProps({
+  exportFunction: {
+    type: Function,
+    required: true,
+  },
+  resumeId: {
+    type: string,
+    required: true,
+  },
+});
+
 const resume_data_local = ref([]);
 const header_data_local = ref([]);
-const metadata_local = ref({
-  render_fields: [],
-  section_dividers: false,
-});
+const metadata_local = ref({});
 const personalInfo = ref({
   fName: "Jonah",
   lName: "Veit",
@@ -393,6 +403,28 @@ const showAddDialog = (section) => {
   }
 };
 
+const getResumeData = async (id) => {
+  try {
+    const response = await resumeServices.getAllResumesForUser();
+    if (Array.isArray(response.data)) {
+      // Convert `id` to a number if necessary and find the matching object
+      const resume = response.data.find((resume) => resume.id === Number(id));
+      if (resume) {
+        return resume;
+      } else {
+        console.warn("No Resume Found with ID:", id);
+        return null;
+      }
+    } else {
+      console.error("Response data is not an array:", response.data);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching resumes:", error);
+    return null;
+  }
+};
+
 onMounted(async () => {
   isLoaded.value = false;
   emit("dataChange", { isLoaded: isLoaded.value });
@@ -517,6 +549,7 @@ const parseHeader_data = (header_data, personalInfo) => {
 const parseMetadata = (metadata_local, resume_data) => {
   const result = {};
 
+  //console.log("Render Fields: " + Object.keys(resume_data));
   result.render_fields = Object.keys(resume_data);
   result.section_dividers = metadata_local.section_dividers;
 
@@ -637,8 +670,11 @@ const createSkillItem = async (resumeSectionId, skillData) => {
     const response = await skillItemServices.createSkillItem(skillItem);
     return response.data;
   } catch (error) {
-    console.error("Error creating SkillItem:", error);
-    throw error;
+    console.error(
+      "Error saving the resume:",
+      error.response?.data || error.message
+    );
+    alert("Failed to save the resume. Please try again.");
   }
 };
 </script>

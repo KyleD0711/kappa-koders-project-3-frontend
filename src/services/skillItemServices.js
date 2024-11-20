@@ -1,23 +1,29 @@
 import apiClient from "./services.js";
 
 export default {
-  // Get all skillItems
-  getAllSkillItems() {
-    return apiClient.get("/student/skill-item");
-  },
+    // Create a new SkillItem
+    createSkillItem(skill_id, sectionId, resumeId) {
+        return apiClient.post(`/student/resume/${resumeId}/resumeSection/${sectionId}/skill-item/`, { skill_id });
+    },
 
-  // Delete a skillItem by ID
-  deleteSkillItem(id) {
-    return apiClient.delete(`/student/skill-item/${id}`);
-  },
+    // Get all SkillItems for a specific section
+    getSkillItems(sectionId, resumeId) {
+        console.log(sectionId);
+        return apiClient.get(`/student/resume/${resumeId}/resumeSection/${sectionId}/skill-item/`);
+    },
 
-  // Create a new skillItem
-  createSkillItem(item) {
-    return apiClient.post("/student/skill-item", item);
-  },
+    // Get a specific SkillItem by ID
+    getSkillItem(sectionId, resumeId, itemId) {
+        return apiClient.get(`/student/resume/${resumeId}/resumeSection/${sectionId}/skill-item/${itemId}`);
+    },
 
-  // Update an existing skillItem
-  updateSkillItem(item) {
-    return apiClient.put(`/student/skill-item/${item.id}`, item);
-  },
+    // Update a SkillItem by ID
+    updateSkillItem(sectionId, resumeId, itemId, data) {
+        return apiClient.put(`/student/resume/${resumeId}/resumeSection/${sectionId}/skill-item/${itemId}`, data);
+    },
+
+    // Delete a SkillItem by ID
+    deleteSkillItem(sectionId, resumeId, itemId) {
+        return apiClient.delete(`/student/resume/${resumeId}/resumeSection/${sectionId}/skill-item/${itemId}`);
+    },
 };

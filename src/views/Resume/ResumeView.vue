@@ -11,6 +11,13 @@ const header_data = ref({});
 const resume_data = ref({});
 const isLoaded = ref({});
 
+const route = useRoute();
+const resumeId = route.params.resumeId;
+
+onMounted(async () => {
+  console.log(resumeId);
+});
+
 const resumeViewer = ref(null);
 const resumeSidebar = ref(null);
 
