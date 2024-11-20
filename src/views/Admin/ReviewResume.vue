@@ -1,20 +1,67 @@
 <script setup>
 import ResumeViewer from "../../components/resume/ResumeViewer.vue";
 import ReviewerSidebar from "../../components/admin/ReviewerSidebar.vue";
-import { ref } from "vue";
+import reviewServices from "../../services/reviewServices";
+import resumeSectionServices from "../../services/resumeSectionServices";
+import getResumeService from "../../services/getResumeService";
+import { ref, onMounted } from "vue";
 
-const props = defineProps({
-  reviewId: {
-    type: Number,
-    required: true,
-  },
-});
+// const props = defineProps({
+//   reviewId: {
+//     type: Number,
+//     required: true,
+//   },
+// });
+
+const reviewId = 1;
 
 const metadata = ref({});
 const resume_data = ref({});
 const header_data = ref({});
 const template = ref({});
 const isLoaded = ref(false);
+const sections = ref([]);
+
+onMounted(async () => {
+  const reviewResponse = await reviewServices
+    .getReview(reviewId)
+    .then((data) => {
+      const review = { ...data.data };
+      return getResumeService.getResume(review.resumeId).then((value) => {
+        metadata.value = value.metaData;
+        header_data.value = value.headerData;
+        resume_data.value = value.resumeData;
+        template.value = value.template;
+        isLoaded.value = true;
+        return {
+          resumeId: review.resumeId,
+          render_fields: value.metaData.render_fields,
+        };
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+  await resumeSectionServices
+    .getSectionsForResume(reviewResponse.resumeId)
+    .then((response) => {
+      let filteredResponse = response.data.filter(
+        (value) =>
+          value.section_type != "professional_summary" &&
+          value.section_type != "link"
+      );
+      sections.value = filteredResponse.sort((a, b) => {
+        return (
+          reviewResponse.render_fields.indexOf(a.section_type) -
+          reviewResponse.render_fields.indexOf(b.section_type)
+        );
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
 </script>
 <template>
   <div style="display: flex; align-items: stretch">

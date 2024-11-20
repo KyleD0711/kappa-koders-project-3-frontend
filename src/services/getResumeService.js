@@ -8,6 +8,7 @@ import linkItemServices from "./linkItemServices";
 import skillItemServices from "./skillItemServices";
 import professionalSummaryItemServices from "./professionalSummaryItemServices";
 import professionalSummaryServices from "./professionalSummaryServices";
+import templateServices from "./templateServices";
 
 export default {
   async getResume(resumeId) {
@@ -16,11 +17,13 @@ export default {
     let professionalSummary = await getProfessionalSummary(resumeId);
     let headerData = getHeaderData(resume.metadata, professionalSummary);
     let metaData = getMetaData(resume.metadata);
+    let template = await getTemplate(resume.templateId);
 
     return {
       resumeData,
       headerData,
       metaData,
+      template,
     };
   },
 };
@@ -30,6 +33,17 @@ const getMetaData = (metadata) => {
     render_fields: metadata.render_fields,
     section_dividers: metadata.section_dividers,
   };
+};
+
+const getTemplate = async (templateId) => {
+  return templateServices
+    .getTemplateForId(templateId)
+    .then((res) => {
+      return res.data.template_data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 const getResumeData = async (id) => {
@@ -77,7 +91,7 @@ async function getSectionItems(resumeId) {
               sectionName != "professional_summary" &&
               sectionName != "link"
             ) {
-              resumeData[sectionName].push({ ...value });
+              resumeData[sectionName].push({ ...value[sectionName] });
             }
           });
         })
@@ -124,9 +138,6 @@ function getNameFromKey(sectionData) {
   });
   return sectionName;
 }
-
-// TODO - Need to finish this function.
-const getResumeSectionForType = async (section) => {};
 
 // Queries the correct backend endpoint for the sectionId
 async function fetchSectionItems(sectionType, resumeId, sectionId) {

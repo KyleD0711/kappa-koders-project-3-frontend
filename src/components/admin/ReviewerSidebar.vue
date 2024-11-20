@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import router from "../../router";
 import Utils from "../../config/utils";
 import resumeServices from "../../services/resumeServices";
@@ -34,6 +34,7 @@ const sections = ref([
 ]);
 const sectionData = ref([]);
 const overviewData = ref("");
+const isError = ref(false);
 
 const sanitizeInput = (input) => {
   if (typeof input !== "string") return "";
@@ -52,11 +53,17 @@ const sanitizeInput = (input) => {
 
 const submitReview = async () => {
   let submitData = [];
-  for (let i = 0; i < sections.value.length; i++) {
+
+  if (overviewData.value == "" || overviewData == undefined) {
+    isError.value = true;
+    return;
+  }
+
+  for (let i = 0; i < props.sections.length; i++) {
     submitData = [
       ...submitData,
       {
-        sectionId: sections.value[i].section_id,
+        sectionId: props.sections[i].section_id,
         text: sectionData.value[i],
       },
     ];
@@ -101,22 +108,6 @@ const submitReview = async () => {
 
   router.push({ name: "reviewResumes" });
 };
-
-onMounted(async () => {
-  reviewServices
-    .getReview(props.reviewId)
-    .then((data) => {
-      const review = { ...data.data };
-      getResumeService.getResume(review.resumeId).then((value) => {
-        console.log(value);
-        metadata.value = value.resumeData.metadata;
-        sections.value = value.itemData;
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
 </script>
 
 <template>
@@ -133,10 +124,10 @@ onMounted(async () => {
         <v-expansion-panel-text>
           <v-textarea
             v-model="overviewData"
-            variant="solo-filled"
             auto-grow
-            name="overview"
+            variant="solo-filled"
           ></v-textarea>
+          <span v-if="isError" style="color: red">Overview is required!</span>
         </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
