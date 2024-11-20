@@ -77,8 +77,7 @@ const toggleModal = () => {
 const modalYes = async () => {
   await submitForm()
   .then(() =>  {
-  isVisible.value = false  
-  console.log(isVisible.value);  
+    console.log(isVisible.value);  
   })
   showYesModal.value = false;
 }
@@ -150,7 +149,8 @@ const modalYes = async () => {
         <div v-show="showYesModal" class="confirmation-modal" id="testModal">
           <div class="modal-content">
             <p>Are you sure?</p>
-            <button @click="modalYes">Yes</button>
+            <br>
+            <button @click="modalYes" style="margin-right: 20px">Yes</button>
             <button @click="closeDialog">No</button>
           </div>
         </div>

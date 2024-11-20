@@ -4,16 +4,16 @@ import Login from "./views/Login.vue";
 import ResumeList from "./views/Resume/ResumeList.vue"
 import ResumeView from "./views/Resume/ResumeView.vue";
 import InformationList from "./views/Information/InformationList.vue";
-import InfoExperience from "./components/InfoExperience.vue";
-import InfoSkills from "./components/InfoSkills.vue";
-import InfoAwards from "./components/InfoAwards.vue";
-import InfoLinks from "./components/InfoLinks.vue";
-import InfoEducation from "./components/InfoEducation.vue";
-import InfoProjects from "./components/InfoProjects.vue";
-import InfoUsers from "./components/InfoUsers.vue";
+import InfoExperience from "./components/experience/ExperienceView.vue";
+import InfoSkills from "./components/skill/SkillView.vue";
+import InfoAwards from "./components/award/AwardView.vue";
+import InfoLinks from "./components/links/LinkView.vue";
+import InfoEducation from "./components/education/EducationView.vue";
+import InfoProjects from "./components/project/ProjectView.vue";
 import ProfessionalSummaryView from "./components/professionalSummary/ProfessionalSummaryView.vue";
 import AdminUserView from "./views/Admin/AdminUserView.vue";
 import ReviewResumes from "./views/Admin/ReviewResumes.vue";
+
 
 import RouterStateController from "./utils/routerStateController.js";
 
@@ -77,11 +77,6 @@ const router = createRouter({
           component: InfoProjects,
         },
         {
-          path: "users",
-          name: "users",
-          component: InfoUsers,
-        },
-        {
           path: "professionalSummaries",
           name: "professionalSummaries",
           component: ProfessionalSummaryView,
@@ -95,7 +90,7 @@ const router = createRouter({
         {
           path: "users",
           name: "users",
-          beforeEnter: isAdmin,
+         beforeEnter: isAdmin,
           component: AdminUserView,
         },
         {
