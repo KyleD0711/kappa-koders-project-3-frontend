@@ -19,6 +19,7 @@
     "dotenv": "^16.0.3",
     "eslint": "^8.28.0",
     "eslint-plugin-vue": "^9.7.0",
+    "jspdf": "^2.5.2",
     "pinia": "^2.2.5",
     "primeicons": "^7.0.0",
     "vite-plugin-vuetify": "^1.0.0",
