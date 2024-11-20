@@ -16,9 +16,19 @@ import ReviewerSidebar from "../../components/admin/ReviewerSidebar.vue";
     >
       <ReviewerSidebar></ReviewerSidebar>
     </div>
+    <v-divider
+      vertical
+      :thickness="4"
+      class="white border-opacity-100"
+    ></v-divider>
     <div style="padding-left: 10%">
       <ResumeViewer></ResumeViewer>
     </div>
   </div>
 </template>
-<style scoped></style>
+<style scoped>
+.white {
+  color: #737373;
+  padding-left: 1%;
+}
+</style>
