@@ -1,5 +1,14 @@
 <script setup>
 import { ref } from "vue";
+import router from "../../router";
+import Utils from "../../config/utils";
+
+const props = defineProps({
+  reviewId: {
+    type: Number,
+    required: true,
+  },
+});
 
 const sections = ref([
   {
@@ -22,13 +31,8 @@ const sections = ref([
 const sectionData = ref([]);
 const overviewData = ref("");
 
-const submitReview = (data) => {
-  let submitData = [
-    {
-      section: "overview",
-      data: overviewData.value,
-    },
-  ];
+const submitReview = async () => {
+  let submitData = [];
   for (let i = 0; i < sections.value.length; i++) {
     submitData = [
       ...submitData,
@@ -38,29 +42,44 @@ const submitReview = (data) => {
       },
     ];
   }
-  console.log(submitData);
+
+  const user = Utils.getStore("user");
+  const review = {
+    overview: overviewData.value,
+    reviewer: `${user.fName} ${user.lName}`,
+    status: "completed",
+  };
+
+  // Send review to backend
+
+  await submitData.forEach(async (value) => {
+    if (value !== undefined || value !== "") {
+      const comment = {
+        reviewId: props.reviewId,
+        text: value.text,
+        resumeSectionId: value.sectionId,
+      };
+
+      // Create comment in the backend
+    }
+  });
+
+  router.push({ name: "reviewResumes" });
 };
 </script>
 
 <template>
+  <div class="resume_title">Resume Title</div>
+
   <v-form
     @submit.prevent="submitReview"
     class="d-flex flex-column fill-height pa-0"
   >
-    <div
-      style="
-        color: white;
-        font-size: 2em;
-        text-align: left;
-        padding-bottom: 2%;
-        padding-left: 5px;
-      "
-    >
-      Resume Title
-    </div>
-    <v-expansion-panels variant="accordion">
-      <v-expansion-panel class="expansion_panel">
-        <v-expansion-panel-title>Overview</v-expansion-panel-title>
+    <v-expansion-panels>
+      <v-expansion-panel class="section-0">
+        <v-expansion-panel-title class="section_title"
+          >Overview</v-expansion-panel-title
+        >
         <v-expansion-panel-text>
           <v-textarea
             v-model="overviewData"
@@ -70,43 +89,61 @@ const submitReview = (data) => {
           ></v-textarea>
         </v-expansion-panel-text>
       </v-expansion-panel>
-      <div class="divider"></div>
-      <v-expansion-panel
-        v-for="(section, i) in sections"
-        :key="i"
-        class="expansion_panel"
-      >
-        <v-expansion-panel-title>{{
-          section.section_title[0].toUpperCase() +
-          section.section_title.slice(1)
-        }}</v-expansion-panel-title>
-        <v-expansion-panel-text>
-          <v-textarea
-            v-model="sectionData[i]"
-            auto-grow
-            variant="solo-filled"
-          ></v-textarea>
-        </v-expansion-panel-text>
-      </v-expansion-panel>
     </v-expansion-panels>
 
-    <div class="bottom_button">
+    <br class="light-breakline" />
+
+    <v-card class="mb-3">
+      <v-expansion-panels v-for="(section, i) in sections" :key="i">
+        <v-expansion-panel class="section-0">
+          <v-expansion-panel-title class="section_title">{{
+            section.section_title[0].toUpperCase() +
+            section.section_title.slice(1)
+          }}</v-expansion-panel-title>
+          <v-expansion-panel-text>
+            <v-textarea
+              v-model="sectionData[i]"
+              auto-grow
+              variant="solo-filled"
+            ></v-textarea>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+      </v-expansion-panels>
       <v-btn type="submit" block color="#3D7AE2" large> Submit </v-btn>
-    </div>
+    </v-card>
   </v-form>
 </template>
 
 <style scoped>
+.resume_title {
+  color: white;
+  padding-left: 2%;
+  padding-bottom: 2%;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.section_title {
+  font-size: 20px;
+}
+
 .bottom_button {
   width: 30%;
   position: fixed;
   bottom: 0;
   left: 0;
+  padding: 5px;
 }
 
-.expansion_panel {
-  border-radius: 0;
+.section-0 {
   background-color: #403f3f;
-  color: #ffffff;
+  color: white;
+}
+
+.light-breakline {
+  border: none;
+  border-top: 3px solid #737373;
+  margin: 10px 0;
+  padding-bottom: 3%;
 }
 </style>
