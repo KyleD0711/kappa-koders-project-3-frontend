@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import vuetify from "vite-plugin-vuetify";
+import vueDevTools from 'vite-plugin-vue-devtools'
 
 import dns from "dns";
 dns.setDefaultResultOrder("verbatim");
@@ -15,6 +16,7 @@ export default () => {
       vuetify({
         autoImport: true,
       }),
+      vueDevTools()
     ],
 
     server: {

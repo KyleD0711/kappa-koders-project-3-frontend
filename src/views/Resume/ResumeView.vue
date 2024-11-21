@@ -125,7 +125,7 @@ const templates = ['template1', 'template2', 'template3', 'template4'];
       color="#4c4c4c"
       :width="drawerWidth"
     >
-      <Chat v-if="rightTab == 0"/>
+      <Chat v-if="rightTab == 0" :resume-id="1"/>
       <div v-else>
         <p class="text-h4">Comments Pane Goes Here</p>
       </div>

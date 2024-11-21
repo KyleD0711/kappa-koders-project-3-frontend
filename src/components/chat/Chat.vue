@@ -1,27 +1,47 @@
 <script setup>
-import { nextTick, ref, watch } from "vue"
+import { computed, nextTick, ref } from "vue"
+
+import { useChatHistoryStore } from "../../store/chatHistory.store";
+import { storeToRefs } from "pinia";
+
+const chatHistory = useChatHistoryStore();
+const { history } = storeToRefs(chatHistory);
+
 import sendMessage from "../../services/cohereAIServices.js"
 
 import ResponseBubble from "./ResponseBubble.vue";
 
+const props = defineProps({
+    resumeId: {
+        type: Number,
+        required: true
+    }
+})
+
 const handleMessageResponse = async (responseStream) => {
-    responseHistory.value.push("")
-    const responseIndex = responseHistory.value.length - 1
+    chatHistory.addToHistory('', 'Chatbot', 1)
+    const responseIndex = history.value[props.resumeId].length - 1
 
     for await (const token of responseStream) {
         if (token.eventType === "text-generation") {
-            responseHistory.value[responseIndex] += token.text
+            history.value[props.resumeId][responseIndex].message += token.text
         }
     }
+
 }
 
 const handleSendMessage = async () => {
     const message = userMessage.value.message;
 
-    const responseStream = await sendMessage(message)
+    const currentChatHistory = chatHistory.getHistoryForResume(1)
+    console.log(currentChatHistory)
+
+    const responseStream = await sendMessage(message, currentChatHistory || [])
+
+    chatHistory.addToHistory(message, 'User', 1)
+
     handleMessageResponse(responseStream)
 
-    messageHistory.value.push(message);
     userMessage.value = {}
 
     await nextTick()
@@ -30,8 +50,26 @@ const handleSendMessage = async () => {
 }
 const userMessage = ref({})
 
-const messageHistory = ref([])
-const responseHistory = ref([])
+const combinedChatHistory = computed(() => {
+    const currentHistory = history.value[props.resumeId] || [];
+
+    const result = [];
+    let tempObj = {};
+
+    for (const item of currentHistory) {
+        if (item.role === "User") {
+            // Start a new object for the user message
+            tempObj = { userMessage: item.message };
+        } else if (item.role === "Chatbot" && tempObj) {
+            // Add the bot response to the same object
+            tempObj.botResponse = item.message;
+            result.push(tempObj); // Push the complete object to the result array
+            tempObj = {}; // Reset for the next pair
+        }
+    }
+
+    return result;
+});
 
 const scrollPane = ref()
 
@@ -50,17 +88,17 @@ const scrollToBottom = () => {
         </v-row>
         <div ref="scrollPane" class="scroll-pane">
             <v-col
-                v-for="(message, index) in messageHistory"
+                v-for="(currentChatHistory, index) in combinedChatHistory"
                 :key="index"
                 class="w-100 d-flex flex-column pa-0 px-4"
             >
                 <div class="d-flex justify-end">
                     <!-- User message on the right -->
                     <v-card class="chat-bubble user-message w-75 text-start">
-                            {{ message }}
+                            {{ currentChatHistory.userMessage }}
                     </v-card>
                 </div>
-                <ResponseBubble :text="responseHistory[messageHistory.indexOf(message)]"/>
+                <ResponseBubble :text="currentChatHistory.botResponse"/>
                 
             </v-col>
         </div>
