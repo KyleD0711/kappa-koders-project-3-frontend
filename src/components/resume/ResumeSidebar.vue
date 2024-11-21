@@ -55,6 +55,7 @@ import awardItemServices from "../../services/awardItemServices";
 import linkItemServices from "../../services/linkItemServices";
 import skillItemServices from "../../services/skillItemServices";
 import professionalSummaryItemServices from "../../services/professionalSummaryItemServices";
+// import { link } from "../../../../kappakoders-project3-backend/app/models";
 
 const modalStore = useModalStore();
 const { isVisible } = storeToRefs(modalStore);
@@ -125,6 +126,7 @@ const getEducation = async () => {
       resume_data_local.value.push({
         title: 'Education',
         items: res.data.map(item => ({ name: item.institution, selected: false, data: item })),
+        icon: 'pi pi-graduation-cap'
       });
     }
   } catch (err) {
@@ -146,6 +148,7 @@ const getExperience = async () => {
       resume_data_local.value.push({
         title: 'Experience',
         items: res.data.map(item => ({ name: item.employer, selected: false, data: item })),
+        icon: 'pi pi-briefcase'
       });
     }
   } catch (err) {
@@ -166,6 +169,7 @@ const getProject = async () => {
       resume_data_local.value.push({
         title: 'Project',
         items: res.data.map(item => ({ name: item.name, selected: false, data: item })),
+        icon: 'pi pi-book'
       });
     }
   } catch (err) {
@@ -186,6 +190,7 @@ const getAwards = async () => {
       resume_data_local.value.push({
         title: 'Award',
         items: res.data.map(item => ({ name: item.institution, selected: false, data: item })),
+        icon: 'pi pi-trophy'
       });
     }
   } catch (err) {
@@ -204,6 +209,7 @@ const getLinks = async () => {
       header_data_local.value.push({
         title: 'Link',
         items: res.data.map(item => ({ name: item.name, selected: false, data: item })),
+        icon: 'pi pi-link'
       });
     }
   } catch (err) {
@@ -224,6 +230,7 @@ const getSkills = async () => {
       resume_data_local.value.push({
         title: 'Skill',
         items: res.data.map(item => ({ name: item.name, selected: false, data: item })),
+        icon: 'pi pi-lightbulb'
       });
     }
   } catch (err) {
@@ -753,6 +760,7 @@ const handleSaveResume = async () => {
               <v-expansion-panels>
                 <v-expansion-panel class="section-0">
                   <v-expansion-panel-title>
+                    <i style="margin-left: -10px; margin-right: 5px;"class="pi pi-verified"></i>
                     Professional Summaries
                   </v-expansion-panel-title>
                   <v-expansion-panel-text>
@@ -789,7 +797,7 @@ const handleSaveResume = async () => {
                 <v-card class="mb-3">
                   <v-expansion-panels>
                     <v-expansion-panel class="section-0" :key="header.title">
-                      <v-expansion-panel-title> Links </v-expansion-panel-title>
+                      <v-expansion-panel-title> <i style="margin-left: -10px; margin-right: 5px;"class="pi pi-link"></i> Links </v-expansion-panel-title>
                       <v-expansion-panel-text>
                         <draggable
                           class="item-list"
@@ -849,7 +857,8 @@ const handleSaveResume = async () => {
           <v-expansion-panels v-model="resume_data_local[index].isOpen">
             <v-expansion-panel class="section-0">
               <v-expansion-panel-title>
-                <v-icon class="mr-2">mdi-drag</v-icon>
+                <v-icon class="mr-2" style="margin-left: -10px">mdi-drag</v-icon>
+                <i :class="section.icon" style="margin-right: 5px"></i>
                 {{ section.title }}
               </v-expansion-panel-title>
               <v-expansion-panel-text class="section-1">
