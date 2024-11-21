@@ -148,6 +148,7 @@ const getEducation = async () => {
   } catch (err) {
     console.error(err);
   }
+  processResumeData();
 };
 
 const getExperience = async () => {
@@ -175,6 +176,7 @@ const getExperience = async () => {
   } catch (err) {
     console.error(err);
   }
+  processResumeData();
 };
 
 const getProject = async () => {
@@ -202,6 +204,7 @@ const getProject = async () => {
   } catch (err) {
     console.error(err);
   }
+  processResumeData();
 };
 
 const getAwards = async () => {
@@ -229,6 +232,7 @@ const getAwards = async () => {
   } catch (err) {
     console.error(err);
   }
+  processResumeData();
 };
 
 const getLinks = async () => {
@@ -297,6 +301,7 @@ const getProf_sums = async () => {
   } catch (err) {
     console.error("Error fetching professional summaries:", err);
   }
+  processResumeData();
 };
 
 const editLinkItem = (item) => {
