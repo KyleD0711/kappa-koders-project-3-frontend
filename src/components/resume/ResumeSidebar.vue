@@ -420,9 +420,10 @@ async function processResumeData() {
   console.log("process ResumeData");
   // Set up resume metadata and personal info
   resume = await getResumeData(props.resumeId);
-  
   resumeTitle.value = resume.name;
-  resume.metadata = JSON.parse(resume.metadata);
+  if (typeof(resume.metadata) == "string"){
+    resume.metadata = JSON.parse(resume.metadata);
+  }
   metadata_local.value.section_dividers = resume.metadata.section_dividers ?? false;
   metadata_local.value.render_fields = resume.metadata.render_fields ?? [];
   personalInfo.value.fName = resume.metadata.fName ?? "";
