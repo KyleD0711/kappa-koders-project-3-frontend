@@ -16,7 +16,7 @@ export default {
 </script>
 
 <script setup>
-import { ref, watch, onMounted, defineProps } from "vue";
+import { ref, watch, onMounted, defineProps, computed, defineEmits } from "vue";
 import draggable from "vuedraggable";
 import {
   VCard,
@@ -59,17 +59,20 @@ import skillServices from "../../services/skillServices";
 import professionalSummaryServices from "../../services/professionalSummaryServices";
 import ProfessionalSummaryModal from "../professionalSummary/ProfessionalSummaryModal.vue";
 
-// Resume Items
-// skill
-import skillItemServices from "../../services/skillItemServices";
-import experienceItemServices from "../../services/experienceItemServices";
-import educationItemServices from "../../services/educationItemServices";
+import saveResume from "../../services/saveResumeService";
 
-import resumeSectionServices from "../../services/resumeSectionServices";
 import resumeServices from "../../services/resumeServices";
+import resumeSectionServices from "../../services/resumeSectionServices";
 
 import { storeToRefs } from "pinia";
 import { string } from "@vueform/vueform";
+import educationItemServices from "../../services/educationItemServices";
+import experienceItemServices from "../../services/experienceItemServices";
+import projectItemServices from "../../services/projectItemServices";
+import awardItemServices from "../../services/awardItemServices";
+import linkItemServices from "../../services/linkItemServices";
+import skillItemServices from "../../services/skillItemServices";
+import professionalSummaryItemServices from "../../services/professionalSummaryItemServices";
 
 const modalStore = useModalStore();
 const { isVisible } = storeToRefs(modalStore);
@@ -567,6 +570,7 @@ const updateSummary = (summary) => {
   });
 
   if (summary.selected) {
+    professional_Summary_id = summary.data.id;
     personalInfo.value.professional_summary = summary.summary;
   } else {
     personalInfo.value.professional_summary = null;

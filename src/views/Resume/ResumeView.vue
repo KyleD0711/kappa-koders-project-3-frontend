@@ -11,10 +11,14 @@ const header_data = ref({});
 const resume_data = ref({});
 const isLoaded = ref({});
 
+const resumeViewer = ref(null);
+const resumeSidebar = ref(null);
+
 const route = useRoute();
 const resumeId = route.params.resumeId;
 
-onMounted(async () => {
+// On mounted, log the resumeId
+onMounted(() => {
   console.log(resumeId);
 });
 
@@ -23,7 +27,6 @@ const resumeSidebar = ref(null);
 
 const exportToPDF = () => {
   const pdfContent = resumeViewer.value?.pdf;
-
   const pdfTitle = resumeSidebar.value?.resumeTitle;
 
   if (pdfContent) {
@@ -34,10 +37,10 @@ const exportToPDF = () => {
     });
 
     pdf.html(pdfContent, {
-      x: 0, // Half-inch margin
-      y: -20, // Half-inch margin
+      x: 0,
+      y: -20,
       html2canvas: {
-        scale: 1, // Adjust scale for better fit
+        scale: 1,
         useCORS: true,
       },
       callback: (doc) => {
@@ -49,6 +52,7 @@ const exportToPDF = () => {
   }
 };
 
+// Handle data change
 const handleDataChange = (data) => {
   if (data.metadata) {
     metadata.value = data.metadata;
@@ -67,6 +71,7 @@ const handleDataChange = (data) => {
   }
 };
 </script>
+
 <template>
   <div style="display: flex">
     <div style="width: 30%">
@@ -94,6 +99,10 @@ const handleDataChange = (data) => {
 </template>
 
 <style scoped>
+.white-text {
+  color: white;
+}
+
 .white {
   color: #737373;
   padding-left: 1%;
