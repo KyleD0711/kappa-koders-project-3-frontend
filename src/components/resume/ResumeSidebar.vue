@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted, defineProps } from "vue";
+import { ref, watch, onMounted, defineProps, computed, defineEmits} from "vue";
 import draggable from "vuedraggable";
 import {
   VCard,
@@ -41,17 +41,20 @@ import skillServices from '../../services/skillServices';
 import professionalSummaryServices from '../../services/professionalSummaryServices';
 import ProfessionalSummaryModal from '../professionalSummary/ProfessionalSummaryModal.vue';
 
-// Resume Items
-// skill
-import skillItemServices from "../../services/skillItemServices";
-import experienceItemServices from "../../services/experienceItemServices";
-import educationItemServices from "../../services/educationItemServices";
+import saveResume from "../../services/saveResumeService";
 
-import resumeSectionServices from "../../services/resumeSectionServices";
 import resumeServices from "../../services/resumeServices";
+import resumeSectionServices from "../../services/resumeSectionServices";
 
 import { storeToRefs } from "pinia";
 import { string } from "@vueform/vueform";
+import educationItemServices from "../../services/educationItemServices";
+import experienceItemServices from "../../services/experienceItemServices";
+import projectItemServices from "../../services/projectItemServices";
+import awardItemServices from "../../services/awardItemServices";
+import linkItemServices from "../../services/linkItemServices";
+import skillItemServices from "../../services/skillItemServices";
+import professionalSummaryItemServices from "../../services/professionalSummaryItemServices";
 
 const modalStore = useModalStore();
 const { isVisible } = storeToRefs(modalStore);
@@ -59,6 +62,7 @@ const { isVisible } = storeToRefs(modalStore);
 const emit = defineEmits(['dataChange']);
 
 let resume;
+let professional_Summary_id;
 
 const resume_data = ref([]);
 const header_data = ref([]);
@@ -73,23 +77,29 @@ const props = defineProps({
   resumeId: {
     type: string,
     required: true,
+  },
+  templateData: {
+    type: Object,
+    required: true
   }
 });
+
 
 const resume_data_local = ref([]);
 const header_data_local = ref([]);
 const metadata_local = ref({});
 const personalInfo = ref({
-  fName: 'Jonah',
-  lName: 'Veit',
-  email: 'jonah@gmail.com',
-  phone_number: '999-888-77777',
-  professional_summary: null,
+  fName: "",
+  lName: "",
+  email: "",
+  phone_number: "",
+  professional_summary: "",
 });
 
 const professionalSummaries = ref([]);  
 const resumeTitle = ref();
 const isEditingTitle = ref(false);
+
 
 const toggleEditTitle = () => {
   isEditingTitle.value = !isEditingTitle.value;
@@ -101,7 +111,6 @@ const saveTitle = () => {
 
 const cancelEditTitle = () => {
   isEditingTitle.value = false;
-  resumeTitle.value = "Resume Name"; 
 };
 
 const getEducation = async () => {
@@ -371,17 +380,6 @@ onMounted(async () => {
   // Wait for the resume data
   resume = await getResumeData(props.resumeId);
   
-  if (resume) {
-    resumeTitle.value = resume.name;
-    resume.metadata = JSON.parse(resume.metadata); 
-    metadata_local.value.section_dividers = resume.metadata.section_dividers ?? false;
-    metadata_local.value.render_fields = resume.metadata.render_fields ?? [];
-
-    // Perform additional actions with the `resume` object
-  } else {
-    console.warn("No resume found or error occurred.");
-  }
-
   await Promise.all([
     getEducation(),
     getExperience(),
@@ -392,26 +390,179 @@ onMounted(async () => {
     getProf_sums()
   ]);
 
- 
+  try {
+    await processResumeData();
+  } catch(err) {
+    console.warn("No resume found or error occurred.");
+  }
+  
+
   resume_data_local.value.forEach((section) => {
     if (section.isOpen === undefined) {
       section.isOpen = false;
     }
   });
 
-
-
+  
   isLoaded.value = true;
   handleDataChange();  
 });
+
+
+async function processResumeData() {
+  // Set up resume metadata and personal info
+  resume = await getResumeData(props.resumeId);
+  
+  resumeTitle.value = resume.name;
+  resume.metadata = JSON.parse(resume.metadata);
+  metadata_local.value.section_dividers = resume.metadata.section_dividers ?? false;
+  metadata_local.value.render_fields = resume.metadata.render_fields ?? [];
+  personalInfo.value.fName = resume.metadata.fName ?? "";
+  personalInfo.value.lName = resume.metadata.lName ?? "";
+  personalInfo.value.phone_number = resume.metadata.phone_number ?? "";
+  personalInfo.value.email = resume.metadata.email ?? "";
+
+  // Sort resume data based on render_fields order
+  const sortedResumeData = computed(() => {
+    const renderFieldsMap = new Map(metadata_local.value.render_fields.map((field, index) => [field, index]));
+    return resume_data_local.value.sort((a, b) => {
+      const indexA = renderFieldsMap.has(a.title.toLowerCase()) ? renderFieldsMap.get(a.title.toLowerCase()) : Infinity;
+      const indexB = renderFieldsMap.has(b.title.toLowerCase()) ? renderFieldsMap.get(b.title.toLowerCase()) : Infinity;
+      return indexA - indexB;
+    });
+  });
+
+  resume_data_local.value = sortedResumeData.value;
+  await processSectionItems();
+}
+
+async function processSectionItems() {
+  // Get all resume sections and their items
+  const resumeSections = await resumeSectionServices.getSectionsForResume(props.resumeId);
+
+  if (resumeSections && resumeSections.data) {
+    const fetchItemPromises = resumeSections.data.map((section) =>
+      fetchSectionItems(section.section_type, props.resumeId, section.section_id)
+        .then((itemsResponse) => {
+          // Process the fetched items for each section
+          processFetchedItemsForSection(section, itemsResponse);
+        })
+        .catch((err) => {
+          console.error(`Error fetching items for section ${section.section_type}:`, err);
+        })
+    );
+
+    // Wait for all fetch requests to resolve
+    await Promise.all(fetchItemPromises);
+  } else {
+    console.warn("No sections found for the resume.");
+  }
+}
+
+async function fetchSectionItems(sectionType, resumeId, sectionId) {
+  switch (sectionType) {
+    case 'education':
+      return await educationItemServices.getEducationItems(sectionId, resumeId);
+    case 'experience':
+      return await experienceItemServices.getExperienceItems(sectionId, resumeId);
+    case 'project':
+      return await projectItemServices.getProjectItems(sectionId, resumeId);
+    case 'award':
+      return await awardItemServices.getAwardItems(sectionId, resumeId);
+    case 'link':
+      return await linkItemServices.getLinkItems(sectionId, resumeId);
+    case 'skill':
+      return await skillItemServices.getSkillItems(sectionId, resumeId);
+    case 'professional_summary':
+      return await professionalSummaryItemServices.getProfessionalSummaryItems(sectionId, resumeId);
+    default:
+      console.warn(`No service defined for section type: ${sectionType}`);
+      return [];
+  }
+}
+
+function processFetchedItemsForSection(section, itemsResponse) {
+  // Processing specific section items like professional_summary, link, etc.
+  if (section.section_type === "professional_summary") {
+    handleProfessionalSummary(itemsResponse);
+  }
+
+  if (section.section_type === "link") {
+    handleLinkItems(itemsResponse);
+  }
+
+  // Loop through resume_data_local.value to process and select items based on section type
+  for (let i = 0; i < resume_data_local.value.length; i++) {
+    const resumeSection = resume_data_local.value[i];
+
+    if (resumeSection.title.toLowerCase() === section.section_type) {
+      if (resumeSection.items) {
+        resumeSection.items.forEach((localItem) => {
+          localItem.selected = false; // Reset selection before checking
+
+          // Match items based on section type
+          switch (resumeSection.title) {
+            case "Skill":
+              matchAndSelect(localItem, itemsResponse.data, 'skill_id');
+              break;
+            case "Education":
+              matchAndSelect(localItem, itemsResponse.data, 'education_id');
+              break;
+            case "Experience":
+              matchAndSelect(localItem, itemsResponse.data, 'experience_id');
+              break;
+            case "Award":
+              matchAndSelect(localItem, itemsResponse.data, 'award_id');
+              break;
+            case "Project":
+              matchAndSelect(localItem, itemsResponse.data, 'project_id');
+              break;
+            default:
+              console.warn(`Unhandled section type: ${resumeSection.title}`);
+              break;
+          }
+        });
+      } else {
+        console.warn(`No items found for section: ${resumeSection.title}`);
+      }
+    }
+  }
+}
+
+function matchAndSelect(localItem, itemsData, itemIdKey) {
+  const matchingItem = itemsData.find(item => item[itemIdKey] === localItem.data?.id);
+  if (matchingItem) {
+    localItem.selected = true;
+  }
+}
+
+function handleProfessionalSummary(itemsResponse) {
+  const professionalSummaryId = itemsResponse.data[0]?.professionalSummary_id;
+  if (professionalSummaryId) {
+    professionalSummaries.value.forEach((summary) => {
+      if (summary.data.id === professionalSummaryId) {
+        summary.selected = true;
+        updateSummary(summary);
+      }
+    });
+  }
+}
+
+function handleLinkItems(itemsResponse) {
+  itemsResponse.data.forEach((item) => {
+    header_data_local.value[0].items.forEach((headerItem) => {
+      if (headerItem.data.id === item.link_id) {
+        headerItem.selected = true;
+      }
+    });
+  });
+}
 
 watch([resume_data_local, header_data_local, personalInfo, metadata_local, isLoaded], () => {
   handleDataChange();
 }, { deep: true });
 
 const handleDataChange = () => {
-  
-
   const changes = {};
 
   if (resume_data_local.value) {
@@ -509,8 +660,10 @@ const updateSummary = (summary) => {
 
 
   if (summary.selected) {
+    professional_Summary_id = summary.data.id;
     personalInfo.value.professional_summary = summary.summary;
   } else {
+    professional_Summary_id = null;
     personalInfo.value.professional_summary = null;  
   }
 };
@@ -519,369 +672,10 @@ defineExpose({
   resumeTitle
 });
 
-const saveResume = async () => {
-  try {
-    // Prepare payload for updating the resume
-    const data = {
-      name: resumeTitle.value,
-      metadata: {
-        render_fields: metadata.value.render_fields,
-        section_dividers: metadata.value.section_dividers,
-      },
-    };
-
-    // Update the resume
-    await resumeServices.updateResume(props.resumeId, data);
-    console.log("Resume updated successfully");
-
-    // Fetch current resume sections
-    const sectionResponse = await resumeSectionServices.getSectionsForResume(props.resumeId);
-    const currentResumeSections = sectionResponse.data || [];
-    const renderFields = metadata.value.render_fields;
-
-    const existingSectionsMap = new Map(
-      currentResumeSections.map((section) => [section.section_type, section])
-    );
-
-    const sectionsToCreate = [];
-    const sectionsToUpdate = [];
-    const sectionsToDelete = [];
-
-    // Manage section creation, updates, and deletions
-    renderFields.forEach((sectionType, index) => {
-      const existingSection = existingSectionsMap.get(sectionType);
-
-      if (existingSection) {
-        sectionsToUpdate.push({
-          ...existingSection,
-          section_title: sectionType.charAt(0).toLowerCase() + sectionType.slice(1),
-          order: index + 1,
-        });
-      } else {
-        sectionsToCreate.push({
-          resumeId: props.resumeId,
-          section_type: sectionType,
-          section_title: sectionType.charAt(0).toLowerCase() + sectionType.slice(1),
-        });
-      }
-    });
-
-    currentResumeSections.forEach((section) => {
-      if (!renderFields.includes(section.section_type)) {
-        sectionsToDelete.push(section.section_id);
-      }
-    });
-
-    console.log("Sections to Create:", sectionsToCreate);
-    console.log("Sections to Update:", sectionsToUpdate);
-    console.log("Sections to Delete:", sectionsToDelete);
-
-    // Handle section creation
-    for (const section of sectionsToCreate) {
-      const createdSection = await resumeSectionServices.createResumeSection(props.resumeId, section);
-      const sectionId = createdSection.data.section_id;
-
-      switch (section.section_title) {
-        case "skill":
-          console.log("Handling skill");
-          const skillPromises = resume_data.value.skill.map(async (skill) => {
-            console.log("Skill Name: " + skill.id);
-            console.log(sectionId);
-            try {
-              return await skillItemServices.createSkillItem(skill.id, sectionId, props.resumeId);
-            } catch (error) {
-              console.log("Error creating skill item:", error);
-            }
-          });
-          await Promise.all(skillPromises);
-          break;
-
-        case "education":
-          console.log("Handling education");
-          const educationPromises = resume_data.value.education.map(async (education) => {
-            try {
-              return await educationItemServices.createEducationItem(education.id, sectionId, props.resumeId);
-            } catch (error) {
-              console.log("Error creating education item:", error);
-            }
-          });
-          await Promise.all(educationPromises);
-          break;
-
-        case "experience":
-          console.log("Handling experience");
-          const experiencePromises = resume_data.value.experience.map(async (experience) => {
-            try {
-              return await experienceItemServices.createExperienceItem(experience.id, sectionId, props.resumeId);
-            } catch (error) {
-              console.log("Error creating experience item:", error);
-            }
-          });
-          await Promise.all(experiencePromises);
-          break;
-
-        case "project":
-          console.log("Handling project");
-          const projectPromises = resume_data.value.project.map(async (project) => {
-            try {
-              return await projectItemServices.createProjectItem(project.id, sectionId, props.resumeId);
-            } catch (error) {
-              console.log("Error creating project item:", error);
-            }
-          });
-          await Promise.all(projectPromises);
-          break;
-
-        case "award":
-          console.log("Handling award");
-          const awardPromises = resume_data.value.award.map(async (award) => {
-            try {
-              return await awardItemServices.createAwardItem(award.id, sectionId, props.resumeId);
-            } catch (error) {
-              console.log("Error creating award item:", error);
-            }
-          });
-          await Promise.all(awardPromises);
-          break;
-
-        case "link":
-          console.log("Handling link");
-          const linkPromises = resume_data.value.link.map(async (link) => {
-            try {
-              return await linkItemServices.createLinkItem(link.id, sectionId, props.resumeId);
-            } catch (error) {
-              console.log("Error creating link item:", error);
-            }
-          });
-          await Promise.all(linkPromises);
-          break;
-
-        case "professional_summary":
-          console.log("Handling professional summary");
-          const summaryPromises = resume_data.value.professional_summary.map(async (summary) => {
-            try {
-              return await professionalSummaryItemServices.createProfessionalSummaryItem(summary.id, sectionId, props.resumeId);
-            } catch (error) {
-              console.log("Error creating professional summary item:", error);
-            }
-          });
-          await Promise.all(summaryPromises);
-          break;
-
-        default:
-          break;
-      }
-    }
-
-    // Handle section updates
-    for (const section of sectionsToUpdate) {
-      // Update the section
-      await resumeSectionServices.updateResumeSection(props.resumeId, section.section_id, section);
-
-      switch (section.section_title) {
-        case "skill":
-          console.log("Updating skills: " + section.section_id);
-          const existingSkillsResponse = await skillItemServices.getSkillItems(section.section_id, props.resumeId);
-          const existingSkills = existingSkillsResponse.data || [];
-          const existingSkillsMap = new Map(existingSkills.map(skill => [skill.id, skill]));
-
-          // Create a Set of new skill IDs from resume_data
-          const newSkillIds = new Set(resume_data.value.skill.map(skill => skill.id));
-
-          // Determine skills to delete
-          const skillsToDelete = existingSkills.filter(skill => !newSkillIds.has(skill.id));
-
-          // Delete unused skill items
-          for (const skill of skillsToDelete) {
-            await skillItemServices.deleteSkillItem(section.section_id, props.resumeId, skill.item_id);
-            console.log(`Deleted skill item with ID: ${skill.item_id}`);
-          }
-
-          // Handle updating/creating new skills
-          const skillPromises = resume_data.value.skill.map(async (skill) => {
-            if (existingSkillsMap.has(skill.id)) {
-              // Update existing skill item
-              const skillItemId = existingSkillsMap.get(skill.id).id;
-              return await skillItemServices.updateSkillItem(skillItemId, { skillId: skill.item_id, sectionId: section.section_id });
-            } else {
-              // Create new skill item if it does not exist
-              return await skillItemServices.createSkillItem(skill.id, section.section_id, props.resumeId);
-            }
-          });
-          await Promise.all(skillPromises);
-          break;
-        case "education":
-          console.log("Updating education: " + section.section_id);
-          // Similar logic for education
-          const existingEducationResponse = await educationItemServices.getEducationItems(section.section_id, props.resumeId);
-          const existingEducations = existingEducationResponse.data || [];
-          const existingEducationMap = new Map(existingEducations.map(edu => [edu.id, edu]));
-
-          const newEducationIds = new Set(resume_data.value.education.map(edu => edu.id));
-          const educationsToDelete = existingEducations.filter(edu => !newEducationIds.has(edu.id));
-
-          for (const edu of educationsToDelete) {
-            await educationItemServices.deleteEducationItem(section.section_id, props.resumeId, edu.item_id);
-            console.log(`Deleted education item with ID: ${edu.id}`);
-          }
-
-          const educationPromises = resume_data.value.education.map(async (edu) => {
-            if (existingEducationMap.has(edu.id)) {
-              const educationItemId = existingEducationMap.get(edu.id).id;
-              return await educationItemServices.updateExperienceItem(educationItemId, { educationId: edu.item.id, sectionId: section.section_id });
-            } else {
-              return await educationItemServices.createEducationItem(edu.id, section.section_id, props.resumeId);
-            }
-          });
-          await Promise.all(educationPromises);
-          break;
-        case "experience":
-          console.log("Updating experience: " + section.section_id);
-          // Similar logic for experience
-          const existingExperienceResponse = await experienceItemServices.getExperienceItems(section.section_id, props.resumeId);
-          const existingExperiences = existingExperienceResponse.data || [];
-          const existingExperienceMap = new Map(existingExperiences.map(exp => [exp.id, exp]));
-
-          const newExperienceIds = new Set(resume_data.value.experience.map(exp => exp.id));
-          const experiencesToDelete = existingExperiences.filter(exp => !newExperienceIds.has(exp.id));
-
-          for (const exp of experiencesToDelete) {
-            console.log(exp);
-            await experienceItemServices.deleteExperienceItem(section.section_id, props.resumeId, exp.item_id);
-            console.log(`Deleted experience item with ID: ${exp.id}`);
-          }
-
-          const experiencePromises = resume_data.value.experience.map(async (exp) => {
-            if (existingExperienceMap.has(exp.id)) {
-              console.log(exp);
-              const experienceItemId = existingExperienceMap.get(exp.id).id;
-              return await experienceItemServices.updateEducationItem(experienceItemId, { expreinceId: exp.item.id, sectionId: section.section_id });
-            } else {
-              console.log(exp);
-              return await experienceItemServices.createExperienceItem(exp.id, section.section_id, props.resumeId);
-            }
-          });
-          await Promise.all(experiencePromises);
-          break;
-        case "project":
-          console.log("Updating project: " + section.section_id);
-          // Similar logic for projects
-          const existingProjectResponse = await projectItemServices.getProjectItems(section.section_id, props.resumeId);
-          const existingProjects = existingProjectResponse.data || [];
-          const existingProjectMap = new Map(existingProjects.map(proj => [proj.id, proj]));
-
-          const newProjectIds = new Set(resume_data.value.project.map(proj => proj.id));
-          const projectsToDelete = existingProjects.filter(proj => !newProjectIds.has(proj.id));
-
-          for (const proj of projectsToDelete) {
-            await projectItemServices.deleteProjectItem(section.section_id, props.resumeId, proj.item_id);
-            console.log(`Deleted project item with ID: ${proj.id}`);
-          }
-
-          const projectPromises = resume_data.value.project.map(async (proj) => {
-            if (existingProjectMap.has(proj.id)) {
-              const projectItemId = existingProjectMap.get(proj.id).id;
-              return await projectItemServices.updateProjectItem(projectItemId, { projectId: proj.item.id, sectionId: section.section_id });
-            } else {
-              return await projectItemServices.createProjectItem(proj.id, section.section_id, props.resumeId);
-            }
-          });
-          await Promise.all(projectPromises);
-          break;
-        case "award":
-          console.log("Updating award: " + section.section_id);
-          // Similar logic for awards
-          const existingAwardResponse = await awardItemServices.getAwardItems(section.section_id, props.resumeId);
-          const existingAwards = existingAwardResponse.data || [];
-          const existingAwardMap = new Map(existingAwards.map(award => [award.id, award]));
-
-          const newAwardIds = new Set(resume_data.value.award.map(award => award.id));
-          const awardsToDelete = existingAwards.filter(award => !newAwardIds.has(award.id));
-
-          for (const award of awardsToDelete) {
-            await awardItemServices.deleteAwardItem(section.section_id, props.resumeId, award.item_id);
-            console.log(`Deleted award item with ID: ${award.id}`);
-          }
-
-          const awardPromises = resume_data.value.award.map(async (award) => {
-            if (existingAwardMap.has(award.id)) {
-              const awardItemId = existingAwardMap.get(award.id).id;
-              return await awardItemServices.updateAwardItem(awardItemId, { awardId: award.item.id, sectionId: section.section_id });
-            } else {
-              return await awardItemServices.createAwardItem(award.id, section.section_id, props.resumeId);
-            }
-          });
-          await Promise.all(awardPromises);
-          break;
-        case "link":
-          console.log("Updating link: " + section.section_id);
-          // Similar logic for links
-          const existingLinkResponse = await linkItemServices.getLinkItems(section.section_id, props.resumeId);
-          const existingLinks = existingLinkResponse.data || [];
-          const existingLinkMap = new Map(existingLinks.map(link => [link.id, link]));
-
-          const newLinkIds = new Set(resume_data.value.link.map(link => link.id));
-          const linksToDelete = existingLinks.filter(link => !newLinkIds.has(link.id));
-
-          for (const link of linksToDelete) {
-            await linkItemServices.deleteLinkItem(section.section_id, props.resumeId, link.item_id);
-            console.log(`Deleted link item with ID: ${link.id}`);
-          }
-
-          const linkPromises = resume_data.value.link.map(async (link) => {
-            if (existingLinkMap.has(link.id)) {
-              const linkItemId = existingLinkMap.get(link.id).id;
-              return await linkItemServices.updateLinkItem(linkItemId, { linkId: link.item.id, sectionId: section.section_id });
-            } else {
-              return await linkItemServices.createLinkItem(link.id, section.section_id, props.resumeId);
-            }
-          });
-          await Promise.all(linkPromises);
-          break;
-        case "professional_summary":
-          console.log("Updating professional summary: " + section.section_id);
-          // Similar logic for professional summaries
-          const existingSummaryResponse = await professionalSummaryItemServices.getProfessionalSummaryItems(section.section_id, props.resumeId);
-          const existingSummaries = existingSummaryResponse.data || [];
-          const existingSummaryMap = new Map(existingSummaries.map(summary => [summary.id, summary]));
-
-          const newSummaryIds = new Set(resume_data.value.professional_summary.map(summary => summary.id));
-          const summariesToDelete = existingSummaries.filter(summary => !newSummaryIds.has(summary.id));
-
-          for (const summary of summariesToDelete) {
-            await professionalSummaryItemServices.deleteProfessionalSummaryItem(section.section_id, props.resumeId, summary.item_id);
-            console.log(`Deleted professional summary item with ID: ${summary.id}`);
-          }
-
-          const summaryPromises = resume_data.value.professional_summary.map(async (summary) => {
-            if (existingSummaryMap.has(summary.id)) {
-              const summaryItemId = existingSummaryMap.get(summary.id).id;
-              return await professionalSummaryItemServices.updateProfessionalSummaryItem(summaryItemId, { summaryId: summary.item.id, sectionId: section.section_id });
-            } else {
-              return await professionalSummaryItemServices.createProfessionalSummaryItem(summary.id, section.section_id, props.resumeId);
-            }
-          });
-          await Promise.all(summaryPromises);
-          break;
-
-        default:
-          break;
-      }
-    }
-
-    // Handle section deletions
-    for (const sectionId of sectionsToDelete) {
-      await resumeSectionServices.deleteResumeSection(props.resumeId, sectionId);
-    }
-
-    console.log("Resume sections and skill items updated successfully");
-  } catch (error) {
-    console.error("Error saving the resume:", error.response?.data || error.message);
-    alert("Failed to save the resume. Please try again.");
-  }
+const handleSaveResume = async () => {
+  isResumeSaving = true;
+  await saveResume(props, resume_data, header_data, metadata, professional_Summary_id, resumeTitle, personalInfo);
 };
-
-
 
 
 </script>
@@ -928,6 +722,8 @@ const saveResume = async () => {
           Header
         </v-expansion-panel-title>
         <v-expansion-panel-text class="panel-background">
+
+          
           <div class="option-checkboxes">
             <v-form>
             <!-- Name, email, phone, etc. -->
@@ -1083,9 +879,10 @@ const saveResume = async () => {
       </template>
     </draggable>
 
-    <v-btn block style="background-color:#3D7AE2; color: white" @click="saveResume">
+    <v-btn block style="background-color:#3D7AE2; color: white" @click="handleSaveResume">
       Save Resume
     </v-btn>
+  
 
     <!-- Conditionally render the correct modal based on modalType -->
     <EducationModal v-if="isVisible && modalStore.modalType === 'education'" :education="modalStore.education" @submit-form="getEducation" />
