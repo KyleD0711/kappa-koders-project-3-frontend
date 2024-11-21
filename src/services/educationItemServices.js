@@ -18,8 +18,8 @@ export default {
     },
 
     // Update a EducationItem by ID
-    updateEducationItem(sectionId, resumeId, itemId, data) {
-        return apiClient.put(`/student/resume/${resumeId}/resumeSection/${sectionId}/education-item/${itemId}`, data);
+    updateEducationItem(sectionId, resumeId, itemId, order) {
+        return apiClient.put(`/student/resume/${resumeId}/resumeSection/${sectionId}/education-item/${itemId}`, {order});
     },
 
     // Delete a EducationItem by ID

@@ -213,29 +213,47 @@ const saveResume = async (props, resume_data, header_data, metadata, professiona
             await Promise.all(skillPromises);
             break;
         case "education":
-            console.log("Updating education: " + section.section_id);
-            // Similar logic for education
+
+            console.log("Update Education");    
             const existingEducationResponse = await educationItemServices.getEducationItems(section.section_id, props.resumeId);
-            const existingEducations = existingEducationResponse.data || [];
-            const existingEducationMap = new Map(existingEducations.map(edu => [edu.id, edu]));
+            console.log(existingEducationResponse);
+            
 
-            const newEducationIds = new Set(resume_data.value.education.map(edu => edu.id));
-            const educationsToDelete = existingEducations.filter(edu => !newEducationIds.has(edu.id));
+            // console.log("Updating education: " + section.section_id);
+            // // Similar logic for education
+            // const existingEducationResponse = await educationItemServices.getEducationItems(section.section_id, props.resumeId);
 
-            for (const edu of educationsToDelete) {
-            await educationItemServices.deleteEducationItem(section.section_id, props.resumeId, edu.item_id);
-            console.log(`Deleted education item with ID: ${edu.id}`);
-            }
+            // console.log("ALREADY IN DB");
+            // const existingEducations = existingEducationResponse.data || [];
+            // const existingEducationMap = new Map(existingEducations.map(edu => [edu.item_id, edu]));
 
-            const educationPromises = resume_data.value.education.map(async (edu) => {
-            if (existingEducationMap.has(edu.id)) {
-                const educationItemId = existingEducationMap.get(edu.id).id;
-                return await educationItemServices.updateExperienceItem(educationItemId, { educationId: edu.item.id, sectionId: section.section_id });
-            } else {
-                return await educationItemServices.createEducationItem(edu.id, section.section_id, props.resumeId);
-            }
-            });
-            await Promise.all(educationPromises);
+            // const newEducationIds = new Set(resume_data.value.education.map(edu => edu.item_id));
+            // console.log(existingEducations);
+            // const educationsToDelete = existingEducations.filter(edu => !newEducationIds.has(edu.id));
+
+
+            // console.log("ExistingEducationMap:");
+            // console.log(existingEducationMap);
+            // console.log("newEducationIds:");
+            // console.log(newEducationIds);
+            // console.log("educationsToDelete:");
+            // console.log(educationsToDelete);
+
+
+            // for (const edu of educationsToDelete) {
+            //     await educationItemServices.deleteEducationItem(section.section_id, props.resumeId, edu.item_id);
+            //     console.log(`Deleted education item with ID: ${edu.id}`);
+            // }
+
+            // const educationPromises = resume_data.value.education.map(async (edu) => {
+            // if (existingEducationMap.has(edu.id)) {
+            //     const educationItemId = existingEducationMap.get(edu.id).id;
+            //     return await educationItemServices.updateExperienceItem(educationItemId, { educationId: edu.item.id, sectionId: section.section_id }, 1);
+            // } else {
+            //     return await educationItemServices.createEducationItem(edu.id, section.section_id, props.resumeId, 0);
+            // }
+            // });
+            // await Promise.all(educationPromises);
             break;
         case "experience":
             console.log("Updating experience: " + section.section_id);
