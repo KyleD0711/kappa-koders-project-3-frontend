@@ -103,7 +103,7 @@ const saveResume = async (props, resume_data, header_data, metadata, professiona
             console.log("Handling education");
             const educationPromises = resume_data.value.education.map(async (education) => {
             try {
-                return await educationItemServices.createEducationItem(education.id, sectionId, props.resumeId);
+                return await educationItemServices.createEducationItem(education.id, sectionId, props.resumeId, 0);
             } catch (error) {
                 console.log("Error creating education item:", error);
             }
