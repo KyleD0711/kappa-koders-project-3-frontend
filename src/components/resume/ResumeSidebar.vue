@@ -93,7 +93,7 @@ const getEducation = async () => {
       (section) => section.title === "Education"
     );
     if (educationSection) {
-      educationSection.items = res.data.map(item => ({ name: item.institution, selected: false, data: item }));
+      educationSection.items = res.data.map(item => ({ name: item.institution, selected: true, data: item }));
     } else {
       resume_data_local.value.push({
         title: 'Education',
@@ -112,7 +112,7 @@ const getExperience = async () => {
       (section) => section.title === "Experience"
     );
     if (experienceSection) {
-      experienceSection.items = res.data.map(item => ({ name: item.employer, selected: false, data: item }));
+      experienceSection.items = res.data.map(item => ({ name: item.employer, selected: true, data: item }));
     } else {
       resume_data_local.value.push({
         title: 'Experience',
@@ -131,7 +131,7 @@ const getProject = async () => {
       (section) => section.title === "Project"
     );
     if (projectSection) {
-      projectSection.items = res.data.map(item => ({ name: item.name, selected: false, data: item }));
+      projectSection.items = res.data.map(item => ({ name: item.name, selected: true, data: item }));
     } else {
       resume_data_local.value.push({
         title: 'Project',
@@ -150,7 +150,7 @@ const getAwards = async () => {
       (section) => section.title === "Award"
     );
     if (awardSection) {
-      awardSection.items = res.data.map(item => ({ name: item.institution, selected: false, data: item }));
+      awardSection.items = res.data.map(item => ({ name: item.institution, selected: true, data: item }));
     } else {
       resume_data_local.value.push({
         title: 'Award',
@@ -167,7 +167,7 @@ const getLinks = async () => {
     const res = await linkServices.getAllLinkForUser();
     const linkHeader = header_data_local.value.find(header => header.title === 'Link');
     if (linkHeader) {
-      linkHeader.items = res.data.map(item => ({ name: item.name, selected: false, data: item }));
+      linkHeader.items = res.data.map(item => ({ name: item.name, selected: true, data: item }));
     } else {
       header_data_local.value.push({
         title: 'Link',
@@ -188,7 +188,7 @@ const getSkills = async () => {
       (section) => section.title === "Skill"
     );
     if (skillSection) {
-      skillSection.items = res.data.map(item => ({ name: item.name, selected: false, data: item }));
+      skillSection.items = res.data.map(item => ({ name: item.name, selected: true, data: item }));
     } else {
       resume_data_local.value.push({
         title: 'Skill',
@@ -205,7 +205,7 @@ const getProf_sums = async () => {
     const res = await professionalSummaryServices.getAllProfessionalSummaryForUser();  // API call for professional summaries
     professionalSummaries.value = res.data.map(item => ({
       summary: item.summary,
-      selected: false,
+      selected: true,
       data: item
     }));
   } catch (err) {
