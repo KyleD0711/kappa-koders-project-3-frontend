@@ -39,7 +39,6 @@ const items = ref([]);
 const user = ref({});
 const isLoaded = ref(false);
 
-
 const setCurUser = async () => {
   try {
     curUser.value = Utils.getStore("user");
@@ -56,8 +55,8 @@ const getUsers = async () => {
     .getAllUser()
     .then((res) => {
       curUser.value = Utils.getStore("user");
-      console.log(curUser);
-        items.value = res.data;
+      items.value = res.data;
+        console.log(items.value);
         items.value.forEach(user => {
           user.userRole.forEach(role => {
             if (role.role.type === "admin") {
@@ -67,8 +66,15 @@ const getUsers = async () => {
             }
           })
         })
+        const index = items.value.findIndex(temp => temp.id === curUser.userId);
+
+        if (index !== -1){
+          const [removedItem] = items.value.splice(index, 1);
+          items.value.unshift(removedItem);
+        } 
         isLoaded.value = true;
-    })
+
+      })
     .catch((err) => console.log(err));
 };
 
@@ -106,7 +112,7 @@ onMounted(() => {
 
     <v-data-table :headers="headers" :items="items" v-if="isLoaded">
       <template v-slot:item.actions="{ item }">
-        <v-icon v-if="curUser && item.id !== curUser.userId" class="me-2" size="small" @click="editUser(item)"> <!-- Why is curUser not holding a value?>-->
+        <v-icon v-if="curUser && item.id !== curUser.userId" class="me-2" size="small" @click="editUser(item)">
           mdi-pencil
         </v-icon>
         <v-icon  v-if="curUser && item.id !== curUser.userId" size="small" @click="deleteUser(item)"> mdi-delete </v-icon>
