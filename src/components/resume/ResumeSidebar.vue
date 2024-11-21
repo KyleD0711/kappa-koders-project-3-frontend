@@ -130,6 +130,8 @@ const getEducation = async () => {
   } catch (err) {
     console.error(err);
   }
+  processResumeData();
+  
 };
 
 const getExperience = async () => {
@@ -149,6 +151,7 @@ const getExperience = async () => {
   } catch (err) {
     console.error(err);
   }
+  processResumeData();
 };
 
 const getProject = async () => {
@@ -168,6 +171,7 @@ const getProject = async () => {
   } catch (err) {
     console.error(err);
   }
+  processResumeData();
 };
 
 const getAwards = async () => {
@@ -187,6 +191,7 @@ const getAwards = async () => {
   } catch (err) {
     console.error(err);
   }
+  processResumeData();
 };
 
 const getLinks = async () => {
@@ -204,8 +209,7 @@ const getLinks = async () => {
   } catch (err) {
     console.error(err);
   }
-
-
+  processResumeData();
 }
 
 const getSkills = async () => {
@@ -225,6 +229,7 @@ const getSkills = async () => {
   } catch (err) {
     console.error(err);
   }
+  processResumeData();
 }
 
 const getProf_sums = async () => {
@@ -238,7 +243,9 @@ const getProf_sums = async () => {
   } catch (err) {
     console.error('Error fetching professional summaries:', err);
   }
+  processResumeData();
 };
+
 
 const editLinkItem = (item) => {
   modalStore.link = item.data;
@@ -410,6 +417,7 @@ onMounted(async () => {
 
 
 async function processResumeData() {
+  console.log("process ResumeData");
   // Set up resume metadata and personal info
   resume = await getResumeData(props.resumeId);
   
@@ -535,6 +543,8 @@ function matchAndSelect(localItem, itemsData, itemIdKey) {
     localItem.selected = true;
   }
 }
+
+// when add model is submitted then render processResumeData
 
 function handleProfessionalSummary(itemsResponse) {
   const professionalSummaryId = itemsResponse.data[0]?.professionalSummary_id;
