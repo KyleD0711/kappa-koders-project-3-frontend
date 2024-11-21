@@ -37,9 +37,9 @@ const handleCredentialResponse = async (response) => {
     .then((response) => {
       user.value = response.data;
       Utils.setStore("user", user.value);
-      router.push({ name: "resumes" });
       fName.value = user.value.fName;
       lName.value = user.value.lName;
+      router.push({ name: "resumes" });
     })
     .catch((error) => {
       console.log("error", error);
