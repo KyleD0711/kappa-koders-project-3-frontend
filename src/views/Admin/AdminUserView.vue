@@ -56,6 +56,7 @@ const getUsers = async () => {
     .getAllUser()
     .then((res) => {
       curUser.value = Utils.getStore("user");
+      console.log(curUser);
         items.value = res.data;
         items.value.forEach(user => {
           user.userRole.forEach(role => {
