@@ -1,10 +1,20 @@
 <script setup>
-import { ref, watch, onMounted, defineExpose, onBeforeUnmount, toRaw} from "vue";
+import {
+  ref,
+  watch,
+  onMounted,
+  defineExpose,
+  onBeforeUnmount,
+  toRaw,
+} from "vue";
 import htmlGenerator from "./resumeUtils/htmlGenerator";
 import jsonUtils from "./resumeUtils/jsonUtils";
 import NoDataFound from "./NoDataFound.vue";
+import { storeToRefs } from "pinia";
+import { useResumeViewerStore } from "../../store/resumeViewer.store";
 
-const innerHtml = ref(null);
+const resumeViewerStore = useResumeViewerStore();
+const { innerHTML } = storeToRefs(resumeViewerStore);
 
 const props = defineProps({
   resume_data: {
@@ -37,8 +47,6 @@ const renderPDF = () => {
   let resume_data = props.resume_data;
   let template = props.template;
 
- 
-
   let title = `${header_data.fName} ${header_data.lName}`;
 
   let pdf_header = jsonUtils.findAndUpdateSectionByName(
@@ -48,10 +56,10 @@ const renderPDF = () => {
   );
 
   let personal_info = `${header_data.email} | ${header_data.phone_number}`;
-  
+
   let linkArray = (header_data.link ?? []).map((value) => ({
     name: value.name,
-    url: value.url
+    url: value.url,
   }));
 
   linkArray.forEach((value) => {
@@ -72,14 +80,12 @@ const renderPDF = () => {
 
   let body_children = [pdf_header, professional_summary];
 
-
-
   let renderFieldsArray = toRaw(metadata.render_fields);
-  
+
   const deepToRaw = (data) => {
     // Check if the data is an array
     if (Array.isArray(data)) {
-      return data.map(item => toRaw(item)); // Remove reactivity from each array item
+      return data.map((item) => toRaw(item)); // Remove reactivity from each array item
     }
     // If it's not an array, return as is
     return data;
@@ -87,11 +93,10 @@ const renderPDF = () => {
 
   // Unwrap the object properties
   const rawResumeData = {};
-  Object.keys(props.resume_data).forEach(key => {
+  Object.keys(props.resume_data).forEach((key) => {
     rawResumeData[key] = deepToRaw(toRaw(props.resume_data[key]));
   });
 
-  
   renderFieldsArray.forEach((render_field) => {
     let section = jsonUtils.findAndUpdateSectionByData(
       template,
@@ -100,8 +105,6 @@ const renderPDF = () => {
     );
     body_children.push({ ...section });
   });
-
-
 
   full_json_object = {
     resume: {
@@ -113,10 +116,12 @@ const renderPDF = () => {
     },
   };
 
-  innerHtml.value = htmlGenerator.generateHTMLFromTemplate(
+  let newHtml = htmlGenerator.generateHTMLFromTemplate(
     full_json_object.resume,
     metadata
   );
+
+  resumeViewerStore.updateInnerHTML(newHtml);
 };
 
 watch(props, () => {
@@ -129,8 +134,7 @@ const pdf = ref(null);
 
 defineExpose({
   pdf,
-})
-
+});
 
 const getScreenDPI = () => {
   // Create a temporary element to calculate DPI
@@ -184,6 +188,6 @@ onBeforeUnmount(() => {
     "
   >
     <NoDataFound v-if="!props.isLoaded"></NoDataFound>
-    <div v-else v-html="innerHtml"></div>
+    <div v-else v-html="innerHTML"></div>
   </div>
 </template>
