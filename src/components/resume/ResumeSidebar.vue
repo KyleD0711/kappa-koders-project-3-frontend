@@ -673,7 +673,6 @@ defineExpose({
 });
 
 const handleSaveResume = async () => {
-  isResumeSaving = true;
   await saveResume(props, resume_data, header_data, metadata, professional_Summary_id, resumeTitle, personalInfo);
 };
 
