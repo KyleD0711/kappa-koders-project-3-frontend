@@ -216,8 +216,9 @@ const saveResume = async (props, resume_data, header_data, metadata, professiona
 
             console.log("Update Education");    
             const existingEducationResponse = await educationItemServices.getEducationItems(section.section_id, props.resumeId);
-            console.log(existingEducationResponse);
-            
+            console.log(existingEducationResponse.data);
+            console.log(resume_data.value.education);
+           
 
             // console.log("Updating education: " + section.section_id);
             // // Similar logic for education
