@@ -62,7 +62,7 @@ onMounted(() => {
 <template>
   <div>
     <v-app-bar app>
-      <router-link :to="{ name: 'resume' }">
+      <router-link :to="{ name: 'resumes' }">
         <v-img
           class="mx-2"
           :src="logoURL"
@@ -76,7 +76,7 @@ onMounted(() => {
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <div v-if="showNavOptions">
-        <v-btn class="mx-2" :to="{ name: 'resume' }"> Resume </v-btn>
+        <v-btn class="mx-2" :to="{ name: 'resumes' }"> Resumes </v-btn>
         <v-btn class="mx-2" :to="{ name: 'information' }"> Information </v-btn>
         <v-btn v-if="isAdmin" class="mx-2" text="Admin"
           ><v-menu activator="parent" open-on-hover>

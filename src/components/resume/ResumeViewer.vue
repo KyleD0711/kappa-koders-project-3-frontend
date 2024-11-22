@@ -1,10 +1,20 @@
 <script setup>
-import { ref, watch, onMounted, onBeforeUnmount, toRaw } from "vue";
+import {
+  ref,
+  watch,
+  onMounted,
+  defineExpose,
+  onBeforeUnmount,
+  toRaw,
+} from "vue";
 import htmlGenerator from "./resumeUtils/htmlGenerator";
 import jsonUtils from "./resumeUtils/jsonUtils";
 import NoDataFound from "./NoDataFound.vue";
+import { storeToRefs } from "pinia";
+import { useResumeViewerStore } from "../../store/resumeViewer.store";
 
-const innerHtml = ref(null);
+const resumeViewerStore = useResumeViewerStore();
+const { innerHTML } = storeToRefs(resumeViewerStore);
 
 const props = defineProps({
   resume_data: {
@@ -47,6 +57,7 @@ const renderPDF = () => {
 
   let personal_info = `${header_data.email} | ${header_data.phone_number}`;
 
+
   let linkArray = (header_data.link ?? []).map((value) => ({
     name: value.name,
     url: value.url,
@@ -62,7 +73,13 @@ const renderPDF = () => {
     personal_info
   );
 
-  let body_children = [pdf_header];
+  let professional_summary = jsonUtils.findAndUpdateSectionByName(
+    template.structure.professional_summary,
+    template.data.professional_summary,
+    header_data.professional_summary
+  );
+
+  let body_children = [pdf_header, professional_summary];
 
   if (header_data.professional_summary != "") {
     let professional_summary = jsonUtils.findAndUpdateSectionByName(
@@ -90,6 +107,7 @@ const renderPDF = () => {
     rawResumeData[key] = deepToRaw(toRaw(props.resume_data[key]));
   });
 
+
   renderFieldsArray.forEach((render_field) => {
     let section = jsonUtils.findAndUpdateSectionByData(
       template,
@@ -109,10 +127,12 @@ const renderPDF = () => {
     },
   };
 
-  innerHtml.value = htmlGenerator.generateHTMLFromTemplate(
+  let newHtml = htmlGenerator.generateHTMLFromTemplate(
     full_json_object.resume,
     metadata
   );
+
+  resumeViewerStore.updateInnerHTML(newHtml);
 };
 
 watch(props, () => {
@@ -122,6 +142,10 @@ watch(props, () => {
 });
 
 const pdf = ref(null);
+
+defineExpose({
+  pdf,
+});
 
 const getScreenDPI = () => {
   // Create a temporary element to calculate DPI
@@ -162,14 +186,20 @@ onBeforeUnmount(() => {
     ref="pdf"
     name="pdf"
     style="
+      width: 886px;
+      height: 1136px;
       background-color: white;
-      padding: 10px 10px;
-      border: 1px solid #ccc; /* Subtle border to mimic a physical paper edge */
+      overflow: hidden; /* Ensure no content spills out */
+      box-sizing: border-box; /* Include padding in the total size */
+      padding: 20px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a slight shadow for realism */
       margin: 20px 10px; /* Center the paper on the page */
+      transform: scale(0.9); /* Shrink the content */
+      transform-origin: top left; /* Anchor scaling */
     "
   >
     <NoDataFound v-if="!props.isLoaded"></NoDataFound>
-    <div v-else v-html="innerHtml"></div>
+    <div v-else v-html="innerHTML"></div>
   </div>
 </template>
+

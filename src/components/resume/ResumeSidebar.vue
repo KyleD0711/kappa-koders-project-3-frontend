@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, defineProps, computed, defineEmits} from "vue";
 import draggable from "vuedraggable";
 import {
   VCard,
@@ -10,6 +10,8 @@ import {
   VIcon,
 } from "vuetify/components";
 import { useModalStore } from "../../store/modal.store";
+
+import 'primeicons/primeicons.css'
 
 // Education:
 import EducationModal from "../education/EducationModal.vue";
@@ -39,36 +41,66 @@ import skillServices from '../../services/skillServices';
 import professionalSummaryServices from '../../services/professionalSummaryServices';
 import ProfessionalSummaryModal from '../professionalSummary/ProfessionalSummaryModal.vue';
 
+import saveResume from "../../services/saveResumeService";
+
+import resumeServices from "../../services/resumeServices";
+import resumeSectionServices from "../../services/resumeSectionServices";
+
 import { storeToRefs } from "pinia";
+import { string } from "@vueform/vueform";
+import educationItemServices from "../../services/educationItemServices";
+import experienceItemServices from "../../services/experienceItemServices";
+import projectItemServices from "../../services/projectItemServices";
+import awardItemServices from "../../services/awardItemServices";
+import linkItemServices from "../../services/linkItemServices";
+import skillItemServices from "../../services/skillItemServices";
+import professionalSummaryItemServices from "../../services/professionalSummaryItemServices";
+// import { link } from "../../../../kappakoders-project3-backend/app/models";
 
 const modalStore = useModalStore();
 const { isVisible } = storeToRefs(modalStore);
 
 const emit = defineEmits(['dataChange']);
 
+let resume;
+let professional_Summary_id;
+
 const resume_data = ref([]);
 const header_data = ref([]);
 const metadata = ref([]);
 const isLoaded = ref({});
 
+const props = defineProps({
+  exportFunction: {
+    type: Function,
+    required: true,
+  },
+  resumeId: {
+    type: string,
+    required: true,
+  },
+  templateData: {
+    type: Object,
+    required: true
+  }
+});
+
+
 const resume_data_local = ref([]);
 const header_data_local = ref([]);
-const metadata_local = ref({
-  render_fields: [],
-  section_dividers: false,
-});
+const metadata_local = ref({});
 const personalInfo = ref({
-  fName: 'Jonah',
-  lName: 'Veit',
-  email: 'jonah@gmail.com',
-  phone_number: '999-888-77777',
-  professional_summary: null,
+  fName: "",
+  lName: "",
+  email: "",
+  phone_number: "",
+  professional_summary: "",
 });
-
 
 const professionalSummaries = ref([]);  
-const resumeTitle = ref("Resume Name");
+const resumeTitle = ref();
 const isEditingTitle = ref(false);
+
 
 const toggleEditTitle = () => {
   isEditingTitle.value = !isEditingTitle.value;
@@ -80,7 +112,6 @@ const saveTitle = () => {
 
 const cancelEditTitle = () => {
   isEditingTitle.value = false;
-  resumeTitle.value = "Resume Name"; 
 };
 
 const getEducation = async () => {
@@ -95,11 +126,14 @@ const getEducation = async () => {
       resume_data_local.value.push({
         title: 'Education',
         items: res.data.map(item => ({ name: item.institution, selected: false, data: item })),
+        icon: 'pi pi-graduation-cap'
       });
     }
   } catch (err) {
     console.error(err);
   }
+  processResumeData();
+  
 };
 
 const getExperience = async () => {
@@ -114,11 +148,13 @@ const getExperience = async () => {
       resume_data_local.value.push({
         title: 'Experience',
         items: res.data.map(item => ({ name: item.employer, selected: false, data: item })),
+        icon: 'pi pi-briefcase'
       });
     }
   } catch (err) {
     console.error(err);
   }
+  processResumeData();
 };
 
 const getProject = async () => {
@@ -133,11 +169,13 @@ const getProject = async () => {
       resume_data_local.value.push({
         title: 'Project',
         items: res.data.map(item => ({ name: item.name, selected: false, data: item })),
+        icon: 'pi pi-book'
       });
     }
   } catch (err) {
     console.error(err);
   }
+  processResumeData();
 };
 
 const getAwards = async () => {
@@ -152,11 +190,13 @@ const getAwards = async () => {
       resume_data_local.value.push({
         title: 'Award',
         items: res.data.map(item => ({ name: item.institution, selected: false, data: item })),
+        icon: 'pi pi-trophy'
       });
     }
   } catch (err) {
     console.error(err);
   }
+  processResumeData();
 };
 
 const getLinks = async () => {
@@ -169,13 +209,13 @@ const getLinks = async () => {
       header_data_local.value.push({
         title: 'Link',
         items: res.data.map(item => ({ name: item.name, selected: false, data: item })),
+        icon: 'pi pi-link'
       });
     }
   } catch (err) {
     console.error(err);
   }
-
-
+  processResumeData();
 }
 
 const getSkills = async () => {
@@ -190,11 +230,13 @@ const getSkills = async () => {
       resume_data_local.value.push({
         title: 'Skill',
         items: res.data.map(item => ({ name: item.name, selected: false, data: item })),
+        icon: 'pi pi-lightbulb'
       });
     }
   } catch (err) {
     console.error(err);
   }
+  processResumeData();
 }
 
 const getProf_sums = async () => {
@@ -208,7 +250,9 @@ const getProf_sums = async () => {
   } catch (err) {
     console.error('Error fetching professional summaries:', err);
   }
+  processResumeData();
 };
+
 
 const editLinkItem = (item) => {
   modalStore.link = item.data;
@@ -319,12 +363,37 @@ const showAddDialog = (section) => {
   }
 };
 
+const getResumeData = async (id) => {
+  try {
+    const response = await resumeServices.getAllResumesForUser();
+    if (Array.isArray(response.data)) {
+      // Convert `id` to a number if necessary and find the matching object
+      const resume = response.data.find((resume) => resume.id === Number(id));
+      if (resume) {
+        return resume;
+      } else {
+        console.warn("No Resume Found with ID:", id);
+        return null;
+      }
+    } else {
+      console.error("Response data is not an array:", response.data);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching resumes:", error);
+    return null;
+  }
+};
+
 onMounted(async () => {
   isLoaded.value = false;
   emit('dataChange', { isLoaded: isLoaded.value });
   
   document.body.style.caretColor = 'transparent';
 
+  // Wait for the resume data
+  resume = await getResumeData(props.resumeId);
+  
   await Promise.all([
     getEducation(),
     getExperience(),
@@ -335,16 +404,177 @@ onMounted(async () => {
     getProf_sums()
   ]);
 
- 
+  try {
+    await processResumeData();
+  } catch(err) {
+    console.warn("No resume found or error occurred.");
+  }
+  
+
   resume_data_local.value.forEach((section) => {
     if (section.isOpen === undefined) {
       section.isOpen = false;
     }
   });
 
+  
   isLoaded.value = true;
   handleDataChange();  
 });
+
+
+async function processResumeData() {
+  console.log("process ResumeData");
+  // Set up resume metadata and personal info
+  resume = await getResumeData(props.resumeId);
+  resumeTitle.value = resume.name;
+  if (typeof(resume.metadata) == "string"){
+    resume.metadata = JSON.parse(resume.metadata);
+  }
+  metadata_local.value.section_dividers = resume.metadata.section_dividers ?? false;
+  metadata_local.value.render_fields = resume.metadata.render_fields ?? [];
+  personalInfo.value.fName = resume.metadata.fName ?? "";
+  personalInfo.value.lName = resume.metadata.lName ?? "";
+  personalInfo.value.phone_number = resume.metadata.phone_number ?? "";
+  personalInfo.value.email = resume.metadata.email ?? "";
+
+  // Sort resume data based on render_fields order
+  const sortedResumeData = computed(() => {
+    const renderFieldsMap = new Map(metadata_local.value.render_fields.map((field, index) => [field, index]));
+    return resume_data_local.value.sort((a, b) => {
+      const indexA = renderFieldsMap.has(a.title.toLowerCase()) ? renderFieldsMap.get(a.title.toLowerCase()) : Infinity;
+      const indexB = renderFieldsMap.has(b.title.toLowerCase()) ? renderFieldsMap.get(b.title.toLowerCase()) : Infinity;
+      return indexA - indexB;
+    });
+  });
+
+  resume_data_local.value = sortedResumeData.value;
+  await processSectionItems();
+}
+
+async function processSectionItems() {
+  // Get all resume sections and their items
+  const resumeSections = await resumeSectionServices.getSectionsForResume(props.resumeId);
+
+  if (resumeSections && resumeSections.data) {
+    const fetchItemPromises = resumeSections.data.map((section) =>
+      fetchSectionItems(section.section_type, props.resumeId, section.section_id)
+        .then((itemsResponse) => {
+          // Process the fetched items for each section
+          processFetchedItemsForSection(section, itemsResponse);
+        })
+        .catch((err) => {
+          console.error(`Error fetching items for section ${section.section_type}:`, err);
+        })
+    );
+
+    // Wait for all fetch requests to resolve
+    await Promise.all(fetchItemPromises);
+  } else {
+    console.warn("No sections found for the resume.");
+  }
+}
+
+async function fetchSectionItems(sectionType, resumeId, sectionId) {
+  switch (sectionType) {
+    case 'education':
+      return await educationItemServices.getEducationItems(sectionId, resumeId);
+    case 'experience':
+      return await experienceItemServices.getExperienceItems(sectionId, resumeId);
+    case 'project':
+      return await projectItemServices.getProjectItems(sectionId, resumeId);
+    case 'award':
+      return await awardItemServices.getAwardItems(sectionId, resumeId);
+    case 'link':
+      return await linkItemServices.getLinkItems(sectionId, resumeId);
+    case 'skill':
+      return await skillItemServices.getSkillItems(sectionId, resumeId);
+    case 'professional_summary':
+      return await professionalSummaryItemServices.getProfessionalSummaryItems(sectionId, resumeId);
+    default:
+      console.warn(`No service defined for section type: ${sectionType}`);
+      return [];
+  }
+}
+
+function processFetchedItemsForSection(section, itemsResponse) {
+  // Processing specific section items like professional_summary, link, etc.
+  if (section.section_type === "professional_summary") {
+    handleProfessionalSummary(itemsResponse);
+  }
+
+  if (section.section_type === "link") {
+    handleLinkItems(itemsResponse);
+  }
+
+  // Loop through resume_data_local.value to process and select items based on section type
+  for (let i = 0; i < resume_data_local.value.length; i++) {
+    const resumeSection = resume_data_local.value[i];
+
+    if (resumeSection.title.toLowerCase() === section.section_type) {
+      if (resumeSection.items) {
+        resumeSection.items.forEach((localItem) => {
+          localItem.selected = false; // Reset selection before checking
+
+          // Match items based on section type
+          switch (resumeSection.title) {
+            case "Skill":
+              matchAndSelect(localItem, itemsResponse.data, 'skill_id');
+              break;
+            case "Education":
+              matchAndSelect(localItem, itemsResponse.data, 'education_id');
+              break;
+            case "Experience":
+              matchAndSelect(localItem, itemsResponse.data, 'experience_id');
+              break;
+            case "Award":
+              matchAndSelect(localItem, itemsResponse.data, 'award_id');
+              break;
+            case "Project":
+              matchAndSelect(localItem, itemsResponse.data, 'project_id');
+              break;
+            default:
+              console.warn(`Unhandled section type: ${resumeSection.title}`);
+              break;
+          }
+        });
+      } else {
+        console.warn(`No items found for section: ${resumeSection.title}`);
+      }
+    }
+  }
+}
+
+function matchAndSelect(localItem, itemsData, itemIdKey) {
+  const matchingItem = itemsData.find(item => item[itemIdKey] === localItem.data?.id);
+  if (matchingItem) {
+    localItem.selected = true;
+  }
+}
+
+// when add model is submitted then render processResumeData
+
+function handleProfessionalSummary(itemsResponse) {
+  const professionalSummaryId = itemsResponse.data[0]?.professionalSummary_id;
+  if (professionalSummaryId) {
+    professionalSummaries.value.forEach((summary) => {
+      if (summary.data.id === professionalSummaryId) {
+        summary.selected = true;
+        updateSummary(summary);
+      }
+    });
+  }
+}
+
+function handleLinkItems(itemsResponse) {
+  itemsResponse.data.forEach((item) => {
+    header_data_local.value[0].items.forEach((headerItem) => {
+      if (headerItem.data.id === item.link_id) {
+        headerItem.selected = true;
+      }
+    });
+  });
+}
 
 watch([resume_data_local, header_data_local, personalInfo, metadata_local, isLoaded], () => {
   handleDataChange();
@@ -430,9 +660,11 @@ const parseHeader_data = (header_data, personalInfo) => {
 const parseMetadata = (metadata_local, resume_data) => {
   const result = {};
 
+  //console.log("Render Fields: " + Object.keys(resume_data));
   result.render_fields = Object.keys(resume_data);
   result.section_dividers = metadata_local.section_dividers;
   
+
   return result;
 };
 
@@ -446,11 +678,22 @@ const updateSummary = (summary) => {
 
 
   if (summary.selected) {
+    professional_Summary_id = summary.data.id;
     personalInfo.value.professional_summary = summary.summary;
   } else {
+    professional_Summary_id = null;
     personalInfo.value.professional_summary = null;  
   }
 };
+
+defineExpose({
+  resumeTitle
+});
+
+const handleSaveResume = async () => {
+  await saveResume(props, resume_data, header_data, metadata, professional_Summary_id, resumeTitle, personalInfo);
+};
+
 
 </script>
 
@@ -480,6 +723,13 @@ const updateSummary = (summary) => {
           @click="toggleEditTitle"
           >mdi-pencil</v-icon
         >
+
+        <i 
+          @click="exportFunction" 
+          v-if="!isEditingTitle" 
+          style="margin-left: 30px; vertical-align: middle; position: relative; top: -2px;" 
+          class="pi pi-print">
+        </i>      
       </template>
     </div>
 
@@ -489,6 +739,8 @@ const updateSummary = (summary) => {
           Header
         </v-expansion-panel-title>
         <v-expansion-panel-text class="panel-background">
+
+          
           <div class="option-checkboxes">
             <v-form>
             <!-- Name, email, phone, etc. -->
@@ -508,6 +760,7 @@ const updateSummary = (summary) => {
               <v-expansion-panels>
                 <v-expansion-panel class="section-0">
                   <v-expansion-panel-title>
+                    <i style="margin-left: -10px; margin-right: 5px;"class="pi pi-verified"></i>
                     Professional Summaries
                   </v-expansion-panel-title>
                   <v-expansion-panel-text>
@@ -544,7 +797,7 @@ const updateSummary = (summary) => {
                 <v-card class="mb-3">
                   <v-expansion-panels>
                     <v-expansion-panel class="section-0" :key="header.title">
-                      <v-expansion-panel-title> Links </v-expansion-panel-title>
+                      <v-expansion-panel-title> <i style="margin-left: -10px; margin-right: 5px;"class="pi pi-link"></i> Links </v-expansion-panel-title>
                       <v-expansion-panel-text>
                         <draggable
                           class="item-list"
@@ -604,7 +857,8 @@ const updateSummary = (summary) => {
           <v-expansion-panels v-model="resume_data_local[index].isOpen">
             <v-expansion-panel class="section-0">
               <v-expansion-panel-title>
-                <v-icon class="mr-2">mdi-drag</v-icon>
+                <v-icon class="mr-2" style="margin-left: -10px">mdi-drag</v-icon>
+                <i :class="section.icon" style="margin-right: 5px"></i>
                 {{ section.title }}
               </v-expansion-panel-title>
               <v-expansion-panel-text class="section-1">
@@ -644,6 +898,10 @@ const updateSummary = (summary) => {
       </template>
     </draggable>
 
+    <v-btn block style="background-color:#3D7AE2; color: white" @click="handleSaveResume">
+      Save Resume
+    </v-btn>
+  
 
     <!-- Conditionally render the correct modal based on modalType -->
     <EducationModal v-if="isVisible && modalStore.modalType === 'education'" :education="modalStore.education" @submit-form="getEducation" />
