@@ -1,11 +1,14 @@
 <script setup>
-import { computed, nextTick, ref } from "vue"
+import { computed, nextTick, onMounted, ref, watch } from "vue"
 
 import { useChatHistoryStore } from "../../store/chatHistory.store";
+import { useResumeViewerStore } from "../../store/resumeViewer.store.js";
 import { storeToRefs } from "pinia";
 
 const chatHistory = useChatHistoryStore();
+const resumeViewer = useResumeViewerStore();
 const { history } = storeToRefs(chatHistory);
+const { innerHTML } = storeToRefs(resumeViewer)
 
 import sendMessage from "../../services/cohereAIServices.js"
 
@@ -19,7 +22,7 @@ const props = defineProps({
 })
 
 const handleMessageResponse = async (responseStream) => {
-    chatHistory.addToHistory('', 'Chatbot', 1)
+    chatHistory.addToHistory('', 'Chatbot', props.resumeId)
     const responseIndex = history.value[props.resumeId].length - 1
 
     for await (const token of responseStream) {
@@ -38,7 +41,7 @@ const handleSendMessage = async () => {
 
     const responseStream = await sendMessage(message, currentChatHistory || [])
 
-    chatHistory.addToHistory(message, 'User', 1)
+    chatHistory.addToHistory(message, 'User', props.resumeId)
 
     handleMessageResponse(responseStream)
 
@@ -76,6 +79,28 @@ const scrollPane = ref()
 const scrollToBottom = () => {
     scrollPane.value.scrollTop = scrollPane.value.scrollHeight;
 }
+
+const initializeChatHitory = () => {
+    if(!history.value[props.resumeId]){
+        history.value[props.resumeId] = []
+    }
+
+    if(!history.value[props.resumeId][0]){
+        history.value[props.resumeId].push({
+            message: "",
+            role: "User"
+        })
+    }
+    history.value[props.resumeId][0].message = `This is the resume that this chat is regarding:` + innerHTML.value
+}
+
+watch(innerHTML.value, () => {
+    initializeChatHitory();
+})
+
+onMounted(() => {
+    initializeChatHitory();
+})
 </script>
 
 <template>
@@ -159,6 +184,7 @@ const scrollToBottom = () => {
 /* Custom scrollbar styling (works in webkit browsers like Chrome and Safari) */
 .scroll-pane::-webkit-scrollbar {
   width: 8px;           /* Width of the scrollbar */
+  padding-left: 4px;
 }
 
 .scroll-pane::-webkit-scrollbar-thumb {

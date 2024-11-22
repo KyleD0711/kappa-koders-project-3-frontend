@@ -175,16 +175,13 @@ onBeforeUnmount(() => {
     ref="pdf"
     name="pdf"
     style="
-      width: 886px;
-      height: 1136px;
+      max-width: 886px;
+      aspect-ratio: 1 / 1.294;
       background-color: white;
       overflow: hidden; /* Ensure no content spills out */
       box-sizing: border-box; /* Include padding in the total size */
       padding: 20px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a slight shadow for realism */
-      margin: 20px 10px; /* Center the paper on the page */
-      transform: scale(0.9); /* Shrink the content */
-      transform-origin: top left; /* Anchor scaling */
     "
   >
     <NoDataFound v-if="!props.isLoaded"></NoDataFound>

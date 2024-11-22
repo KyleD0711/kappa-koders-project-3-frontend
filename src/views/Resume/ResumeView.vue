@@ -17,6 +17,12 @@ const header_data = ref({});
 const resume_data = ref({});
 const isLoaded = ref({});
 
+const resumeViewer = ref(null);
+const resumeSidebar = ref(null);
+
+const route = useRoute();
+const resumeId = route.params.resumeId;
+
 const leftTab = ref(null)
 const rightTab = ref(null)
 
@@ -90,19 +96,25 @@ const templates = ['template1', 'template2', 'template3', 'template4'];
           :resume_data="resume_data"
           @dataChange = "handleDataChange" />
       </v-navigation-drawer>
-
-    <div class="scroll-pane">
-      <ResumeViewer
-        @dataChange="handleDataChange"
-        ref="resumeViewer"
-        :resumeId="resumeId"
-        :is-loaded="isLoaded"
-        :template="templateData"
-        :metadata="metadata"
-        :header_data="header_data"
-        :resume_data="resume_data"
-      />
-    </div>
+      <v-col class="mx-5">
+        <v-tabs v-model="selectedTemplate" vertical class="white-text mt-1" style="width:fit-content; margin:auto">
+        <v-tab v-for="templateKey in templates" :key="templateKey" :value="templateKey" class="white-text">
+          {{ templateKey }}
+        </v-tab>
+      </v-tabs>
+      <div class="scroll-pane">
+        <ResumeViewer
+          @dataChange="handleDataChange"
+          ref="resumeViewer"
+          :resumeId="resumeId"
+          :is-loaded="isLoaded"
+          :template="templateData"
+          :metadata="metadata"
+          :header_data="header_data"
+          :resume_data="resume_data"
+        />
+      </div>
+      </v-col>
     <v-tabs
       v-model="rightTab"
       direction="vertical"
@@ -125,7 +137,7 @@ const templates = ['template1', 'template2', 'template3', 'template4'];
       color="#4c4c4c"
       :width="drawerWidth"
     >
-      <Chat v-if="rightTab == 0" :resume-id="1"/>
+      <Chat v-if="rightTab == 0" :resume-id="resumeId"/>
       <div v-else>
         <p class="text-h4">Comments Pane Goes Here</p>
       </div>
@@ -154,12 +166,15 @@ const templates = ['template1', 'template2', 'template3', 'template4'];
 }
 
 .scroll-pane {
-  height: 85vh;    /* Sets the height limit for scroll */
+  height: 79vh;    /* Sets the height limit for scroll */
+  width:fit-content;
   overflow-y: auto;     /* Enables vertical scrolling */
   overflow-x: hidden;   /* Hides horizontal scrolling */
   box-sizing: border-box; /* Ensures padding is within total width/height */
+  margin: auto;
   margin-top: 15px; 
   margin-bottom: 12px;
+  padding-right: 8px;
 }
 
 /* Custom scrollbar styling (works in webkit browsers like Chrome and Safari) */
