@@ -21,9 +21,14 @@ const props = defineProps({
     }
 })
 
+const userMessage = ref({})
+const isLoadingMessage = ref(false)
+
 const handleMessageResponse = async (responseStream) => {
     chatHistory.addToHistory('', 'Chatbot', props.resumeId)
     const responseIndex = history.value[props.resumeId].length - 1
+
+    isLoadingMessage.value = true;
 
     for await (const token of responseStream) {
         if (token.eventType === "text-generation") {
@@ -31,12 +36,14 @@ const handleMessageResponse = async (responseStream) => {
         }
     }
 
+    isLoadingMessage.value = false;
+
 }
 
 const handleSendMessage = async () => {
     const message = userMessage.value.message;
 
-    const currentChatHistory = chatHistory.getHistoryForResume(1)
+    const currentChatHistory = history.value[props.resumeId]
     console.log(currentChatHistory)
 
     const responseStream = await sendMessage(message, currentChatHistory || [])
@@ -51,7 +58,6 @@ const handleSendMessage = async () => {
 
     scrollToBottom()
 }
-const userMessage = ref({})
 
 const combinedChatHistory = computed(() => {
     const currentHistory = history.value[props.resumeId] || [];
@@ -80,7 +86,7 @@ const scrollToBottom = () => {
     scrollPane.value.scrollTop = scrollPane.value.scrollHeight;
 }
 
-const initializeChatHitory = () => {
+const updateChatHistoryResume = () => {
     if(!history.value[props.resumeId]){
         history.value[props.resumeId] = []
     }
@@ -91,25 +97,68 @@ const initializeChatHitory = () => {
             role: "User"
         })
     }
-    history.value[props.resumeId][0].message = `This is the resume that this chat is regarding:` + innerHTML.value
+
+    if(history.value[props.resumeId].length > 1){
+        history.value[props.resumeId].push({
+            role: 'User',
+            message: `I've updated my resume, use this version for any future questions:` + innerHTML.value
+        })
+    } else {
+        history.value[props.resumeId][0].message = `This is the resume that this chat is regarding, ignore the HTML tags and only provide feedback on the text of the resume for this version and all future versions:` + innerHTML.value
+    }
+}
+
+const clearHistory = () => {
+    history.value[props.resumeId] = []
+    updateChatHistoryResume()
+}
+
+const recommendationClass = computed(() => {
+    if(history.value[props.resumeId] && history.value[props.resumeId].length > 1) {
+        return 'no-flex-grow'
+    } else {
+        return 'w-100 d-flex flex-column align-end'
+    }
+})
+
+const sendRecommendedMessage = (index) => {
+    let message = ""
+    switch (index) {
+        case 2:
+            message = "Are there any misspellings on my Resume?"
+            break;
+        case 3:
+            message = "Is my resume tailored to the industry I'm applying for? If not what recommendations do you have?"
+            break;
+        default:
+            message = "Can you give me some feedback on my resume? What are some areas that can be improved?"
+    }
+
+    userMessage.value.message = message;
+    handleSendMessage()
 }
 
 watch(innerHTML.value, () => {
-    initializeChatHitory();
+    updateChatHistoryResume();
 })
 
 onMounted(() => {
-    initializeChatHitory();
+    updateChatHistoryResume();
 })
 </script>
 
 <template>
-    <div>
-        <v-row no-gutters class="align-center ma-4">
-            <p class="text-h5">Ask AI</p>
-            <v-icon class="ml-3">
-                mdi-shimmer
-            </v-icon>
+    <div class="chat-container">
+        <v-row no-gutters class="align-center ma-4 justify-space-between no-flex-grow">
+            <v-row no-gutters class="align-center">
+                <p class="text-h5">Ask AI</p>
+                <v-icon class="ml-3">
+                    mdi-shimmer
+                </v-icon>
+            </v-row>
+            <v-btn append-icon="mdi-delete" color="teal" @click="clearHistory()">
+                Clear
+            </v-btn>
         </v-row>
         <div ref="scrollPane" class="scroll-pane">
             <v-col
@@ -128,6 +177,36 @@ onMounted(() => {
             </v-col>
         </div>
 
+        <v-col :class="recommendationClass">
+            <v-chip 
+                class="my-2 mr-1 px-4" 
+                prepend-icon="mdi-file-search-outline"  
+                variant="flat" 
+                color="#262626" 
+                @click="sendRecommendedMessage(1)"
+            >
+                General Feedback
+            </v-chip>
+            <v-chip 
+                class="my-2 mr-1 px-4" 
+                prepend-icon="mdi-file-edit"  
+                variant="flat" 
+                color="#262626" 
+                @click="sendRecommendedMessage(2)"
+            >
+                Spell Check
+            </v-chip>
+            <v-chip 
+                class="my-2 mr-1 px-4" 
+                prepend-icon="mdi-content-cut"  
+                variant="flat" 
+                color="#262626" 
+                @click="sendRecommendedMessage(3)"
+            >
+                Job Tailoring
+            </v-chip>
+        </v-col>
+
 
         <Vueform
             size="md"
@@ -135,7 +214,7 @@ onMounted(() => {
             @submit="handleSendMessage()"
             :display-errors="false"
             v-model="userMessage"
-            class="mx-4"
+            class="mx-4 mb-4"
             sync
         >
             <GroupElement name="message-send-row">
@@ -152,6 +231,7 @@ onMounted(() => {
                     name="Submit"
                     :submits="true"
                     button-label="Send"
+                    :disabled="isLoadingMessage"
                     :columns="{
                         container: 2,
                         label: 12,
@@ -172,13 +252,29 @@ onMounted(() => {
     margin-top: 16px;
 }
 
+.suggestion-chip {
+    width: fit-content;
+}
+
+.no-flex-grow {
+    flex-shrink: 0; /* Prevent the row from shrinking */
+    flex-grow: 0; /* Prevent the row from growing */
+}
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .scroll-pane {
   width: 100%;          /* Adjust width as needed */
-  height: 72vh;    /* Sets the height limit for scroll */
+  height: 48vh;    /* Sets the height limit for scroll */
   overflow-y: auto;     /* Enables vertical scrolling */
   overflow-x: hidden;   /* Hides horizontal scrolling */
   box-sizing: border-box; /* Ensures padding is within total width/height */
   margin-bottom: 12px;
+  flex-grow: 1;
 }
 
 /* Custom scrollbar styling (works in webkit browsers like Chrome and Safari) */

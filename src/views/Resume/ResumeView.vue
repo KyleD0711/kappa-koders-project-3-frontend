@@ -45,6 +45,40 @@ watch(leftTab, (newVal) => {
   }
 });
 
+// Watch the selectedTemplate for changes
+watch(selectedTemplate, (newTemplateKey) => {
+  console.log('Selected template:', newTemplateKey);
+  templateData.value = template[newTemplateKey] || {}; // Dynamically select the template
+});
+
+// Export to PDF function
+const exportToPDF = () => {
+  const pdfContent = resumeViewer.value?.pdf;
+  const pdfTitle = resumeSidebar.value?.resumeTitle;
+
+  if (pdfContent) {
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'px',
+      format: [816, 1056],
+    });
+
+    pdf.html(pdfContent, {
+      x: 0,
+      y: -20,
+      html2canvas: {
+        scale: 1,
+        useCORS: true,
+      },
+      callback: (doc) => {
+        doc.save(`${pdfTitle}.pdf`);
+      },
+    });
+  } else {
+    console.error('PDF content is not accessible!');
+  }
+};
+
 const handleDataChange = (data) => {
   if (data.metadata) {
     metadata.value = data.metadata;
@@ -93,8 +127,13 @@ const templates = ['template1', 'template2', 'template3', 'template4'];
         :width="drawerWidth"
       >
         <ResumeSidebar 
+          ref="resumeSidebar"
           :resume_data="resume_data"
-          @dataChange = "handleDataChange" />
+          :resumeId="resumeId"
+          :templateData="selectedTemplate"
+          :exportFunction="exportToPDF"
+          @dataChange="handleDataChange" 
+        />
       </v-navigation-drawer>
       <v-col class="mx-5">
         <v-tabs v-model="selectedTemplate" vertical class="white-text mt-1" style="width:fit-content; margin:auto">

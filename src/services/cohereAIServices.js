@@ -25,7 +25,6 @@ export default async (message, history) => {
       ...history
     ],
     promptTruncation: "AUTO",
-    connectors: [{"id":"web-search"}]
   });
 
   return stream;
