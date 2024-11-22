@@ -14,6 +14,7 @@ import InfoUsers from "./components/InfoUsers.vue";
 import ProfessionalSummaryView from "./components/professionalSummary/ProfessionalSummaryView.vue";
 import AdminUserView from "./views/Admin/AdminUserView.vue";
 import ReviewResumes from "./views/Admin/ReviewResumes.vue";
+import ChatView from "./components/chat/ChatDrawer.vue"
 
 import RouterStateController from "./utils/routerStateController.js";
 
@@ -85,6 +86,29 @@ const router = createRouter({
           path: "professionalSummaries",
           name: "professionalSummaries",
           component: ProfessionalSummaryView,
+        },
+        {
+          path: "/chat",
+          name: "chat",
+          component: ChatView,
+        },
+      ],
+    },
+    {
+      path: "/admin",
+      name: "admin",
+      children: [
+        {
+          path: "users",
+          name: "users",
+          beforeEnter: isAdmin,
+          component: AdminUserView,
+        },
+        {
+          path: "reviewResumes",
+          name: "reviewResumes",
+          beforeEnter: isAdmin,
+          component: ReviewResumes,
         },
       ],
     },
