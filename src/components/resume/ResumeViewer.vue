@@ -57,6 +57,7 @@ const renderPDF = () => {
 
   let personal_info = `${header_data.email} | ${header_data.phone_number}`;
 
+
   let linkArray = (header_data.link ?? []).map((value) => ({
     name: value.name,
     url: value.url,
@@ -72,13 +73,16 @@ const renderPDF = () => {
     personal_info
   );
 
-  let professional_summary = jsonUtils.findAndUpdateSectionByName(
-    template.structure.professional_summary,
-    template.data.professional_summary,
-    header_data.professional_summary
-  );
+  let body_children = [pdf_header];
 
-  let body_children = [pdf_header, professional_summary];
+  if (header_data.professional_summary != "") {
+    let professional_summary = jsonUtils.findAndUpdateSectionByName(
+      template.structure.professional_summary,
+      template.data.professional_summary,
+      header_data.professional_summary
+    );
+    body_children = [...body_children, professional_summary];
+  }
 
   let renderFieldsArray = toRaw(metadata.render_fields);
 
@@ -96,6 +100,7 @@ const renderPDF = () => {
   Object.keys(props.resume_data).forEach((key) => {
     rawResumeData[key] = deepToRaw(toRaw(props.resume_data[key]));
   });
+
 
   renderFieldsArray.forEach((render_field) => {
     let section = jsonUtils.findAndUpdateSectionByData(
@@ -191,3 +196,4 @@ onBeforeUnmount(() => {
     <div v-else v-html="innerHTML"></div>
   </div>
 </template>
+
