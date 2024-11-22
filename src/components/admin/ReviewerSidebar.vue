@@ -101,6 +101,22 @@ const submitReview = async () => {
 
   router.push({ name: "reviewResumes" });
 };
+
+onMounted(async () => {
+  reviewServices
+    .getReview(props.reviewId)
+    .then((data) => {
+      const review = { ...data.data };
+      getResumeService.getResume(review.resumeId).then((value) => {
+        console.log(value);
+        metadata.value = value.resumeData.metadata;
+        sections.value = value.itemData;
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
 </script>
 
 <template>

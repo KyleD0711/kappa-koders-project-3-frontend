@@ -1,6 +1,20 @@
 <script setup>
 import ResumeViewer from "../../components/resume/ResumeViewer.vue";
 import ReviewerSidebar from "../../components/admin/ReviewerSidebar.vue";
+import { ref } from "vue";
+
+const props = defineProps({
+  reviewId: {
+    type: Number,
+    required: true,
+  },
+});
+
+const metadata = ref({});
+const resume_data = ref({});
+const header_data = ref({});
+const template = ref({});
+const isLoaded = ref(false);
 </script>
 <template>
   <div style="display: flex; align-items: stretch">
@@ -22,7 +36,13 @@ import ReviewerSidebar from "../../components/admin/ReviewerSidebar.vue";
       class="white border-opacity-100"
     ></v-divider>
     <div style="padding-left: 10%">
-      <ResumeViewer></ResumeViewer>
+      <ResumeViewer
+        :metadata="metadata"
+        :resume_data="resume_data"
+        :header_data="header_data"
+        :template="template"
+        :isLoaded="isLoaded"
+      ></ResumeViewer>
     </div>
   </div>
 </template>

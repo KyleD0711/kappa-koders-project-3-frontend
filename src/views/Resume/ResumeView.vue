@@ -69,6 +69,8 @@ const handleDataChange = (data) => {
   if (data.isLoaded) {
     isLoaded.value = data.isLoaded;
   }
+
+  console.log(metadata.value, resume_data.value, header_data.value);
 };
 </script>
 
