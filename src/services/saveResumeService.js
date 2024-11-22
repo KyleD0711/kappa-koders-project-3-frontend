@@ -75,9 +75,9 @@ const saveResume = async (props, resume_data, header_data, metadata, professiona
         }
     });
 
-    console.log("Sections to Create:", sectionsToCreate);
-    console.log("Sections to Update:", sectionsToUpdate);
-    console.log("Sections to Delete:", sectionsToDelete);
+    // console.log("Sections to Create:", sectionsToCreate);
+    // console.log("Sections to Update:", sectionsToUpdate);
+    // console.log("Sections to Delete:", sectionsToDelete);
 
     // Handle section creation
     for (const section of sectionsToCreate) {
@@ -86,10 +86,8 @@ const saveResume = async (props, resume_data, header_data, metadata, professiona
 
         switch (section.section_title) {
         case "skill":
-            console.log("Handling skill");
             const skillPromises = resume_data.value.skill.map(async (skill) => {
-            console.log("Skill Name: " + skill.id);
-            console.log(sectionId);
+         
             try {
                 const order = resume_data.value.skill.findIndex(item => item.id === skill.id);
                 return await skillItemServices.createSkillItem(skill.id, sectionId, props.resumeId, order);
@@ -100,7 +98,6 @@ const saveResume = async (props, resume_data, header_data, metadata, professiona
             await Promise.all(skillPromises);
             break;
         case "education":
-            console.log("Handling education");
             const educationPromises = resume_data.value.education.map(async (education) => {
             try {
                 const order = resume_data.value.education.findIndex(item => item.id === education.id);
@@ -112,7 +109,6 @@ const saveResume = async (props, resume_data, header_data, metadata, professiona
             await Promise.all(educationPromises);
             break;
         case "experience":
-            console.log("Handling experience");
             const experiencePromises = resume_data.value.experience.map(async (experience) => {
             try {
                 const order = resume_data.value.experience.findIndex(item => item.id === experience.id);
@@ -124,7 +120,6 @@ const saveResume = async (props, resume_data, header_data, metadata, professiona
             await Promise.all(experiencePromises);
             break;
         case "project":
-            console.log("Handling project");
             const projectPromises = resume_data.value.project.map(async (project) => {
             try {
                 const order = resume_data.value.project.findIndex(item => item.id === project.id);
@@ -136,7 +131,6 @@ const saveResume = async (props, resume_data, header_data, metadata, professiona
             await Promise.all(projectPromises);
             break;
         case "award":
-            console.log("Handling award");
             const awardPromises = resume_data.value.award.map(async (award) => {
             try {
                 const order = resume_data.value.award.findIndex(item => item.id === award.id);
@@ -148,7 +142,6 @@ const saveResume = async (props, resume_data, header_data, metadata, professiona
             await Promise.all(awardPromises);
             break;
         case "link":
-            console.log("Handling link");
             const linkPromises = header_data.value.link.map(async (link) => {
             try {
                 const order = header_data.value.link.findIndex(item => item.id === link.id);
@@ -160,10 +153,7 @@ const saveResume = async (props, resume_data, header_data, metadata, professiona
             await Promise.all(linkPromises);
             break;
         case "professional_summary":
-            console.log("Handling professional summary");
             try {
-            console.log(header_data.value.professional_summary);
-            console.log(professional_Summary_id);
             return await professionalSummaryItemServices.createProfessionalSummaryItem(professional_Summary_id, sectionId, props.resumeId);
             } catch (error) {
             console.log("Error creating professional summary item:", error);
