@@ -62,8 +62,7 @@ const exportToPDF = () => {
 // Handle data change
 const handleDataChange = (data) => {
   if (data.metadata) {
-    metadata.value = data.metadata
-
+    metadata.value = data.metadata;
   }
 
   if (data.resume_data) {
@@ -79,6 +78,8 @@ const handleDataChange = (data) => {
   }
 };
 
+// Reactive slide selection
+const templates = ['template1', 'template2', 'template3', 'template4'];
 </script>
 
 <template>
@@ -87,7 +88,10 @@ const handleDataChange = (data) => {
       <ResumeSidebar 
         ref="resumeSidebar"
         :resume_data="resume_data"
-        @dataChange = "handleDataChange" />
+        :resumeId="resumeId"
+        :templateData="selectedTemplate"
+        :exportFunction="exportToPDF"
+        @dataChange="handleDataChange" />
     </div>
     <v-divider
       vertical
@@ -105,7 +109,9 @@ const handleDataChange = (data) => {
 
       <!-- ResumeViewer placed below tabs -->
       <ResumeViewer
-      @dataChange="handleDataChange"
+        @dataChange="handleDataChange"
+        ref="resumeViewer"
+        :resumeId="resumeId"
         :is-loaded="isLoaded"
         :template="templateData"
         :metadata="metadata"
