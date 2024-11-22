@@ -60,12 +60,12 @@ const exportToPDF = () => {
     const pdf = new jsPDF({
       orientation: 'portrait',
       unit: 'px',
-      format: [816, 1056],
+      format: [816, 1066],
     });
 
     pdf.html(pdfContent, {
       x: 0,
-      y: -20,
+      y: 0,
       html2canvas: {
         scale: 1,
         useCORS: true,
