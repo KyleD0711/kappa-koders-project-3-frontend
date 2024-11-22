@@ -57,6 +57,7 @@ const renderPDF = () => {
 
   let personal_info = `${header_data.email} | ${header_data.phone_number}`;
 
+
   let linkArray = (header_data.link ?? []).map((value) => ({
     name: value.name,
     url: value.url,
@@ -72,13 +73,16 @@ const renderPDF = () => {
     personal_info
   );
 
-  let professional_summary = jsonUtils.findAndUpdateSectionByName(
-    template.structure.professional_summary,
-    template.data.professional_summary,
-    header_data.professional_summary
-  );
+  let body_children = [pdf_header];
 
-  let body_children = [pdf_header, professional_summary];
+  if (header_data.professional_summary != "") {
+    let professional_summary = jsonUtils.findAndUpdateSectionByName(
+      template.structure.professional_summary,
+      template.data.professional_summary,
+      header_data.professional_summary
+    );
+    body_children = [...body_children, professional_summary];
+  }
 
   let renderFieldsArray = toRaw(metadata.render_fields);
 
@@ -96,6 +100,7 @@ const renderPDF = () => {
   Object.keys(props.resume_data).forEach((key) => {
     rawResumeData[key] = deepToRaw(toRaw(props.resume_data[key]));
   });
+
 
   renderFieldsArray.forEach((render_field) => {
     let section = jsonUtils.findAndUpdateSectionByData(
@@ -175,19 +180,17 @@ onBeforeUnmount(() => {
     ref="pdf"
     name="pdf"
     style="
-      width: 886px;
-      height: 1136px;
+      max-width: 886px;
+      aspect-ratio: 1 / 1.294;
       background-color: white;
       overflow: hidden; /* Ensure no content spills out */
       box-sizing: border-box; /* Include padding in the total size */
       padding: 20px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a slight shadow for realism */
-      margin: 20px 10px; /* Center the paper on the page */
-      transform: scale(0.9); /* Shrink the content */
-      transform-origin: top left; /* Anchor scaling */
     "
   >
     <NoDataFound v-if="!props.isLoaded"></NoDataFound>
     <div v-else v-html="innerHTML"></div>
   </div>
 </template>
+
