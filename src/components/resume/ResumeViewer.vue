@@ -73,13 +73,7 @@ const renderPDF = () => {
     personal_info
   );
 
-  let professional_summary = jsonUtils.findAndUpdateSectionByName(
-    template.structure.professional_summary,
-    template.data.professional_summary,
-    header_data.professional_summary
-  );
-
-  let body_children = [pdf_header, professional_summary];
+  let body_children = [pdf_header];
 
   if (header_data.professional_summary != "") {
     let professional_summary = jsonUtils.findAndUpdateSectionByName(
