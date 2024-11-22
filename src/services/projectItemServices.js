@@ -2,8 +2,8 @@ import apiClient from "./services.js";
 
 export default {
     // Create a new ProjectItem
-    createProjectItem(project_id, sectionId, resumeId) {
-        return apiClient.post(`/student/resume/${resumeId}/resumeSection/${sectionId}/project-item/`, { project_id });
+    createProjectItem(project_id, sectionId, resumeId, order) {
+        return apiClient.post(`/student/resume/${resumeId}/resumeSection/${sectionId}/project-item/`, { project_id, order });
     },
 
     // Get all ProjectItems for a specific section
@@ -18,8 +18,8 @@ export default {
     },
 
     // Update a ProjectItem by ID
-    updateProjectItem(sectionId, resumeId, itemId, data) {
-        return apiClient.put(`/student/resume/${resumeId}/resumeSection/${sectionId}/project-item/${itemId}`, data);
+    updateProjectItem(sectionId, resumeId, itemId, order) {
+        return apiClient.put(`/student/resume/${resumeId}/resumeSection/${sectionId}/project-item/${itemId}`, {order});
     },
 
     // Delete a ProjectItem by ID

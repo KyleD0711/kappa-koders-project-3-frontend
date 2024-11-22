@@ -513,31 +513,29 @@ function processFetchedItemsForSection(section, itemsResponse) {
 
     if (resumeSection.title.toLowerCase() === section.section_type) {
       if (resumeSection.items) {
+        // Create a mapping of itemIdKey to order
+        const orderMap = {};
+        itemsResponse.data.forEach(item => {
+          const itemIdKey = getItemIdKey(resumeSection.title);
+          orderMap[item[itemIdKey]] = item.order;
+        });
+
         resumeSection.items.forEach((localItem) => {
           localItem.selected = false; // Reset selection before checking
 
           // Match items based on section type
-          switch (resumeSection.title) {
-            case "Skill":
-              matchAndSelect(localItem, itemsResponse.data, 'skill_id');
-              break;
-            case "Education":
-              matchAndSelect(localItem, itemsResponse.data, 'education_id');
-              break;
-            case "Experience":
-              matchAndSelect(localItem, itemsResponse.data, 'experience_id');
-              break;
-            case "Award":
-              matchAndSelect(localItem, itemsResponse.data, 'award_id');
-              break;
-            case "Project":
-              matchAndSelect(localItem, itemsResponse.data, 'project_id');
-              break;
-            default:
-              console.warn(`Unhandled section type: ${resumeSection.title}`);
-              break;
-          }
+          const itemIdKey = getItemIdKey(resumeSection.title);
+          matchAndSelect(localItem, itemsResponse.data, itemIdKey);
         });
+
+        // Sort resumeSection.items based on the order value
+        resumeSection.items.sort((a, b) => {
+          const orderA = orderMap[a.data?.id] !== undefined ? orderMap[a.data?.id] : Infinity;
+          const orderB = orderMap[b.data?.id] !== undefined ? orderMap[b.data?.id] : Infinity;
+          return orderA - orderB;
+        });
+
+        console.log(resumeSection.items); // Check the reordered items
       } else {
         console.warn(`No items found for section: ${resumeSection.title}`);
       }
@@ -552,6 +550,24 @@ function matchAndSelect(localItem, itemsData, itemIdKey) {
   }
 }
 
+function getItemIdKey(sectionTitle) {
+  switch (sectionTitle) {
+    case "Skill":
+      return 'skill_id';
+    case "Education":
+      return 'education_id';
+    case "Experience":
+      return 'experience_id';
+    case "Award":
+      return 'award_id';
+    case "Project":
+      return 'project_id';
+    default:
+      console.warn(`Unhandled section type: ${sectionTitle}`);
+      return null;
+  }
+}
+ 
 // when add model is submitted then render processResumeData
 
 function handleProfessionalSummary(itemsResponse) {
@@ -567,13 +583,29 @@ function handleProfessionalSummary(itemsResponse) {
 }
 
 function handleLinkItems(itemsResponse) {
-  itemsResponse.data.forEach((item) => {
-    header_data_local.value[0].items.forEach((headerItem) => {
-      if (headerItem.data.id === item.link_id) {
-        headerItem.selected = true;
-      }
-    });
+  console.log(itemsResponse.data);
+
+  // Create a mapping of link_id to order
+  const orderMap = {};
+  itemsResponse.data.forEach(item => {
+    orderMap[item.link_id] = item.order;
   });
+
+  // Select the values in header_data_local if they are in the database
+  header_data_local.value[0].items.forEach(headerItem => {
+    if (orderMap.hasOwnProperty(headerItem.data.id)) {
+      headerItem.selected = true;
+    }
+  });
+
+
+  // Sort header_data_local.value[0].items based on the order value
+  header_data_local.value[0].items.sort((a, b) => {
+    const orderA = orderMap[a.data.id] !== undefined ? orderMap[a.data.id] : Infinity;
+    const orderB = orderMap[b.data.id] !== undefined ? orderMap[b.data.id] : Infinity;
+    return orderA - orderB;
+  });
+ 
 }
 
 watch([resume_data_local, header_data_local, personalInfo, metadata_local, isLoaded], () => {

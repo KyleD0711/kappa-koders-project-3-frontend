@@ -2,8 +2,8 @@ import apiClient from "./services.js";
 
 export default {
     // Create a new ExperienceItem
-    createExperienceItem(experience_id, sectionId, resumeId) {
-        return apiClient.post(`/student/resume/${resumeId}/resumeSection/${sectionId}/experience-item/`, { experience_id });
+    createExperienceItem(experience_id, sectionId, resumeId, order) {
+        return apiClient.post(`/student/resume/${resumeId}/resumeSection/${sectionId}/experience-item/`, { experience_id, order });
     },
 
     // Get all ExperienceItems for a specific section
@@ -18,8 +18,8 @@ export default {
     },
 
     // Update a ExperienceItem by ID
-    updateExperienceItem(sectionId, resumeId, itemId, data) {
-        return apiClient.put(`/student/resume/${resumeId}/resumeSection/${sectionId}/experience-item/${itemId}`, data);
+    updateExperienceItem(sectionId, resumeId, itemId, order) {
+        return apiClient.put(`/student/resume/${resumeId}/resumeSection/${sectionId}/experience-item/${itemId}`, {order});
     },
 
     // Delete a ExperienceItem by ID

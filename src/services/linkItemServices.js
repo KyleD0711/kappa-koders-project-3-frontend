@@ -2,8 +2,8 @@ import apiClient from "./services.js";
 
 export default {
     // Create a new LinkItem
-    createLinkItem(link_id, sectionId, resumeId) {
-        return apiClient.post(`/student/resume/${resumeId}/resumeSection/${sectionId}/link-item/`, { link_id });
+    createLinkItem(link_id, sectionId, resumeId, order) {
+        return apiClient.post(`/student/resume/${resumeId}/resumeSection/${sectionId}/link-item/`, { link_id, order });
     },
 
     // Get all LinkItems for a specific section
@@ -18,8 +18,8 @@ export default {
     },
 
     // Update a LinkItem by ID
-    updateLinkItem(sectionId, resumeId, itemId, data) {
-        return apiClient.put(`/student/resume/${resumeId}/resumeSection/${sectionId}/link-item/${itemId}`, data);
+    updateLinkItem(sectionId, resumeId, itemId, order) {
+        return apiClient.put(`/student/resume/${resumeId}/resumeSection/${sectionId}/link-item/${itemId}`, {order});
     },
 
     // Delete a LinkItem by ID
