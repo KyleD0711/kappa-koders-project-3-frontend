@@ -53,7 +53,6 @@ const sanitizeInput = (input) => {
 
 const submitReview = async () => {
   let submitData = [];
-
   if (overviewData.value == "" || overviewData == undefined) {
     isError.value = true;
     return;
@@ -70,33 +69,27 @@ const submitReview = async () => {
   }
 
   const user = Utils.getStore("user");
+  console.log(sanitizeInput(overviewData.value));
   const review = {
-    overview: sanitizeInput(overviewData.value),
+    summary: overviewData.value,
     reviewer: `${user.fName} ${user.lName}`,
     status: "completed",
   };
 
   // Send review to backend
-  await resumeServices
-    .updateReview(reviewId.value, review)
-    .then((response) => {
-      console.log(response);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  await reviewServices.updateReview(props.reviewId, review);
 
   await submitData.forEach(async (value) => {
-    if (value !== undefined || value !== "") {
+    if (value.text !== undefined && value.text !== "") {
       const comment = {
-        reviewId: reviewId.value,
-        text: sanitizeInput(value.text),
-        resumeSectionId: value.sectionId,
+        reviewId: props.reviewId,
+        text: value.text,
+        resumeSectionSectionId: value.sectionId,
       };
 
       // Create comment in the backend
       commentServices
-        .createComment(reviewId.value, comment)
+        .createComment(props.reviewId, comment)
         .then((response) => {
           console.log(response);
         })

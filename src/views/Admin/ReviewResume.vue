@@ -13,7 +13,7 @@ import { ref, onMounted } from "vue";
 //   },
 // });
 
-const reviewId = 1;
+const reviewId = 3;
 
 const metadata = ref({});
 const resume_data = ref({});
@@ -61,6 +61,8 @@ onMounted(async () => {
     .catch((err) => {
       console.log(err);
     });
+
+  console.log(template.value);
 });
 </script>
 <template>
