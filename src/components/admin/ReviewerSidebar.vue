@@ -23,7 +23,8 @@ const { sectionData, overviewData } = storeToRefs(reviewerSidebarStore);
 
 const isError = ref(false);
 
-const submitReview = async () => {
+const submitReview = async (isSave) => {
+  console.log(isSave);
   let submitData = [];
   if (overviewData.value == "" || overviewData == undefined) {
     isError.value = true;
@@ -45,7 +46,7 @@ const submitReview = async () => {
   const review = {
     summary: overviewData.value,
     reviewer: `${user.fName} ${user.lName}`,
-    status: "completed",
+    status: isSave ? "in-review" : "completed",
   };
 
   // Send review to backend
@@ -69,16 +70,15 @@ const submitReview = async () => {
     }
   });
 
-  router.push({ name: "reviewResumes" });
+  if (!isSave) {
+    router.push({ name: "reviewResumes" });
+  }
 };
 </script>
 
 <template>
   <div class="resume_title">Resume Title</div>
-  <v-form
-    @submit.prevent="submitReview"
-    class="d-flex flex-column fill-height pa-0"
-  >
+  <div class="d-flex flex-column fill-height pa-0">
     <v-expansion-panels>
       <v-expansion-panel class="section-0">
         <v-expansion-panel-title class="section_title"
@@ -113,8 +113,15 @@ const submitReview = async () => {
         </v-expansion-panel>
       </v-expansion-panels>
     </v-card>
-    <v-btn type="submit" block color="#3D7AE2" large> Submit </v-btn>
-  </v-form>
+    <div class="d-flex flex-wrap align-center justify-center" style="gap: 16px">
+      <v-btn @click="submitReview(false)" color="#3D7AE2" large>
+        Submit Review
+      </v-btn>
+      <v-btn @click="submitReview(true)" color="#3D7AE2" large>
+        Save Changes
+      </v-btn>
+    </div>
+  </div>
 </template>
 
 <style scoped>
