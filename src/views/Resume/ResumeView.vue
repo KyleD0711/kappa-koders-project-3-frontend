@@ -4,7 +4,7 @@ import ResumeSidebar from "../../components/resume/ResumeSidebar.vue";
 import jsPDF from "jspdf";
 import { ref } from "vue";
 import template from "../../../templates/templates.json";
-const templateData = ref(template["template4"]);
+const templateData = ref(template["template3"]);
 
 const metadata = ref({});
 const header_data = ref({});
@@ -21,9 +21,6 @@ const resumeId = route.params.resumeId;
 onMounted(() => {
   console.log(resumeId);
 });
-
-const resumeViewer = ref(null);
-const resumeSidebar = ref(null);
 
 const exportToPDF = () => {
   const pdfContent = resumeViewer.value?.pdf;

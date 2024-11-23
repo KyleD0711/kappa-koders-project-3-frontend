@@ -17,6 +17,7 @@ import ReviewResumes from "./views/Admin/ReviewResumes.vue";
 import ReviewResume from "./views/Admin/ReviewResume.vue";
 
 import RouterStateController from "./utils/routerStateController.js";
+import SkillView from "./components/skill/SkillView.vue";
 
 const routerState = new RouterStateController();
 
@@ -50,37 +51,32 @@ const router = createRouter({
         {
           path: "experience",
           name: "experience",
-          component: InfoExperience,
+          component: ExperienceView,
         },
         {
           path: "skills",
           name: "skills",
-          component: InfoSkills,
+          component: SkillView,
         },
         {
           path: "awards",
           name: "awards",
-          component: InfoAwards,
+          component: AwardView,
         },
         {
           path: "links",
           name: "links",
-          component: InfoLinks,
+          component: LinkView,
         },
         {
           path: "education",
           name: "education",
-          component: InfoEducation,
+          component: EducationView,
         },
         {
           path: "projects",
           name: "projects",
-          component: InfoProjects,
-        },
-        {
-          path: "users",
-          name: "users",
-          component: InfoUsers,
+          component: ProjectView,
         },
         {
           path: "professionalSummaries",

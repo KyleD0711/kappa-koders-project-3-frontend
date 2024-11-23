@@ -59,7 +59,7 @@ import skillServices from "../../services/skillServices";
 import professionalSummaryServices from "../../services/professionalSummaryServices";
 import ProfessionalSummaryModal from "../professionalSummary/ProfessionalSummaryModal.vue";
 
-import saveResume from "../../services/saveResumeService";
+import saveResumeService from "../../services/saveResumeService";
 
 import resumeServices from "../../services/resumeServices";
 import resumeSectionServices from "../../services/resumeSectionServices";
