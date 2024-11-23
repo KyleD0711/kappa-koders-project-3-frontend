@@ -11,6 +11,7 @@ import professionalSummaryItemServices from "./professionalSummaryItemServices";
 const saveResume = async (props, resume_data, header_data, metadata, professional_Summary_id, resumeTitle, personalInfo) => {
     try {
     // Prepare payload for updating the resume
+    const templateId = props.templateData.substring(8);
     const data = {
         name: resumeTitle.value,
         metadata: {
@@ -21,9 +22,8 @@ const saveResume = async (props, resume_data, header_data, metadata, professiona
             render_fields: metadata.value.render_fields,
             section_dividers: metadata.value.section_dividers,
         },
-        // JONAH - give resume the template
+        templateId: templateId,
     };
-
     
     // Update the resume
     await resumeServices.updateResume(props.resumeId, data);

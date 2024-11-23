@@ -6,12 +6,33 @@ import { useRoute } from 'vue-router';
 import Chat from "../../components/chat/Chat.vue"
 import { computed, ref, onMounted, watch } from "vue";
 import template from "../../../templates/templates.json";
+import resumeServices from "../../services/resumeServices";
 
 const drawerCols = 4;
 
+
+onMounted(async () => { 
+  console.log("Resume Data");
+  console.log(resumeId);
+
+  try {
+    const response = await resumeServices.getResumeByID(resumeId);
+    console.log(response.data.template.template_data);
+    templateData.value = JSON.parse(response.data.template.template_data);
+    templateId.value = response.data.templateId;
+  }
+  catch(e){
+    console.log("Error");
+  }
+
+  selectedTemplate.value = "template" + templateId.value;
+});
+const templateId = ref();
+
+
 // Reactive variables
-const selectedTemplate = ref('template1'); // Default to 'template1'
-const templateData = ref(template["template1"]);
+const selectedTemplate = ref(""); // Default to 'template1'
+const templateData = ref();
 const metadata = ref({});
 const header_data = ref({});
 const resume_data = ref({});
@@ -29,6 +50,7 @@ const rightTab = ref(null)
 const leftDrawer = ref(true);
 const rightDrawer = ref(false)
 
+
 watch(rightTab, (newVal) => {
   if (newVal !== null) {
     leftTab.value = null; // Deselect left tab when a right tab is selected
@@ -44,6 +66,8 @@ watch(leftTab, (newVal) => {
     rightDrawer.value = false; // Close right drawer
   }
 });
+
+
 
 // Watch the selectedTemplate for changes
 watch(selectedTemplate, (newTemplateKey) => {
