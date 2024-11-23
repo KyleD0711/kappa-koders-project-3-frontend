@@ -393,6 +393,7 @@ onMounted(async () => {
 
   // Wait for the resume data
   resume = await getResumeData(props.resumeId);
+  console.log(resume);
   
   await Promise.all([
     getEducation(),
@@ -692,6 +693,7 @@ defineExpose({
 
 const handleSaveResume = async () => {
   await saveResume(props, resume_data, header_data, metadata, professional_Summary_id, resumeTitle, personalInfo);
+  alert("Resume Saved!");
 };
 
 
@@ -729,7 +731,10 @@ const handleSaveResume = async () => {
           v-if="!isEditingTitle" 
           style="margin-left: 30px; vertical-align: middle; position: relative; top: -2px;" 
           class="pi pi-print">
-        </i>      
+        </i>    
+        
+        <br>
+        <p v-if="!isEditingTitle" style="font-size: 14px;">Last updated:  {{  resume_data_local.updatedAt }}</p>
       </template>
     </div>
 
