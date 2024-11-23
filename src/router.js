@@ -129,11 +129,11 @@ const router = createRouter({
           component: ReviewResumes,
         },
         {
-          path: "reviewResumes/:resumeId",
+          path: "reviewResume/:reviewId",
           name: "reviewResume",
           beforeEnter: isAdmin,
-          component: ResumeView,
-          props: (route) => ({ formId: Number(route.params.resumeId) })
+          component: ReviewResume,
+          props: (route) => ({ reviewId: Number(route.params.reviewId) }),
         },
       ],
     },
