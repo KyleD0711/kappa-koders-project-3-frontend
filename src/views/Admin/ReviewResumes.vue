@@ -38,6 +38,12 @@ const getResumes = async () => {
     })
 }
 
+const checkEmpty = (newValue) => {
+ if(newValue == ""){
+  getResumes()
+ }
+}
+
 onMounted(() => {
     getResumes()
 })
@@ -52,7 +58,7 @@ onMounted(() => {
           <Vueform
             size="md"
             :endpoint="false"
-            @submit="submitForm"
+            @submit="getResumes"
             :display-errors="false"
             v-model="searchString"
             sync
@@ -60,6 +66,7 @@ onMounted(() => {
             
             <TextElement
               name="searchQuery"
+              @change="checkEmpty"
             >
               <template #addon-before>
                 <v-icon class="mx-n1" color="#a5adb3">mdi-magnify</v-icon>
