@@ -531,8 +531,6 @@ function processFetchedItemsForSection(section, itemsResponse) {
           const orderB = orderMap[b.data?.id] !== undefined ? orderMap[b.data?.id] : Infinity;
           return orderA - orderB;
         });
-
-        console.log(resumeSection.items); // Check the reordered items
       }
     }
   }
@@ -577,8 +575,6 @@ function handleProfessionalSummary(itemsResponse) {
 }
 
 function handleLinkItems(itemsResponse) {
-  console.log(itemsResponse.data);
-
   // Create a mapping of link_id to order
   const orderMap = {};
   itemsResponse.data.forEach(item => {
@@ -686,7 +682,6 @@ const parseHeader_data = (header_data, personalInfo) => {
 const parseMetadata = (metadata_local, resume_data) => {
   const result = {};
 
-  //console.log("Render Fields: " + Object.keys(resume_data));
   result.render_fields = Object.keys(resume_data);
   result.section_dividers = metadata_local.section_dividers;
   
