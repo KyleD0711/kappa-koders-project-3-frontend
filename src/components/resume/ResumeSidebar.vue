@@ -76,14 +76,15 @@ const props = defineProps({
     required: true,
   },
   resumeId: {
-    type: string,
+    type: String, // Fixed the type here
     required: true,
   },
   templateData: {
-    type: Object,
-    required: true
-  }
+    type: [Object, String], // Fixed the type here
+    required: true,
+  },
 });
+
 
 
 const resume_data_local = ref([]);
@@ -372,11 +373,9 @@ const getResumeData = async (id) => {
       if (resume) {
         return resume;
       } else {
-        console.warn("No Resume Found with ID:", id);
         return null;
       }
     } else {
-      console.error("Response data is not an array:", response.data);
       return null;
     }
   } catch (error) {
@@ -407,7 +406,6 @@ onMounted(async () => {
   try {
     await processResumeData();
   } catch(err) {
-    console.warn("No resume found or error occurred.");
   }
   
 
@@ -424,7 +422,6 @@ onMounted(async () => {
 
 
 async function processResumeData() {
-  console.log("process ResumeData");
   // Set up resume metadata and personal info
   resume = await getResumeData(props.resumeId);
   resumeTitle.value = resume.name;
@@ -433,6 +430,8 @@ async function processResumeData() {
   }
   metadata_local.value.section_dividers = resume.metadata.section_dividers ?? false;
   metadata_local.value.render_fields = resume.metadata.render_fields ?? [];
+  
+  // JONAH - Handle default fName. lName, phone_num, and email from user
   personalInfo.value.fName = resume.metadata.fName ?? "";
   personalInfo.value.lName = resume.metadata.lName ?? "";
   personalInfo.value.phone_number = resume.metadata.phone_number ?? "";
@@ -471,7 +470,6 @@ async function processSectionItems() {
     // Wait for all fetch requests to resolve
     await Promise.all(fetchItemPromises);
   } else {
-    console.warn("No sections found for the resume.");
   }
 }
 
@@ -492,7 +490,6 @@ async function fetchSectionItems(sectionType, resumeId, sectionId) {
     case 'professional_summary':
       return await professionalSummaryItemServices.getProfessionalSummaryItems(sectionId, resumeId);
     default:
-      console.warn(`No service defined for section type: ${sectionType}`);
       return [];
   }
 }
@@ -513,33 +510,27 @@ function processFetchedItemsForSection(section, itemsResponse) {
 
     if (resumeSection.title.toLowerCase() === section.section_type) {
       if (resumeSection.items) {
+        // Create a mapping of itemIdKey to order
+        const orderMap = {};
+        itemsResponse.data.forEach(item => {
+          const itemIdKey = getItemIdKey(resumeSection.title);
+          orderMap[item[itemIdKey]] = item.order;
+        });
+
         resumeSection.items.forEach((localItem) => {
           localItem.selected = false; // Reset selection before checking
 
           // Match items based on section type
-          switch (resumeSection.title) {
-            case "Skill":
-              matchAndSelect(localItem, itemsResponse.data, 'skill_id');
-              break;
-            case "Education":
-              matchAndSelect(localItem, itemsResponse.data, 'education_id');
-              break;
-            case "Experience":
-              matchAndSelect(localItem, itemsResponse.data, 'experience_id');
-              break;
-            case "Award":
-              matchAndSelect(localItem, itemsResponse.data, 'award_id');
-              break;
-            case "Project":
-              matchAndSelect(localItem, itemsResponse.data, 'project_id');
-              break;
-            default:
-              console.warn(`Unhandled section type: ${resumeSection.title}`);
-              break;
-          }
+          const itemIdKey = getItemIdKey(resumeSection.title);
+          matchAndSelect(localItem, itemsResponse.data, itemIdKey);
         });
-      } else {
-        console.warn(`No items found for section: ${resumeSection.title}`);
+
+        // Sort resumeSection.items based on the order value
+        resumeSection.items.sort((a, b) => {
+          const orderA = orderMap[a.data?.id] !== undefined ? orderMap[a.data?.id] : Infinity;
+          const orderB = orderMap[b.data?.id] !== undefined ? orderMap[b.data?.id] : Infinity;
+          return orderA - orderB;
+        });
       }
     }
   }
@@ -552,6 +543,23 @@ function matchAndSelect(localItem, itemsData, itemIdKey) {
   }
 }
 
+function getItemIdKey(sectionTitle) {
+  switch (sectionTitle) {
+    case "Skill":
+      return 'skill_id';
+    case "Education":
+      return 'education_id';
+    case "Experience":
+      return 'experience_id';
+    case "Award":
+      return 'award_id';
+    case "Project":
+      return 'project_id';
+    default:
+      return null;
+  }
+}
+ 
 // when add model is submitted then render processResumeData
 
 function handleProfessionalSummary(itemsResponse) {
@@ -567,13 +575,27 @@ function handleProfessionalSummary(itemsResponse) {
 }
 
 function handleLinkItems(itemsResponse) {
-  itemsResponse.data.forEach((item) => {
-    header_data_local.value[0].items.forEach((headerItem) => {
-      if (headerItem.data.id === item.link_id) {
-        headerItem.selected = true;
-      }
-    });
+  // Create a mapping of link_id to order
+  const orderMap = {};
+  itemsResponse.data.forEach(item => {
+    orderMap[item.link_id] = item.order;
   });
+
+  // Select the values in header_data_local if they are in the database
+  header_data_local.value[0].items.forEach(headerItem => {
+    if (orderMap.hasOwnProperty(headerItem.data.id)) {
+      headerItem.selected = true;
+    }
+  });
+
+
+  // Sort header_data_local.value[0].items based on the order value
+  header_data_local.value[0].items.sort((a, b) => {
+    const orderA = orderMap[a.data.id] !== undefined ? orderMap[a.data.id] : Infinity;
+    const orderB = orderMap[b.data.id] !== undefined ? orderMap[b.data.id] : Infinity;
+    return orderA - orderB;
+  });
+ 
 }
 
 watch([resume_data_local, header_data_local, personalInfo, metadata_local, isLoaded], () => {
@@ -660,7 +682,6 @@ const parseHeader_data = (header_data, personalInfo) => {
 const parseMetadata = (metadata_local, resume_data) => {
   const result = {};
 
-  //console.log("Render Fields: " + Object.keys(resume_data));
   result.render_fields = Object.keys(resume_data);
   result.section_dividers = metadata_local.section_dividers;
   

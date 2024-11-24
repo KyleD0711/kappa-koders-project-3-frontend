@@ -15,7 +15,7 @@ const templateData = ref(template["template1"]);
 const metadata = ref({});
 const header_data = ref({});
 const resume_data = ref({});
-const isLoaded = ref({});
+const isLoaded = ref(false);
 
 const resumeViewer = ref(null);
 const resumeSidebar = ref(null);
@@ -129,7 +129,7 @@ const templates = ['template1', 'template2', 'template3', 'template4'];
         <ResumeSidebar 
           ref="resumeSidebar"
           :resume_data="resume_data"
-          :resumeId="resumeId"
+          :resumeId="String(resumeId)"
           :templateData="selectedTemplate"
           :exportFunction="exportToPDF"
           @dataChange="handleDataChange" 
@@ -145,8 +145,8 @@ const templates = ['template1', 'template2', 'template3', 'template4'];
         <ResumeViewer
           @dataChange="handleDataChange"
           ref="resumeViewer"
-          :resumeId="resumeId"
-          :is-loaded="isLoaded"
+          :resumeId="String(resumeId)"
+          :is-loaded="!!isLoaded"
           :template="templateData"
           :metadata="metadata"
           :header_data="header_data"

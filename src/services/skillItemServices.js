@@ -2,8 +2,8 @@ import apiClient from "./services.js";
 
 export default {
     // Create a new SkillItem
-    createSkillItem(skill_id, sectionId, resumeId) {
-        return apiClient.post(`/student/resume/${resumeId}/resumeSection/${sectionId}/skill-item/`, { skill_id });
+    createSkillItem(skill_id, sectionId, resumeId, order) {
+        return apiClient.post(`/student/resume/${resumeId}/resumeSection/${sectionId}/skill-item/`, { skill_id, order });
     },
 
     // Get all SkillItems for a specific section
@@ -18,8 +18,8 @@ export default {
     },
 
     // Update a SkillItem by ID
-    updateSkillItem(sectionId, resumeId, itemId, data) {
-        return apiClient.put(`/student/resume/${resumeId}/resumeSection/${sectionId}/skill-item/${itemId}`, data);
+    updateSkillItem(sectionId, resumeId, itemId, order) {
+        return apiClient.put(`/student/resume/${resumeId}/resumeSection/${sectionId}/skill-item/${itemId}`, {order});
     },
 
     // Delete a SkillItem by ID
