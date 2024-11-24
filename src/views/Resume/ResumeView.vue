@@ -7,6 +7,7 @@ import Chat from "../../components/chat/Chat.vue";
 import { computed, ref, onMounted, watch } from "vue";
 import template from "../../../templates/templates.json";
 import Comment from "../../components/comment/Comment.vue";
+import reviewServices from "../../services/reviewServices";
 
 const drawerCols = 4;
 
