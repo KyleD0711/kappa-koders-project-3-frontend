@@ -37,7 +37,7 @@
 
 /* Expansion Panel */
     /* Title Box */
-    #bg-item {
+    #bg-item > .v-expansion-panel-text__wrapper {
         background-color: #575757;
     }
 
@@ -56,4 +56,10 @@
     .resumeButton {
         margin-left: 10px;
         margin-right: 10px;
+    }
+
+/* Slider Panel */
+    /* Slider Text and Slider */
+    .slider {
+        color: #f2f4f3
     }
