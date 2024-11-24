@@ -88,7 +88,6 @@ export default {
         .then((res) => {
             curUser.value = Utils.getStore("user");
             items.value = res.data;
-            console.log(items.value);
             items.value.forEach(user => {
                 user.userRole.forEach(role => {
                     if (role.role.type === "admin" && user.id == curUser.value.userId) {

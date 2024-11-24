@@ -42,8 +42,6 @@ const isLoaded = ref(false);
 const setCurUser = async () => {
   try {
     curUser.value = Utils.getStore("user");
-    console.log("Stored user:", Utils.getStore("user"));
-    console.log(curUser.value);
     curUser.value.userId = 1;
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -51,12 +49,11 @@ const setCurUser = async () => {
 }
 
 const getUsers = async () => {
-  await userServices
+  await userServices 
     .getAllUser()
     .then((res) => {
       curUser.value = Utils.getStore("user");
       items.value = res.data;
-        console.log(items.value);
         items.value.forEach(user => {
           user.userRole.forEach(role => {
             if (role.role.type === "admin") {
