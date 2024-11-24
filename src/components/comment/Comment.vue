@@ -4,8 +4,8 @@ import reviewServices from "../../services/reviewServices";
 import { onMounted } from "vue";
 
 const props = defineProps({
-  reviews: {
-    type: Array,
+  resumeId: {
+    type: Number,
     required: true,
   },
 });
