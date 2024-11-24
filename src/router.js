@@ -10,11 +10,11 @@ import InfoAwards from "./components/award/AwardView.vue";
 import InfoLinks from "./components/links/LinkView.vue";
 import InfoEducation from "./components/education/EducationView.vue";
 import InfoProjects from "./components/project/ProjectView.vue";
-import InfoUsers from "./components/InfoUsers.vue";
 import ProfessionalSummaryView from "./components/professionalSummary/ProfessionalSummaryView.vue";
 import AdminUserView from "./views/Admin/AdminUserView.vue";
 import ReviewResumes from "./views/Admin/ReviewResumes.vue";
 import ChatView from "./components/chat/ChatDrawer.vue"
+
 
 import RouterStateController from "./utils/routerStateController.js";
 
@@ -78,11 +78,6 @@ const router = createRouter({
           component: InfoProjects,
         },
         {
-          path: "users",
-          name: "users",
-          component: InfoUsers,
-        },
-        {
           path: "professionalSummaries",
           name: "professionalSummaries",
           component: ProfessionalSummaryView,
@@ -119,7 +114,7 @@ const router = createRouter({
         {
           path: "users",
           name: "users",
-          beforeEnter: isAdmin,
+         beforeEnter: isAdmin,
           component: AdminUserView,
         },
         {
