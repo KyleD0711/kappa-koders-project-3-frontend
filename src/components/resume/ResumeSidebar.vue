@@ -919,7 +919,7 @@ const handleSaveResume = async () => {
       </template>
     </draggable>
 
-    <v-btn block class="positiveButton" @click="handleSaveResume">
+    <v-btn block style="border-color: #054a91; background-color: #054a91; color: #f2f4f3;" @click="handleSaveResume">
       Save Resume
     </v-btn>
   
