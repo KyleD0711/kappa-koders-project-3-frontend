@@ -49,7 +49,6 @@ const addItem = async (data) => {
 };
 
 const updateItem = async (item) => {
-  console.log(item);
   await userServices
     .updateUser(item)
     .then(() => {
@@ -70,7 +69,6 @@ onMounted(() => {
 });
 
 const toggleModal = () => {
-  console.log("toggledModal");
   showYesModal.value = true;
 }
 
