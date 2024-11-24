@@ -65,11 +65,11 @@ onMounted(() => {
   <div>
     <v-col :cols="pageCols" class="mx-auto">
         <v-row class="w-100 justify-space-between align-center" no-gutters>
-          <p class="text-h4 my-4 ml-4 text-secondary">My Resumes</p>
+          <p class="text-h4 my-4 ml-4 text-secondary" style="color: #f2f4f3 !important">My Resumes</p>
           <v-btn
             prepend-icon="mdi-plus"
-            color="teal"
             class="mr-6"
+            style="border-color: #054a91; background-color: #054a91; color: #f2f4f3;"
             @click="isVisible = true"
           >
             Add Resume

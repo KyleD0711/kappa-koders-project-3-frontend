@@ -124,6 +124,7 @@ onMounted(() => {
         <GroupElement class="actions-container" name="button_container">
           <ButtonElement
             secondary
+            class="cancelButtons"
             name="cancel"
             :submits="false"
             button-label="Cancel"
@@ -142,6 +143,7 @@ onMounted(() => {
             button-label="Submit"
             :full="true"
             size="md"
+            class="positiveButtons"
             :columns="{
               container: 6,
               label: 12,

@@ -137,6 +137,7 @@ onMounted(() => {
         <GroupElement name="button_container">
           <ButtonElement
             secondary
+            class="cancelButtons"
             name="cancel"
             :submits="false"
             button-label="Cancel"
@@ -150,6 +151,7 @@ onMounted(() => {
             @click="closeDialog"
           />
           <ButtonElement
+          class="positiveButtons"
             name="Submit"
             :submits="true"
             button-label="Submit"

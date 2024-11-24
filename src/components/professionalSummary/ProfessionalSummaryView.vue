@@ -70,8 +70,7 @@ onMounted(() => {
       </p>
       <v-btn
         variant="elevated"
-        color="D9D9D9"
-        style="margin: 10px"
+        style="border-color: #054a91; background-color: #054a91; color: #f2f4f3; margin: 10px;"
         @click="showAddDialog"
         >Add new</v-btn
       >

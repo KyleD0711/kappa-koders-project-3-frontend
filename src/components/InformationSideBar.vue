@@ -127,7 +127,7 @@ export default {
 }
 
 .active {
-    background-color: #eee !important;
+    background-color: #f2f4f3 !important;
 }
 .infoSidebar {
     width: 20%;
@@ -142,7 +142,7 @@ export default {
 
     padding-left: 15px;
     align-content: center;
-    color: #000;
+    color: #262626;
 
     font-size: 18px;
     font-weight: 700;

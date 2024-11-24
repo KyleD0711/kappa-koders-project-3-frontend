@@ -113,7 +113,7 @@ const templates = ['template1', 'template2', 'template3', 'template4'];
         direction="vertical"
         hide-slider
       >
-        <v-card class="mt-1 tab-width tab-left" :color="leftTab == 0 ? 'teal' : ''">
+        <v-card class="mt-1 tab-width tab-left" :color="leftTab == 0 ? '#054a91' : ''">
           <v-tab  height="125">
             <v-icon size="x-large">mdi-pencil</v-icon>
           </v-tab>
@@ -159,12 +159,12 @@ const templates = ['template1', 'template2', 'template3', 'template4'];
       direction="vertical"
       hide-slider
     >
-      <v-card class="mt-1 tab-width tab-right" :color="rightTab == 0 ? 'teal' : ''">
+      <v-card class="mt-1 tab-width tab-right" :color="rightTab == 0 ? '#054a91' : ''">
         <v-tab size="large" height="125" >
           <v-icon size="large" class="ml-n2">mdi-chat</v-icon>
         </v-tab>
       </v-card>
-      <v-card class="mt-1 tab-width tab-right"  :color="rightTab == 1 ? 'teal' : ''">
+      <v-card class="mt-1 tab-width tab-right"  :color="rightTab == 1 ? '#054a91' : ''">
         <v-tab size="large" height="125">
           <v-icon size="large" class="ml-n2">mdi-comment-multiple</v-icon>
         </v-tab>

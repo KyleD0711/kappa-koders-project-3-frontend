@@ -1,5 +1,5 @@
 <script setup>
-import ocLogo from "/oc-logo-white.png";
+import ocLogo from "/ocTransparentBackground.png";
 import { ref, onMounted, watch, watchEffect } from "vue";
 import Utils from "../config/utils";
 import AuthServices from "../services/authServices";

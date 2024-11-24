@@ -84,12 +84,14 @@ const nameValidator = class extends Validator {
           content="Add Resume"
           tag="h1"
           align="center"
+          class="positiveButton"
         ></StaticElement>
         <TextElement name="name" before="Name" :rules="['required', nameValidator]" />
         
         <GroupElement name="button_container">
           <ButtonElement
             secondary
+            class="cancelButtons"
             name="cancel"
             :submits="false"
             button-label="Cancel"
@@ -103,6 +105,7 @@ const nameValidator = class extends Validator {
             @click="closeDialog"
           />
           <ButtonElement
+          class="positiveButtons"
             name="Submit"
             :submits="true"
             button-label="Submit"

@@ -756,14 +756,14 @@ const handleSaveResume = async () => {
 
     <v-expansion-panels style="padding-bottom: 2%">
       <v-expansion-panel class="section-0">
-        <v-expansion-panel-title style="font-size: 20px">
+        <v-expansion-panel-title style="font-size: 20px;">
           Header
         </v-expansion-panel-title>
-        <v-expansion-panel-text class="panel-background">
+        <v-expansion-panel-text id="bg-item" class="panel-background">
 
           
-          <div class="option-checkboxes">
-            <v-form>
+          <div class="option-checkboxes" style="background-color: #575757 !important">
+            <v-form style="background-color: #575757 !important">
             <!-- Name, email, phone, etc. -->
             <v-row>
               <v-col cols="6">
@@ -919,7 +919,7 @@ const handleSaveResume = async () => {
       </template>
     </draggable>
 
-    <v-btn block style="background-color:#3D7AE2; color: white" @click="handleSaveResume">
+    <v-btn block class="positiveButton" @click="handleSaveResume">
       Save Resume
     </v-btn>
   

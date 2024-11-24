@@ -156,7 +156,7 @@ onMounted(() => {
                     mdi-shimmer
                 </v-icon>
             </v-row>
-            <v-btn append-icon="mdi-delete" color="teal" @click="clearHistory()">
+            <v-btn append-icon="mdi-delete" color="#054a91" @click="clearHistory()">
                 Clear
             </v-btn>
         </v-row>
@@ -229,6 +229,7 @@ onMounted(() => {
                 />
                 <ButtonElement
                     name="Submit"
+                    class="positiveButtons"
                     :submits="true"
                     button-label="Send"
                     :disabled="isLoadingMessage"

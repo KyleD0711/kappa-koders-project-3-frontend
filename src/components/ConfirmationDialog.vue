@@ -42,7 +42,7 @@ onMounted(() => {
         <v-container class="w-75 mx-auto">
           <v-btn
             color="secondary"
-            class="w-25 mx-auto float-left"
+            class="cancelButtons w-25 mx-auto float-left"
             @click="cancel"
           >
             Cancel
