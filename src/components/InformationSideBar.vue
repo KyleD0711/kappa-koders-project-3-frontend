@@ -1,11 +1,20 @@
 <script>
+import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useModalStore } from "../store/modal.store";
+import userServices from "../services/userServices";
+import { storeToRefs } from "pinia";
+import Utils from "../config/utils";
+
 import 'primeicons/primeicons.css';
 
 
 export default {
-  setup() {
-    const router = useRouter();
+    setup() {
+        const router = useRouter();
+        const curUser = ref(null);
+        const modalStore = useModalStore();
+        let showUser = ref(false);
 
         const showExperience = () => {
             router.push({name: 'experience'});
@@ -70,7 +79,31 @@ export default {
           document.getElementById('summ').classList.add('active');
         }
 
+    const items = ref({});
+
+    const isAdmin = async () => {
+        showUser.value = false;
+        await userServices
+        .getAllUser()
+        .then((res) => {
+            curUser.value = Utils.getStore("user");
+            items.value = res.data;
+            items.value.forEach(user => {
+                user.userRole.forEach(role => {
+                    if (role.role.type === "admin" && user.id == curUser.value.userId) {
+                        showUser.value = true;
+                    } 
+                })
+            })
+        })
+    }
+
+        onMounted(() => {
+            isAdmin();
+        })
+
     return {
+            showUser,
       showExperience,
       showSkills,
       showAwards,
@@ -85,6 +118,7 @@ export default {
 
 <template>
   <div class="infoSidebar">
+
     <div id="exp" class="infoSection" @click="showExperience()"> 
         <i class="pi pi-briefcase"></i>
         Experience
