@@ -6,4 +6,7 @@ export default {
   updateReview(reviewId, review) {
     return apiClient.put(`/admin/resume/review/${reviewId}`, review);
   },
+  getReviewsForResume(resumeId) {
+    return apiClient.get(`/student/resume/${resumeId}/review`);
+  },
 };
