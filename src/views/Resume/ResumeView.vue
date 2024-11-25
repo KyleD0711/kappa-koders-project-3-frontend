@@ -7,6 +7,7 @@ import Chat from "../../components/chat/Chat.vue"
 import { computed, ref, onMounted, watch } from "vue";
 import template from "../../../templates/templates.json";
 import resumeServices from "../../services/resumeServices";
+import templateServices from "../../services/templateServices";
 
 const drawerCols = 4;
 
@@ -17,7 +18,6 @@ onMounted(async () => {
 
   try {
     const response = await resumeServices.getResumeByID(resumeId);
-    console.log(response.data.template.template_data);
     templateData.value = JSON.parse(response.data.template.template_data);
     templateId.value = response.data.templateId;
   }
@@ -68,11 +68,22 @@ watch(leftTab, (newVal) => {
 });
 
 
+const switchDisplayedTemplate = async (id) => {
+  console.log(id);
+  try {
+    const response = await templateServices.getTemplateForId(id);
+    return response.data.template_data;
+  }
+  catch(e) {
+    console.log(e);
+  }
+}
 
 // Watch the selectedTemplate for changes
-watch(selectedTemplate, (newTemplateKey) => {
+watch(selectedTemplate, async (newTemplateKey) => {
+  
   console.log('Selected template:', newTemplateKey);
-  templateData.value = template[newTemplateKey] || {}; // Dynamically select the template
+  templateData.value = switchDisplayedTemplate(newTemplateKey.substring(8));
 });
 
 // Export to PDF function
