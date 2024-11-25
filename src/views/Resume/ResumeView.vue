@@ -77,9 +77,12 @@ const switchDisplayedTemplate = async (id) => {
 
 // Watch the selectedTemplate for changes
 watch(selectedTemplate, async (newTemplateKey) => {
-  templateData.value = await switchDisplayedTemplate(
-    newTemplateKey.substring(8)
-  );
+  let response = await switchDisplayedTemplate(newTemplateKey.substring(8));
+  if (typeof respone == "string") {
+    templateData.value = JSON.parse(response);
+  } else {
+    templateData.value = response;
+  }
 });
 
 // Export to PDF function
