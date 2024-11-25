@@ -750,7 +750,9 @@ const handleSaveResume = async () => {
           v-if="!isEditingTitle" 
           style="margin-left: 30px; vertical-align: middle; position: relative; top: -2px;" 
           class="pi pi-print">
-        </i>      
+        </i>    
+        <br> 
+        <p v-if="!isEditingTitle" style="pointer-events: none; font-size:14px;">Last Updated: </p>  
       </template>
     </div>
 
