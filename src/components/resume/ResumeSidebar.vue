@@ -1,6 +1,6 @@
 <script setup>
-import { ref, watch, onMounted, defineProps, computed, defineEmits} from "vue";
-import debounce from 'lodash/debounce';
+import { ref, watch, onMounted, defineProps, computed, defineEmits } from "vue";
+import debounce from "lodash/debounce";
 import draggable from "vuedraggable";
 import {
   VCard,
@@ -709,15 +709,25 @@ function handleLinkItems(itemsResponse) {
   });
 }
 
-watch([resume_data_local, header_data_local, personalInfo, metadata_local, isLoaded, props, resumeTitle], () => {
-  console.clear();
-  handleDataChangeDebounced(); // Trigger debounced handleDataChange
-}, { deep: true });
+watch(
+  [
+    resume_data_local,
+    header_data_local,
+    personalInfo,
+    metadata_local,
+    isLoaded,
+    props,
+    resumeTitle,
+  ],
+  () => {
+    handleDataChangeDebounced(); // Trigger debounced handleDataChange
+  },
+  { deep: true }
+);
 
 const handleDataChangeDebounced = debounce(async () => {
   await handleDataChange(); // Wait for handleDataChange to finish
-  setTimeout(() => {
-  }, 100);
+  setTimeout(() => {}, 100);
   handleSaveResumeDebounced(); // Then trigger debounced handleSaveResume
 }, 100);
 
@@ -763,7 +773,7 @@ async function handleDataChange() {
   changes.isLoaded = isLoaded;
 
   emit("dataChange", changes);
-};
+}
 
 const parseResumeData = (resumeData) => {
   const result = {};
