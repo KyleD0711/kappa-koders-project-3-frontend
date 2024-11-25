@@ -8,7 +8,6 @@ export default {
 
     // Get all ExperienceItems for a specific section
     getExperienceItems(sectionId, resumeId) {
-        console.log(sectionId);
         return apiClient.get(`/student/resume/${resumeId}/resumeSection/${sectionId}/experience-item/`);
     },
 

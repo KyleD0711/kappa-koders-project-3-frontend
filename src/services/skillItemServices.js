@@ -8,7 +8,6 @@ export default {
 
     // Get all SkillItems for a specific section
     getSkillItems(sectionId, resumeId) {
-        console.log(sectionId);
         return apiClient.get(`/student/resume/${resumeId}/resumeSection/${sectionId}/skill-item/`);
     },
 

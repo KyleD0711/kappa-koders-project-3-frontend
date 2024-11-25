@@ -8,7 +8,6 @@ export default {
 
     // Get all LinkItems for a specific section
     getLinkItems(sectionId, resumeId) {
-        console.log(sectionId);
         return apiClient.get(`/student/resume/${resumeId}/resumeSection/${sectionId}/link-item/`);
     },
 

@@ -8,7 +8,6 @@ export default {
 
     // Get all AwardItems for a specific section
     getAwardItems(sectionId, resumeId) {
-        console.log(sectionId);
         return apiClient.get(`/student/resume/${resumeId}/resumeSection/${sectionId}/award-item/`);
     },
 
