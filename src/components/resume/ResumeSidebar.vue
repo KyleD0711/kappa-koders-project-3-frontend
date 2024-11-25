@@ -614,7 +614,7 @@ const handleDataChangeDebounced = debounce(async () => {
 const handleSaveResumeDebounced = debounce(() => {
   handleSaveResume(); // Save the resume
   // Updated last updated
-}, 500);
+}, 1000);
 
 async function handleDataChange() {
   const changes = {};
