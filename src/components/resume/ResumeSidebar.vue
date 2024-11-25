@@ -752,7 +752,7 @@ const handleSaveResume = async () => {
           class="pi pi-print">
         </i>    
         <br> 
-        <p v-if="!isEditingTitle" style="pointer-events: none; font-size:14px;">Last Updated: </p>  
+        <p v-if="!isEditingTitle" style="pointer-events: none; font-size:14px;"> Last updated: {{ new Date(resume.updatedAt).toLocaleString() }}</p>  
       </template>
     </div>
 
