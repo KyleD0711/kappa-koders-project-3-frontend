@@ -8,12 +8,10 @@ export default {
       { professionalSummary_id }
     );
   },
-
-  getProfessionalSummaryItemsForResume(resumeId) {
-    return apiClient.get(
-      `/student/resume/${resumeId}/professionalSummary-item`
-    );
-  },
+    // Get all ProfessionalSummaryItems for a specific section
+    getProfessionalSummaryItems(sectionId, resumeId) {
+        return apiClient.get(`/student/resume/${resumeId}/resumeSection/${sectionId}/professionalSummary-item/`);
+    },
 
   // Get all ProfessionalSummaryItems for a specific section
   getProfessionalSummaryItems(sectionId, resumeId) {

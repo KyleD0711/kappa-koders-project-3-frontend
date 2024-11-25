@@ -1,5 +1,6 @@
 <script setup>
-import { ref, watch, onMounted, defineProps, computed, defineEmits } from "vue";
+import { ref, watch, onMounted, defineProps, computed, defineEmits} from "vue";
+import debounce from 'lodash/debounce';
 import draggable from "vuedraggable";
 import {
   VCard,
@@ -708,21 +709,24 @@ function handleLinkItems(itemsResponse) {
   });
 }
 
-watch(
-  [
-    resume_data_local,
-    header_data_local,
-    personalInfo,
-    metadata_local,
-    isLoaded,
-  ],
-  () => {
-    handleDataChange();
-  },
-  { deep: true }
-);
+watch([resume_data_local, header_data_local, personalInfo, metadata_local, isLoaded, props, resumeTitle], () => {
+  console.clear();
+  handleDataChangeDebounced(); // Trigger debounced handleDataChange
+}, { deep: true });
 
-const handleDataChange = () => {
+const handleDataChangeDebounced = debounce(async () => {
+  await handleDataChange(); // Wait for handleDataChange to finish
+  setTimeout(() => {
+  }, 100);
+  handleSaveResumeDebounced(); // Then trigger debounced handleSaveResume
+}, 100);
+
+const handleSaveResumeDebounced = debounce(() => {
+  handleSaveResume(); // Save the resume
+  // Updated last updated
+}, 1000);
+
+async function handleDataChange() {
   const changes = {};
 
   if (resume_data_local.value) {
@@ -1087,7 +1091,6 @@ const handleSaveResume = async () => {
         </v-card>
       </template>
     </draggable>
-
     <v-btn
       block
       style="background-color: #3d7ae2; color: white"
@@ -1095,7 +1098,6 @@ const handleSaveResume = async () => {
     >
       Save Resume
     </v-btn>
-
     <!-- Conditionally render the correct modal based on modalType -->
     <EducationModal
       v-if="isVisible && modalStore.modalType === 'education'"

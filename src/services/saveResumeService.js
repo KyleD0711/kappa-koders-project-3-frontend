@@ -19,22 +19,21 @@ const saveResume = async (
 ) => {
   try {
     // Prepare payload for updating the resume
+    const templateId = props.templateData.substring(8);
     const data = {
-      name: resumeTitle.value,
-      metadata: {
-        fName: personalInfo.value.fName,
-        lName: personalInfo.value.lName,
-        email: personalInfo.value.email,
-        phone_number: personalInfo.value.phone_number,
-        render_fields: metadata.value.render_fields,
-        section_dividers: metadata.value.section_dividers,
-      },
-      // JONAH - give resume the template
+        name: resumeTitle.value,
+        metadata: {
+            fName: personalInfo.value.fName,
+            lName: personalInfo.value.lName,
+            email: personalInfo.value.email,
+            phone_number: personalInfo.value.phone_number,
+            render_fields: metadata.value.render_fields,
+            section_dividers: metadata.value.section_dividers,
+        },
+        templateId: templateId,
     };
-
     // Update the resume
     await resumeServices.updateResume(props.resumeId, data);
-    console.log(personalInfo.value.fName);
 
     // Fetch current resume sections
     const sectionResponse = await resumeSectionServices.getSectionsForResume(
