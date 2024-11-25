@@ -12,4 +12,7 @@ export default {
   updatProfessionalSummary(item) {
     return apiClient.put(`/student/professionalsummary/${item.id}`, item);
   },
+  getProfessionalSummaryForResumeId(resumeId) {
+    return apiClient.get(`/student/professionalsummary/resume/${resumeId}`);
+  },
 };
