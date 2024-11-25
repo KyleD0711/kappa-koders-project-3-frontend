@@ -4,6 +4,7 @@ import ReviewerSidebar from "../../components/admin/ReviewerSidebar.vue";
 import reviewServices from "../../services/reviewServices";
 import resumeSectionServices from "../../services/resumeSectionServices";
 import getResumeService from "../../services/getResumeService";
+import professionalSummaryServices from "../../services/professionalSummaryServices";
 import { ref, onMounted } from "vue";
 import { useReviewerSidebarStore } from "../../store/reviewerSidebar.store";
 
@@ -25,7 +26,7 @@ const sections = ref([]);
 onMounted(async () => {
   const reviewResponse = await reviewServices
     .getReview(props.reviewId)
-    .then((data) => {
+    .then(async (data) => {
       const review = { ...data.data };
       return getResumeService.getResume(review.resumeId).then((value) => {
         metadata.value = value.metaData;
@@ -51,9 +52,7 @@ onMounted(async () => {
     )
     .then((response) => {
       let filteredResponse = response.data.filter(
-        (value) =>
-          value.section_type != "professional_summary" &&
-          value.section_type != "link"
+        (value) => value.section_type != "link"
       );
       let sortedRespone = filteredResponse.sort((a, b) => {
         return (

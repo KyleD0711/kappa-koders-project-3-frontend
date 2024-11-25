@@ -115,8 +115,10 @@ onMounted(async () => {
     <TextBubble
       v-for="comment in currentReview.comment"
       :sectionName="
-        comment.resumeSection.section_type[0].toUpperCase() +
-        comment.resumeSection.section_type.slice(1)
+        (
+          comment.resumeSection.section_type[0].toUpperCase() +
+          comment.resumeSection.section_type.slice(1)
+        ).replace('_', ' ')
       "
       :reviewText="comment.text"
     ></TextBubble>

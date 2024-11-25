@@ -866,19 +866,6 @@ const handleSaveResume = async () => {
       </template>
       <template v-else>
         <span @click="toggleEditTitle">{{ resumeTitle }}</span>
-
-        <!-- <i
-          @click="exportFunction"
-          v-if="!isEditingTitle"
-          style="
-            margin-left: 30px;
-            vertical-align: middle;
-            position: relative;
-            top: -2px;
-          "
-          class="pi pi-print"
-        >
-        </i> -->
         <div style="float: right; margin-right: 10px">
           <v-btn
             class="mx-2"
