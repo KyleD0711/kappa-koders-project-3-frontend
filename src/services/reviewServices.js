@@ -9,4 +9,7 @@ export default {
   getReviewsForResume(resumeId) {
     return apiClient.get(`/student/resume/${resumeId}/review`);
   },
+  startReview(resumeId) {
+    return apiClient.post(`/student/resume/${resumeId}/review`);
+  },
 };

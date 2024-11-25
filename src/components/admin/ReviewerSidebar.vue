@@ -24,9 +24,8 @@ const { sectionData, overviewData } = storeToRefs(reviewerSidebarStore);
 const isError = ref(false);
 
 const submitReview = async (isSave) => {
-  console.log(isSave);
   let submitData = [];
-  if (overviewData.value == "" || overviewData == undefined) {
+  if ((overviewData.value == "" || overviewData == undefined) && !isSave) {
     isError.value = true;
     return;
   }
