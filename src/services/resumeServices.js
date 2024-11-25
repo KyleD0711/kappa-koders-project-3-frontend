@@ -6,6 +6,9 @@ export default {
   getAllResumesForUser() {
     return apiClient.get("/student/resume/");
   },
+  getAllResumesForReview(searchString) {
+    return apiClient.get(`/admin/resume${searchString ? '?search=' + searchString : ''}`);
+  },
   deleteResume(resumeId) {
     return apiClient.delete("/student/resume/" + resumeId)
   },
