@@ -77,13 +77,15 @@ const switchDisplayedTemplate = async (id) => {
   catch(e) {
     console.log(e);
   }
+  
 }
 
 // Watch the selectedTemplate for changes
 watch(selectedTemplate, async (newTemplateKey) => {
   
   console.log('Selected template:', newTemplateKey);
-  templateData.value = switchDisplayedTemplate(newTemplateKey.substring(8));
+  templateData.value = JSON.parse(await switchDisplayedTemplate(newTemplateKey.substring(8)));
+  console.log(templateData.value);
 });
 
 // Export to PDF function
