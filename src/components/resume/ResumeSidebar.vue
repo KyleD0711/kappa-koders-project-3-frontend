@@ -599,7 +599,7 @@ function handleLinkItems(itemsResponse) {
  
 }
 
-watch([resume_data_local, header_data_local, personalInfo, metadata_local, isLoaded, props], () => {
+watch([resume_data_local, header_data_local, personalInfo, metadata_local, isLoaded, props, resumeTitle], () => {
   console.clear();
   handleDataChangeDebounced(); // Trigger debounced handleDataChange
 }, { deep: true });
