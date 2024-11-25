@@ -8,7 +8,6 @@ export default {
 
     // Get all EducationItems for a specific section
     getEducationItems(sectionId, resumeId) {
-        console.log(sectionId);
         return apiClient.get(`/student/resume/${resumeId}/resumeSection/${sectionId}/education-item/`);
     },
 

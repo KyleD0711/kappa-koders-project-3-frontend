@@ -8,7 +8,6 @@ export default {
 
     // Get all ProfessionalSummaryItems for a specific section
     getProfessionalSummaryItems(sectionId, resumeId) {
-        console.log(sectionId);
         return apiClient.get(`/student/resume/${resumeId}/resumeSection/${sectionId}/professionalSummary-item/`);
     },
 

@@ -11,6 +11,7 @@ import reviewServices from "../../services/reviewServices";
 import resumeServices from "../../services/resumeServices";
 import templateServices from "../../services/templateServices";
 
+
 const drawerCols = 4;
 
 
@@ -71,7 +72,6 @@ watch(leftTab, (newVal) => {
 
 
 const switchDisplayedTemplate = async (id) => {
-  console.log(id);
   try {
     const response = await templateServices.getTemplateForId(id);
     return response.data.template_data;
@@ -79,15 +79,11 @@ const switchDisplayedTemplate = async (id) => {
   catch(e) {
     console.log(e);
   }
-  
 }
 
 // Watch the selectedTemplate for changes
 watch(selectedTemplate, async (newTemplateKey) => {
-  
-  console.log('Selected template:', newTemplateKey);
   templateData.value = JSON.parse(await switchDisplayedTemplate(newTemplateKey.substring(8)));
-  console.log(templateData.value);
 });
 
 // Export to PDF function

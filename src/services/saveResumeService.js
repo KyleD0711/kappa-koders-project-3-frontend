@@ -27,7 +27,6 @@ const saveResume = async (props, resume_data, header_data, metadata, professiona
     
     // Update the resume
     await resumeServices.updateResume(props.resumeId, data);
-    console.log(personalInfo.value.fName);
 
     // Fetch current resume sections
     const sectionResponse = await resumeSectionServices.getSectionsForResume(props.resumeId);

@@ -8,7 +8,6 @@ export default {
 
     // Get all ProjectItems for a specific section
     getProjectItems(sectionId, resumeId) {
-        console.log(sectionId);
         return apiClient.get(`/student/resume/${resumeId}/resumeSection/${sectionId}/project-item/`);
     },
 
