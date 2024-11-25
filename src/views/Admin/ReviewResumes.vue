@@ -33,7 +33,9 @@ const pageCols = computed(() => {
 const getResumes = async () => {
     ResumeServices.getAllResumesForReview(searchString.value.searchQuery)
     .then((response) => {
-        resumeList.value = response.data
+        const formattedList = response.data.filter((review) => review.user != null)
+
+        resumeList.value = formattedList
         dataLoaded.value = true
     })
 }
