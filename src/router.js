@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import Login from "./views/Login.vue";
-import ResumeList from "./views/Resume/ResumeList.vue"
+import ResumeList from "./views/Resume/ResumeList.vue";
 import ResumeView from "./views/Resume/ResumeView.vue";
 import InformationList from "./views/Information/InformationList.vue";
 import InfoExperience from "./components/experience/ExperienceView.vue";
@@ -10,13 +10,14 @@ import InfoAwards from "./components/award/AwardView.vue";
 import InfoLinks from "./components/links/LinkView.vue";
 import InfoEducation from "./components/education/EducationView.vue";
 import InfoProjects from "./components/project/ProjectView.vue";
-import InfoUsers from "./components/InfoUsers.vue";
 import ProfessionalSummaryView from "./components/professionalSummary/ProfessionalSummaryView.vue";
 import AdminUserView from "./views/Admin/AdminUserView.vue";
 import ReviewResumes from "./views/Admin/ReviewResumes.vue";
-import ChatView from "./components/chat/ChatDrawer.vue"
+import ChatView from "./components/chat/ChatDrawer.vue";
+
 
 import RouterStateController from "./utils/routerStateController.js";
+import ReviewResume from "./views/Admin/ReviewResume.vue";
 
 const routerState = new RouterStateController();
 
@@ -34,7 +35,7 @@ const router = createRouter({
       alias: "/resume",
       name: "editResume",
       component: ResumeView,
-      props: (route) => ({ formId: Number(route.params.resumeId) })
+      props: (route) => ({ formId: Number(route.params.resumeId) }),
     },
     {
       path: "/login",
@@ -78,11 +79,6 @@ const router = createRouter({
           component: InfoProjects,
         },
         {
-          path: "users",
-          name: "users",
-          component: InfoUsers,
-        },
-        {
           path: "professionalSummaries",
           name: "professionalSummaries",
           component: ProfessionalSummaryView,
@@ -119,7 +115,7 @@ const router = createRouter({
         {
           path: "users",
           name: "users",
-          beforeEnter: isAdmin,
+         beforeEnter: isAdmin,
           component: AdminUserView,
         },
         {
@@ -127,6 +123,13 @@ const router = createRouter({
           name: "reviewResumes",
           beforeEnter: isAdmin,
           component: ReviewResumes,
+        },
+        {
+          path: "reviewResume/:reviewId",
+          name: "reviewResume",
+          beforeEnter: isAdmin,
+          component: ReviewResume,
+          props: (route) => ({ reviewId: Number(route.params.reviewId) }),
         },
       ],
     },

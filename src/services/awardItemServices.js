@@ -2,8 +2,8 @@ import apiClient from "./services.js";
 
 export default {
     // Create a new AwardItem
-    createAwardItem(award_id, sectionId, resumeId) {
-        return apiClient.post(`/student/resume/${resumeId}/resumeSection/${sectionId}/award-item/`, { award_id });
+    createAwardItem(award_id, sectionId, resumeId, order) {
+        return apiClient.post(`/student/resume/${resumeId}/resumeSection/${sectionId}/award-item/`, { award_id, order});
     },
 
     // Get all AwardItems for a specific section
@@ -18,8 +18,8 @@ export default {
     },
 
     // Update a AwardItem by ID
-    updateAwardItem(sectionId, resumeId, itemId, data) {
-        return apiClient.put(`/student/resume/${resumeId}/resumeSection/${sectionId}/award-item/${itemId}`, data);
+    updateAwardItem(sectionId, resumeId, itemId, order) {
+        return apiClient.put(`/student/resume/${resumeId}/resumeSection/${sectionId}/award-item/${itemId}`, {order});
     },
 
     // Delete a AwardItem by ID

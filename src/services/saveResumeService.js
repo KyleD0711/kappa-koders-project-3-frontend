@@ -75,9 +75,9 @@ const saveResume = async (props, resume_data, header_data, metadata, professiona
         }
     });
 
-    console.log("Sections to Create:", sectionsToCreate);
-    console.log("Sections to Update:", sectionsToUpdate);
-    console.log("Sections to Delete:", sectionsToDelete);
+    // console.log("Sections to Create:", sectionsToCreate);
+    // console.log("Sections to Update:", sectionsToUpdate);
+    // console.log("Sections to Delete:", sectionsToDelete);
 
     // Handle section creation
     for (const section of sectionsToCreate) {
@@ -86,90 +86,79 @@ const saveResume = async (props, resume_data, header_data, metadata, professiona
 
         switch (section.section_title) {
         case "skill":
-            console.log("Handling skill");
             const skillPromises = resume_data.value.skill.map(async (skill) => {
-            console.log("Skill Name: " + skill.id);
-            console.log(sectionId);
+         
             try {
-                return await skillItemServices.createSkillItem(skill.id, sectionId, props.resumeId);
+                const order = resume_data.value.skill.findIndex(item => item.id === skill.id);
+                return await skillItemServices.createSkillItem(skill.id, sectionId, props.resumeId, order);
             } catch (error) {
                 console.log("Error creating skill item:", error);
             }
             });
             await Promise.all(skillPromises);
             break;
-
         case "education":
-            console.log("Handling education");
             const educationPromises = resume_data.value.education.map(async (education) => {
             try {
-                return await educationItemServices.createEducationItem(education.id, sectionId, props.resumeId);
+                const order = resume_data.value.education.findIndex(item => item.id === education.id);
+                return await educationItemServices.createEducationItem(education.id, sectionId, props.resumeId, order);
             } catch (error) {
                 console.log("Error creating education item:", error);
             }
             });
             await Promise.all(educationPromises);
             break;
-
         case "experience":
-            console.log("Handling experience");
             const experiencePromises = resume_data.value.experience.map(async (experience) => {
             try {
-                return await experienceItemServices.createExperienceItem(experience.id, sectionId, props.resumeId);
+                const order = resume_data.value.experience.findIndex(item => item.id === experience.id);
+                return await experienceItemServices.createExperienceItem(experience.id, sectionId, props.resumeId, order);
             } catch (error) {
                 console.log("Error creating experience item:", error);
             }
             });
             await Promise.all(experiencePromises);
             break;
-
         case "project":
-            console.log("Handling project");
             const projectPromises = resume_data.value.project.map(async (project) => {
             try {
-                return await projectItemServices.createProjectItem(project.id, sectionId, props.resumeId);
+                const order = resume_data.value.project.findIndex(item => item.id === project.id);
+                return await projectItemServices.createProjectItem(project.id, sectionId, props.resumeId, order);
             } catch (error) {
                 console.log("Error creating project item:", error);
             }
             });
             await Promise.all(projectPromises);
             break;
-
         case "award":
-            console.log("Handling award");
             const awardPromises = resume_data.value.award.map(async (award) => {
             try {
-                return await awardItemServices.createAwardItem(award.id, sectionId, props.resumeId);
+                const order = resume_data.value.award.findIndex(item => item.id === award.id);
+                return await awardItemServices.createAwardItem(award.id, sectionId, props.resumeId, order);
             } catch (error) {
                 console.log("Error creating award item:", error);
             }
             });
             await Promise.all(awardPromises);
             break;
-
         case "link":
-            console.log("Handling link");
             const linkPromises = header_data.value.link.map(async (link) => {
             try {
-                return await linkItemServices.createLinkItem(link.id, sectionId, props.resumeId);
+                const order = header_data.value.link.findIndex(item => item.id === link.id);
+                return await linkItemServices.createLinkItem(link.id, sectionId, props.resumeId, order);
             } catch (error) {
                 console.log("Error creating link item:", error);
             }
             });
             await Promise.all(linkPromises);
             break;
-
         case "professional_summary":
-            console.log("Handling professional summary");
             try {
-            console.log(header_data.value.professional_summary);
-            console.log(professional_Summary_id);
             return await professionalSummaryItemServices.createProfessionalSummaryItem(professional_Summary_id, sectionId, props.resumeId);
             } catch (error) {
             console.log("Error creating professional summary item:", error);
             }
             break;
-
         default:
             break;
         }
@@ -182,172 +171,190 @@ const saveResume = async (props, resume_data, header_data, metadata, professiona
 
         switch (section.section_title) {
         case "skill":
-            console.log("Updating skills: " + section.section_id);
-            const existingSkillsResponse = await skillItemServices.getSkillItems(section.section_id, props.resumeId);
-            const existingSkills = existingSkillsResponse.data || [];
-            const existingSkillsMap = new Map(existingSkills.map(skill => [skill.id, skill]));
+            let skill_existingSkillResponse = await skillItemServices.getSkillItems(section.section_id, props.resumeId);
 
-            // Create a Set of new skill IDs from resume_data
-            const newSkillIds = new Set(resume_data.value.skill.map(skill => skill.id));
+            let skill_existingIds = skill_existingSkillResponse.data.map(item => item.skill_id);
+            
+            let skill_resumeIds = resume_data.value.skill.map(item => item.id);
+            // ids to add
+            let skill_missingIds = skill_resumeIds.filter(id => !skill_existingIds.includes(id));
+            // ids to update
+            let skill_updateIds = skill_resumeIds.filter(id => skill_existingIds.includes(id));
+            // ids to delete
+            let skill_deleteIds = skill_existingIds.filter(id => !skill_resumeIds.includes(id));
 
-            // Determine skills to delete
-            const skillsToDelete = existingSkills.filter(skill => !newSkillIds.has(skill.id));
-
-            // Delete unused skill items
-            for (const skill of skillsToDelete) {
-            await skillItemServices.deleteSkillItem(section.section_id, props.resumeId, skill.item_id);
-            console.log(`Deleted skill item with ID: ${skill.item_id}`);
+            // add
+            for (const missingId of skill_missingIds) {
+                const order = resume_data.value.skill.findIndex(item => item.id === missingId);
+                await skillItemServices.createSkillItem(missingId, section.section_id, props.resumeId, order);
             }
-
-            // Handle updating/creating new skills
-            const skillPromises = resume_data.value.skill.map(async (skill) => {
-            if (existingSkillsMap.has(skill.id)) {
-                // Update existing skill item
-                const skillItemId = existingSkillsMap.get(skill.id).id;
-                return await skillItemServices.updateSkillItem(skillItemId, { skillId: skill.item_id, sectionId: section.section_id });
-            } else {
-                // Create new skill item if it does not exist
-                return await skillItemServices.createSkillItem(skill.id, section.section_id, props.resumeId);
+            // update
+            for (const updateId of skill_updateIds) {
+                const order = resume_data.value.skill.findIndex(item => item.id === updateId);
+                const matchingItem = skill_existingSkillResponse.data.find(item => item.skill_id === updateId);
+                await skillItemServices.updateSkillItem(section.section_id, props.resumeId, matchingItem.item_id, order);
             }
-            });
-            await Promise.all(skillPromises);
+            // delete
+            for (const deleteId of skill_deleteIds) {
+                const matchingItem = skill_existingSkillResponse.data.find(item => item.skill_id === deleteId);
+                await skillItemServices.deleteSkillItem(section.section_id, props.resumeId, matchingItem.item_id);
+            }
             break;
         case "education":
-            console.log("Updating education: " + section.section_id);
-            // Similar logic for education
-            const existingEducationResponse = await educationItemServices.getEducationItems(section.section_id, props.resumeId);
-            const existingEducations = existingEducationResponse.data || [];
-            const existingEducationMap = new Map(existingEducations.map(edu => [edu.id, edu]));
+            let education_existingEducationResponse = await educationItemServices.getEducationItems(section.section_id, props.resumeId);
 
-            const newEducationIds = new Set(resume_data.value.education.map(edu => edu.id));
-            const educationsToDelete = existingEducations.filter(edu => !newEducationIds.has(edu.id));
+            let education_existingIds = education_existingEducationResponse.data.map(item => item.education_id);
+          
+            let education_resumeIds = resume_data.value.education.map(item => item.id);
+            // ids to add
+            let education_missingIds = education_resumeIds.filter(id => !education_existingIds.includes(id));
+            // ids to update
+            let education_updateIds = education_resumeIds.filter(id => education_existingIds.includes(id));
+            // ids to delete
+            let education_deleteIds = education_existingIds.filter(id => !education_resumeIds.includes(id));
 
-            for (const edu of educationsToDelete) {
-            await educationItemServices.deleteEducationItem(section.section_id, props.resumeId, edu.item_id);
-            console.log(`Deleted education item with ID: ${edu.id}`);
+            // add
+            for (const missingId of education_missingIds) {
+                const order = resume_data.value.education.findIndex(item => item.id === missingId);
+                await educationItemServices.createEducationItem(missingId, section.section_id, props.resumeId, order);
             }
-
-            const educationPromises = resume_data.value.education.map(async (edu) => {
-            if (existingEducationMap.has(edu.id)) {
-                const educationItemId = existingEducationMap.get(edu.id).id;
-                return await educationItemServices.updateExperienceItem(educationItemId, { educationId: edu.item.id, sectionId: section.section_id });
-            } else {
-                return await educationItemServices.createEducationItem(edu.id, section.section_id, props.resumeId);
+            // update
+            for (const updateId of education_updateIds) {
+                const order = resume_data.value.education.findIndex(item => item.id === updateId);
+                const matchingItem = education_existingEducationResponse.data.find(item => item.education_id === updateId);
+                await educationItemServices.updateEducationItem(section.section_id, props.resumeId, matchingItem.item_id, order);
             }
-            });
-            await Promise.all(educationPromises);
+            // delete
+            for (const deleteId of education_deleteIds) {
+                const matchingItem = education_existingEducationResponse.data.find(item => item.education_id === deleteId);
+                await educationItemServices.deleteEducationItem(section.section_id, props.resumeId, matchingItem.item_id);
+            }
             break;
         case "experience":
-            console.log("Updating experience: " + section.section_id);
-            // Similar logic for experience
-            const existingExperienceResponse = await experienceItemServices.getExperienceItems(section.section_id, props.resumeId);
-            const existingExperiences = existingExperienceResponse.data || [];
-            const existingExperienceMap = new Map(existingExperiences.map(exp => [exp.id, exp]));
+            let experience_existingExperienceResponse = await experienceItemServices.getExperienceItems(section.section_id, props.resumeId);
 
-            const newExperienceIds = new Set(resume_data.value.experience.map(exp => exp.id));
-            const experiencesToDelete = existingExperiences.filter(exp => !newExperienceIds.has(exp.id));
+            let experience_existingIds = experience_existingExperienceResponse.data.map(item => item.experience_id);
 
-            for (const exp of experiencesToDelete) {
-            console.log(exp);
-            await experienceItemServices.deleteExperienceItem(section.section_id, props.resumeId, exp.item_id);
-            console.log(`Deleted experience item with ID: ${exp.id}`);
+            let experience_resumeIds = resume_data.value.experience.map(item => item.id);
+            // ids to add
+            let experience_missingIds = experience_resumeIds.filter(id => !experience_existingIds.includes(id));
+            // ids to update
+            let experience_updateIds = experience_resumeIds.filter(id => experience_existingIds.includes(id));
+            // ids to delete
+            let experience_deleteIds = experience_existingIds.filter(id => !experience_resumeIds.includes(id));
+
+            // add
+            for (const missingId of experience_missingIds) {
+                const order = resume_data.value.experience.findIndex(item => item.id === missingId);
+                await experienceItemServices.createExperienceItem(missingId, section.section_id, props.resumeId, order);
             }
-
-            const experiencePromises = resume_data.value.experience.map(async (exp) => {
-            if (existingExperienceMap.has(exp.id)) {
-                console.log(exp);
-                const experienceItemId = existingExperienceMap.get(exp.id).id;
-                return await experienceItemServices.updateEducationItem(experienceItemId, { expreinceId: exp.item.id, sectionId: section.section_id });
-            } else {
-                console.log(exp);
-                return await experienceItemServices.createExperienceItem(exp.id, section.section_id, props.resumeId);
+            // update
+            for (const updateId of experience_updateIds) {
+                const order = resume_data.value.experience.findIndex(item => item.id === updateId);
+                const matchingItem = experience_existingExperienceResponse.data.find(item => item.experience_id === updateId);
+                await experienceItemServices.updateExperienceItem(section.section_id, props.resumeId, matchingItem.item_id, order);
             }
-            });
-            await Promise.all(experiencePromises);
+            // delete
+            for (const deleteId of experience_deleteIds) {
+                const matchingItem = experience_existingExperienceResponse.data.find(item => item.experience_id === deleteId);
+                await experienceItemServices.deleteExperienceItem(section.section_id, props.resumeId, matchingItem.item_id);
+            }
             break;
         case "project":
-            console.log("Updating project: " + section.section_id);
-            // Similar logic for projects
-            const existingProjectResponse = await projectItemServices.getProjectItems(section.section_id, props.resumeId);
-            const existingProjects = existingProjectResponse.data || [];
-            const existingProjectMap = new Map(existingProjects.map(proj => [proj.id, proj]));
+            let project_existingProjectResponse = await projectItemServices.getProjectItems(section.section_id, props.resumeId);
 
-            const newProjectIds = new Set(resume_data.value.project.map(proj => proj.id));
-            const projectsToDelete = existingProjects.filter(proj => !newProjectIds.has(proj.id));
+            let project_existingIds = project_existingProjectResponse.data.map(item => item.project_id);
 
-            for (const proj of projectsToDelete) {
-            await projectItemServices.deleteProjectItem(section.section_id, props.resumeId, proj.item_id);
-            console.log(`Deleted project item with ID: ${proj.id}`);
+            let project_resumeIds = resume_data.value.project.map(item => item.id);
+            // ids to add
+            let project_missingIds = project_resumeIds.filter(id => !project_existingIds.includes(id));
+            // ids to update
+            let project_updateIds = project_resumeIds.filter(id => project_existingIds.includes(id));
+            // ids to delete
+            let project_deleteIds = project_existingIds.filter(id => !project_resumeIds.includes(id));
+
+            // add
+            for (const missingId of project_missingIds) {
+                const order = resume_data.value.project.findIndex(item => item.id === missingId);
+                await projectItemServices.createProjectItem(missingId, section.section_id, props.resumeId, order);
             }
-
-            const projectPromises = resume_data.value.project.map(async (proj) => {
-            if (existingProjectMap.has(proj.id)) {
-                const projectItemId = existingProjectMap.get(proj.id).id;
-                return await projectItemServices.updateProjectItem(projectItemId, { projectId: proj.item.id, sectionId: section.section_id });
-            } else {
-                return await projectItemServices.createProjectItem(proj.id, section.section_id, props.resumeId);
+            // update
+            for (const updateId of project_updateIds) {
+                const order = resume_data.value.project.findIndex(item => item.id === updateId);
+                const matchingItem = project_existingProjectResponse.data.find(item => item.project_id === updateId);
+                await projectItemServices.updateProjectItem(section.section_id, props.resumeId, matchingItem.item_id, order);
             }
-            });
-            await Promise.all(projectPromises);
+            // delete
+            for (const deleteId of project_deleteIds) {
+                const matchingItem = project_existingProjectResponse.data.find(item => item.project_id === deleteId);
+                await projectItemServices.deleteProjectItem(section.section_id, props.resumeId, matchingItem.item_id);
+            }
             break;
         case "award":
-            console.log("Updating award: " + section.section_id);
-            // Similar logic for awards
-            const existingAwardResponse = await awardItemServices.getAwardItems(section.section_id, props.resumeId);
-            const existingAwards = existingAwardResponse.data || [];
-            const existingAwardMap = new Map(existingAwards.map(award => [award.id, award]));
+            let award_existingAwardResponse = await awardItemServices.getAwardItems(section.section_id, props.resumeId);
 
-            const newAwardIds = new Set(resume_data.value.award.map(award => award.id));
-            const awardsToDelete = existingAwards.filter(award => !newAwardIds.has(award.id));
+            let award_existingIds = award_existingAwardResponse.data.map(item => item.award_id);
 
-            for (const award of awardsToDelete) {
-            await awardItemServices.deleteAwardItem(section.section_id, props.resumeId, award.item_id);
-            console.log(`Deleted award item with ID: ${award.id}`);
+            let award_resumeIds = resume_data.value.award.map(item => item.id);
+            // ids to add
+            let award_missingIds = award_resumeIds.filter(id => !award_existingIds.includes(id));
+            // ids to update
+            let award_updateIds = award_resumeIds.filter(id => award_existingIds.includes(id));
+            // ids to delete
+            let award_deleteIds = award_existingIds.filter(id => !award_resumeIds.includes(id));
+
+            // add
+            for (const missingId of award_missingIds) {
+                const order = resume_data.value.award.findIndex(item => item.id === missingId);
+                await awardItemServices.createAwardItem(missingId, section.section_id, props.resumeId, order);
             }
-
-            const awardPromises = resume_data.value.award.map(async (award) => {
-            if (existingAwardMap.has(award.id)) {
-                const awardItemId = existingAwardMap.get(award.id).id;
-                return await awardItemServices.updateAwardItem(awardItemId, { awardId: award.item.id, sectionId: section.section_id });
-            } else {
-                return await awardItemServices.createAwardItem(award.id, section.section_id, props.resumeId);
+            // update
+            for (const updateId of award_updateIds) {
+                const order = resume_data.value.award.findIndex(item => item.id === updateId);
+                const matchingItem = award_existingAwardResponse.data.find(item => item.award_id === updateId);
+                await awardItemServices.updateAwardItem(section.section_id, props.resumeId, matchingItem.item_id, order);
             }
-            });
-            await Promise.all(awardPromises);
+            // delete
+            for (const deleteId of award_deleteIds) {
+                const matchingItem = award_existingAwardResponse.data.find(item => item.award_id === deleteId);
+                await awardItemServices.deleteAwardItem(section.section_id, props.resumeId, matchingItem.item_id);
+            }
             break;
         case "link":
-            console.log("Updating link: " + section.section_id);
-            // Similar logic for links
-            const existingLinkResponse = await linkItemServices.getLinkItems(section.section_id, props.resumeId);
-            const existingLinks = existingLinkResponse.data || [];
-            const existingLinkMap = new Map(existingLinks.map(link => [link.id, link]));
+            let link_existingLinkResponse = await linkItemServices.getLinkItems(section.section_id, props.resumeId);
 
-            const newLinkIds = new Set(header_data.value.link.map(link => link.id));
-            const linksToDelete = existingLinks.filter(link => !newLinkIds.has(link.id));
+            let link_existingIds = link_existingLinkResponse.data.map(item => item.link_id);
+            
+            let link_resumeIds = header_data.value.link.map(item => item.id);
+            // ids to add
+            let link_missingIds = link_resumeIds.filter(id => !link_existingIds.includes(id));
+            // ids to update
+            let link_updateIds = link_resumeIds.filter(id => link_existingIds.includes(id));
+            // ids to delete
+            let link_deleteIds = link_existingIds.filter(id => !link_resumeIds.includes(id));
 
-            for (const link of linksToDelete) {
-            await linkItemServices.deleteLinkItem(section.section_id, props.resumeId, link.item_id);
-            console.log(`Deleted link item with ID: ${link.id}`);
+            // add
+            for (const missingId of link_missingIds) {
+                const order = header_data.value.link.findIndex(item => item.id === missingId);
+                await linkItemServices.createLinkItem(missingId, section.section_id, props.resumeId, order);
             }
-
-            const linkPromises = header_data.value.link.map(async (link) => {
-            if (existingLinkMap.has(link.id)) {
-                const linkItemId = existingLinkMap.get(link.id).id;
-                return await linkItemServices.updateLinkItem(linkItemId, { linkId: link.item.id, sectionId: section.section_id });
-            } else {
-                return await linkItemServices.createLinkItem(link.id, section.section_id, props.resumeId);
+            // update
+            for (const updateId of link_updateIds) {
+                const order = header_data.value.link.findIndex(item => item.id === updateId);
+                const matchingItem = link_existingLinkResponse.data.find(item => item.link_id === updateId);
+                await linkItemServices.updateLinkItem(section.section_id, props.resumeId, matchingItem.item_id, order);
             }
-            });
-            await Promise.all(linkPromises);
+            // delete
+            for (const deleteId of link_deleteIds) {
+                const matchingItem = link_existingLinkResponse.data.find(item => item.link_id === deleteId);
+                await linkItemServices.deleteLinkItem(section.section_id, props.resumeId, matchingItem.item_id);
+            }
             break;
         case "professional_summary":
-            console.log("Updating professional summary: " + section.section_id);
-
             // Fetch the existing professional summary from the backend
             const existingSummaryResponse = await professionalSummaryItemServices.getProfessionalSummaryItems(section.section_id, props.resumeId);
 
             let itemIDToDelete = existingSummaryResponse.data[0].item_id;
-            console.log(itemIDToDelete);
             await professionalSummaryItemServices.deleteProfessionalSummaryItem(section.section_id, props.resumeId, itemIDToDelete);
             await professionalSummaryItemServices.createProfessionalSummaryItem(professional_Summary_id, section.section_id, props.resumeId);
 

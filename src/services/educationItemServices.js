@@ -2,8 +2,8 @@ import apiClient from "./services.js";
 
 export default {
     // Create a new EducationItem
-    createEducationItem(education_id, sectionId, resumeId) {
-        return apiClient.post(`/student/resume/${resumeId}/resumeSection/${sectionId}/education-item/`, { education_id });
+    createEducationItem(education_id, sectionId, resumeId, order) {
+        return apiClient.post(`/student/resume/${resumeId}/resumeSection/${sectionId}/education-item/`, { education_id, order },);
     },
 
     // Get all EducationItems for a specific section
@@ -18,8 +18,8 @@ export default {
     },
 
     // Update a EducationItem by ID
-    updateEducationItem(sectionId, resumeId, itemId, data) {
-        return apiClient.put(`/student/resume/${resumeId}/resumeSection/${sectionId}/education-item/${itemId}`, data);
+    updateEducationItem(sectionId, resumeId, itemId, order) {
+        return apiClient.put(`/student/resume/${resumeId}/resumeSection/${sectionId}/education-item/${itemId}`, {order});
     },
 
     // Delete a EducationItem by ID
