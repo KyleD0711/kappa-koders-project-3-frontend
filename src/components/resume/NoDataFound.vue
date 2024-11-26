@@ -1,15 +1,4 @@
-<script setup>
-const props = defineProps({
-  title: {
-    type: String,
-    default: "No Data Found",
-  },
-  subText: {
-    type: String,
-    default: "Try adjusting your search or filters",
-  },
-});
-</script>
+<script setup></script>
 <template>
   <div class="no-data-container">
     <div class="icon-container">
@@ -19,8 +8,7 @@ const props = defineProps({
         />
       </svg>
     </div>
-    <div class="no-data-text">{{ title }}</div>
-    <div class="no-data-subtext">{{ subtext }}</div>
+    <div class="no-data-text">No Data Found</div>
   </div>
 </template>
 
@@ -50,11 +38,6 @@ const props = defineProps({
 .no-data-text {
   font-size: 1.2em;
   margin-bottom: 10px;
-}
-
-.no-data-subtext {
-  font-size: 0.9em;
-  color: #999;
 }
 
 @keyframes float {

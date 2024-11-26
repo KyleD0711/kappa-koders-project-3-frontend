@@ -33,7 +33,8 @@ const submitForm = async () => {
     metadata: {
       render_fields: [],
       section_dividers: false,
-    }
+    },
+    templateId: 1, // default to template1
   };
 
   addResume(data);

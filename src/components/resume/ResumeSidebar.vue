@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watch, onMounted, defineProps, computed, defineEmits} from "vue";
+import debounce from 'lodash/debounce';
 import draggable from "vuedraggable";
 import {
   VCard,
@@ -598,11 +599,24 @@ function handleLinkItems(itemsResponse) {
  
 }
 
-watch([resume_data_local, header_data_local, personalInfo, metadata_local, isLoaded], () => {
-  handleDataChange();
+watch([resume_data_local, header_data_local, personalInfo, metadata_local, isLoaded, props, resumeTitle], () => {
+  console.clear();
+  handleDataChangeDebounced(); // Trigger debounced handleDataChange
 }, { deep: true });
 
-const handleDataChange = () => {
+const handleDataChangeDebounced = debounce(async () => {
+  await handleDataChange(); // Wait for handleDataChange to finish
+  setTimeout(() => {
+  }, 100);
+  handleSaveResumeDebounced(); // Then trigger debounced handleSaveResume
+}, 100);
+
+const handleSaveResumeDebounced = debounce(() => {
+  handleSaveResume(); // Save the resume
+  // Updated last updated
+}, 1000);
+
+async function handleDataChange() {
   const changes = {};
 
   if (resume_data_local.value) {
@@ -756,14 +770,14 @@ const handleSaveResume = async () => {
 
     <v-expansion-panels style="padding-bottom: 2%">
       <v-expansion-panel class="section-0">
-        <v-expansion-panel-title style="font-size: 20px;">
+        <v-expansion-panel-title style="font-size: 20px">
           Header
         </v-expansion-panel-title>
-        <v-expansion-panel-text id="bg-item" class="panel-background">
+        <v-expansion-panel-text class="panel-background">
 
           
-          <div class="option-checkboxes" style="background-color: #575757 !important">
-            <v-form style="background-color: #575757 !important">
+          <div class="option-checkboxes">
+            <v-form>
             <!-- Name, email, phone, etc. -->
             <v-row>
               <v-col cols="6">
@@ -919,11 +933,7 @@ const handleSaveResume = async () => {
       </template>
     </draggable>
 
-    <v-btn block style="border-color: #054a91; background-color: #054a91; color: #f2f4f3;" @click="handleSaveResume">
-      Save Resume
-    </v-btn>
-  
-
+    
     <!-- Conditionally render the correct modal based on modalType -->
     <EducationModal v-if="isVisible && modalStore.modalType === 'education'" :education="modalStore.education" @submit-form="getEducation" />
     <ExperienceModal v-if="isVisible && modalStore.modalType === 'experience'" :experience="modalStore.experience" @submit-form="getExperience" />
