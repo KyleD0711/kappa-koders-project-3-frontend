@@ -1,0 +1,12 @@
+<IfModule mod_negotiation.c>
+Options -MultiViews
+</IfModule>
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /2024/project3/t1
+RewriteRule ^index\.html$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /2024/project3/t1/index.html [L]
+</IfModule>
