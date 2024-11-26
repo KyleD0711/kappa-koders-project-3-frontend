@@ -14,12 +14,12 @@ export default {
   async getResume(resumeId) {
     let resume = await getResumeData(resumeId);
     let sectionData = await getSectionItems(resumeId);
-    console.log(sectionData);
     let resumeData = sectionData.resumeData;
     let professionalSummary = sectionData.professionalSummary;
+    let resumeMetadata = safeParseJSON(resume.metadata);
+    let headerData = getHeaderData(resumeMetadata, professionalSummary);
+    let metaData = getMetaData(resumeMetadata);
 
-    let headerData = getHeaderData(resume.metadata, professionalSummary);
-    let metaData = getMetaData(resume.metadata);
     let template = await getTemplate(resume.templateId);
 
     return {
@@ -29,6 +29,19 @@ export default {
       template,
     };
   },
+};
+
+const safeParseJSON = (jsonObj) => {
+  let defaultValue = {};
+  try {
+    if (typeof jsonObj == "string") {
+      return JSON.parse(jsonObj);
+    } else {
+      return jsonObj;
+    }
+  } catch (exception) {
+    return defaultValue;
+  }
 };
 
 const getMetaData = (metadata) => {
@@ -45,30 +58,19 @@ const getTemplate = async (templateId) => {
       return res.data.template_data;
     })
     .catch((err) => {
-      console.log(err);
+      return {};
     });
 };
 
 const getResumeData = async (id) => {
-  try {
-    const response = await resumeServices.getAllResumesForUser();
-    if (Array.isArray(response.data)) {
-      // Convert `id` to a number if necessary and find the matching object
-      const resume = response.data.find((resume) => resume.id === Number(id));
-      if (resume) {
-        return resume;
-      } else {
-        console.warn("No Resume Found with ID:", id);
-        return null;
-      }
-    } else {
-      console.error("Response data is not an array:", response.data);
-      return null;
-    }
-  } catch (error) {
-    console.error("Error fetching resumes:", error);
-    return null;
-  }
+  return await resumeServices
+    .getResumeByID(id)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((err) => {
+      return {};
+    });
 };
 
 async function getSectionItems(resumeId) {
@@ -181,17 +183,6 @@ async function fetchSectionItems(sectionType, resumeId, sectionId) {
       return [];
   }
 }
-
-const getProfessionalSummary = async (id) => {
-  return await professionalSummaryServices
-    .getProfessionalSummaryById()
-    .then((response) => {
-      return response.data.summary;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
 
 const getHeaderData = (metadata, professional_summary) => {
   const result = {};

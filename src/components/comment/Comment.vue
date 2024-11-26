@@ -43,7 +43,10 @@ onMounted(async () => {
   await reviewServices
     .getReviewsForResume(props.resumeId)
     .then((response) => {
-      reviews.value = response.data;
+      reviews.value = response.data.sort(
+        (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+      );
+      console.log(reviews.value);
       if (reviews.value.length > 0) {
         isData.value = true;
         currentReview.value = reviews.value[currentIndex.value];
