@@ -46,7 +46,6 @@ onMounted(async () => {
       reviews.value = response.data.sort(
         (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
       );
-      console.log(reviews.value);
       if (reviews.value.length > 0) {
         isData.value = true;
         currentReview.value = reviews.value[currentIndex.value];
@@ -164,6 +163,7 @@ onMounted(async () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: 20px 10px;
 }
 
 .chevron-button {
