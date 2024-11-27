@@ -78,7 +78,7 @@ const switchDisplayedTemplate = async (id) => {
 // Watch the selectedTemplate for changes
 watch(selectedTemplate, async (newTemplateKey) => {
   let response = await switchDisplayedTemplate(newTemplateKey.substring(8));
-  if (typeof respone == "string") {
+  if (typeof response == "string") {
     templateData.value = JSON.parse(response);
   } else {
     templateData.value = response;
