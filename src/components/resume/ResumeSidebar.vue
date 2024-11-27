@@ -48,7 +48,6 @@ import resumeServices from "../../services/resumeServices";
 import resumeSectionServices from "../../services/resumeSectionServices";
 
 import { storeToRefs } from "pinia";
-import { string } from "@vueform/vueform";
 import educationItemServices from "../../services/educationItemServices";
 import experienceItemServices from "../../services/experienceItemServices";
 import projectItemServices from "../../services/projectItemServices";
@@ -1101,13 +1100,6 @@ const handleSaveResume = async () => {
         </v-card>
       </template>
     </draggable>
-    <v-btn
-      block
-      style="background-color: #3d7ae2; color: white"
-      @click="handleSaveResume"
-    >
-      Save Resume
-    </v-btn>
     <!-- Conditionally render the correct modal based on modalType -->
     <EducationModal
       v-if="isVisible && modalStore.modalType === 'education'"
