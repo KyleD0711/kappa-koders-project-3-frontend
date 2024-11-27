@@ -1,5 +1,13 @@
 <script setup>
+import { ref, onMounted } from "vue";
+import blankResume from "/BlankResumeLogin.png";
 import SocialLogin from "../components/SocialLogin.vue";
+
+const blankResumeSrc = ref("")
+
+onMounted(() => {
+  blankResumeSrc.value = blankResume
+})
 </script>
 
 <template>
@@ -8,7 +16,7 @@ import SocialLogin from "../components/SocialLogin.vue";
       <v-row class="w-100" no-gutters>
         <div class="w-50 pa-8 grey-background">
           <v-img
-            src="/BlankResumeLogin.png"
+            :src="blankResumeSrc"
           />
         </div>
         <v-col class="d-flex flex-column justify-center">
