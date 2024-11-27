@@ -19,8 +19,8 @@ export default {
     let resumeMetadata = safeParseJSON(resume.metadata);
     let headerData = getHeaderData(resumeMetadata, professionalSummary);
     let metaData = getMetaData(resumeMetadata);
-
-    let template = await getTemplate(resume.templateId);
+    let templateData = await getTemplate(resume.templateId);
+    let template = safeParseJSON(templateData);
 
     return {
       resumeData,
