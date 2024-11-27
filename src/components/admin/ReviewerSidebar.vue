@@ -24,9 +24,8 @@ const { sectionData, overviewData } = storeToRefs(reviewerSidebarStore);
 const isError = ref(false);
 
 const submitReview = async (isSave) => {
-  console.log(isSave);
   let submitData = [];
-  if (overviewData.value == "" || overviewData == undefined) {
+  if ((overviewData.value == "" || overviewData == undefined) && !isSave) {
     isError.value = true;
     return;
   }
@@ -100,8 +99,10 @@ const submitReview = async (isSave) => {
       <v-expansion-panels>
         <v-expansion-panel class="section-0">
           <v-expansion-panel-title class="section_title">{{
-            section.section_title[0].toUpperCase() +
-            section.section_title.slice(1)
+            (
+              section.section_title[0].toUpperCase() +
+              section.section_title.slice(1)
+            ).replace("_", " ")
           }}</v-expansion-panel-title>
           <v-expansion-panel-text>
             <v-textarea
