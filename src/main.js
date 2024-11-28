@@ -7,8 +7,6 @@ import { createPinia } from "pinia";
 import vueformConfig from "../vueform.config.js";
 import Vueform from "@vueform/vueform";
 
-import './assets/global.css';
-
 const app = createApp(App);
 const pinia = createPinia();
 
