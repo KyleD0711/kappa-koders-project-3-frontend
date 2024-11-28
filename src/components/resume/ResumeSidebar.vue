@@ -71,6 +71,7 @@ const resume_data = ref([]);
 const header_data = ref([]);
 const metadata = ref([]);
 const isLoaded = ref({});
+const isUpdated = ref({});
 
 const props = defineProps({
   exportFunction: {
@@ -715,6 +716,7 @@ watch(
     personalInfo,
     metadata_local,
     isLoaded,
+    isUpdated,
     props,
     resumeTitle,
   ],
@@ -733,6 +735,8 @@ const handleDataChangeDebounced = debounce(async () => {
 const handleSaveResumeDebounced = debounce(() => {
   handleSaveResume(); // Save the resume
   // Updated last updated
+  isUpdated.value = true;
+
 }, 1000);
 
 async function handleDataChange() {
@@ -879,6 +883,8 @@ const handleSaveResume = async () => {
       </template>
       <template v-else>
         <span @click="toggleEditTitle">{{ resumeTitle }}</span>
+        <p v-show="isUpdated" style="font-size:12px">Last updated at: </p>
+
         <div style="float: right; margin-right: 10px">
           <v-btn
             class="mx-2"
