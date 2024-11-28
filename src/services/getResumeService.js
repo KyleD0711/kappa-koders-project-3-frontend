@@ -13,11 +13,14 @@ import templateServices from "./templateServices";
 export default {
   async getResume(resumeId) {
     let resume = await getResumeData(resumeId);
-    let resumeData = await getSectionItems(resumeId);
-    let professionalSummary = await getProfessionalSummary(resumeId);
-    let headerData = getHeaderData(resume.metadata, professionalSummary);
-    let metaData = getMetaData(resume.metadata);
-    let template = await getTemplate(resume.templateId);
+    let sectionData = await getSectionItems(resumeId);
+    let resumeData = sectionData.resumeData;
+    let professionalSummary = sectionData.professionalSummary;
+    let resumeMetadata = safeParseJSON(resume.metadata);
+    let headerData = getHeaderData(resumeMetadata, professionalSummary);
+    let metaData = getMetaData(resumeMetadata);
+    let templateData = await getTemplate(resume.templateId);
+    let template = safeParseJSON(templateData);
 
     return {
       resumeData,
@@ -26,6 +29,19 @@ export default {
       template,
     };
   },
+};
+
+const safeParseJSON = (jsonObj) => {
+  let defaultValue = {};
+  try {
+    if (typeof jsonObj == "string") {
+      return JSON.parse(jsonObj);
+    } else {
+      return jsonObj;
+    }
+  } catch (exception) {
+    return defaultValue;
+  }
 };
 
 const getMetaData = (metadata) => {
@@ -42,30 +58,19 @@ const getTemplate = async (templateId) => {
       return res.data.template_data;
     })
     .catch((err) => {
-      console.log(err);
+      return {};
     });
 };
 
 const getResumeData = async (id) => {
-  try {
-    const response = await resumeServices.getAllResumesForUser();
-    if (Array.isArray(response.data)) {
-      // Convert `id` to a number if necessary and find the matching object
-      const resume = response.data.find((resume) => resume.id === Number(id));
-      if (resume) {
-        return resume;
-      } else {
-        console.warn("No Resume Found with ID:", id);
-        return null;
-      }
-    } else {
-      console.error("Response data is not an array:", response.data);
-      return null;
-    }
-  } catch (error) {
-    console.error("Error fetching resumes:", error);
-    return null;
-  }
+  return await resumeServices
+    .getResumeByID(id)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((err) => {
+      return {};
+    });
 };
 
 async function getSectionItems(resumeId) {
@@ -76,36 +81,47 @@ async function getSectionItems(resumeId) {
     project: [],
     skill: [],
   };
+
+  let professionalSummary = "";
+
   // Get all resume sections and their items
   const resumeSections = await resumeSectionServices.getSectionsForResume(
     resumeId
   );
 
   if (resumeSections && resumeSections.data) {
-    await resumeSections.data.forEach(async (section) => {
-      fetchSectionItems(section.section_type, resumeId, section.section_id)
-        .then((data) => {
-          data.data.forEach((value) => {
-            let sectionName = getNameFromKey(value);
-            if (
-              sectionName != "professional_summary" &&
-              sectionName != "link"
-            ) {
-              resumeData[sectionName].push({ ...value[sectionName] });
-            }
-          });
-        })
-        .catch((err) => {
-          console.error(
-            `Error fetching items for section ${section.section_type}:`,
-            err
-          );
-        });
-    });
+    // Use a for...of loop to handle asynchronous calls properly
+    for (const section of resumeSections.data) {
+      try {
+        const data = await fetchSectionItems(
+          section.section_type,
+          resumeId,
+          section.section_id
+        );
 
-    return resumeData;
+        data.data.forEach((value) => {
+          let sectionName = getNameFromKey(value);
+          if (
+            sectionName !== "professional_summary" &&
+            sectionName !== "link"
+          ) {
+            resumeData[sectionName].push({ ...value[sectionName] });
+          } else if (sectionName === "professional_summary") {
+            professionalSummary = value.professionalSummary.summary;
+          }
+        });
+      } catch (err) {
+        console.error(
+          `Error fetching items for section ${section.section_type}:`,
+          err
+        );
+      }
+    }
+
+    return { resumeData, professionalSummary };
   } else {
     console.warn("No sections found for the resume.");
+    return { resumeData, professionalSummary }; // Return even if no sections are found
   }
 }
 
@@ -167,17 +183,6 @@ async function fetchSectionItems(sectionType, resumeId, sectionId) {
       return [];
   }
 }
-
-const getProfessionalSummary = async (resumeId) => {
-  return await professionalSummaryServices
-    .getProfessionalSummaryForResumeId(resumeId)
-    .then((response) => {
-      return response.data.summary;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
 
 const getHeaderData = (metadata, professional_summary) => {
   const result = {};

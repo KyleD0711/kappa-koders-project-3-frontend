@@ -97,24 +97,6 @@ const router = createRouter({
         {
           path: "users",
           name: "users",
-          beforeEnter: isAdmin,
-          component: AdminUserView,
-        },
-        {
-          path: "reviewResumes",
-          name: "reviewResumes",
-          beforeEnter: isAdmin,
-          component: ReviewResumes,
-        },
-      ],
-    },
-    {
-      path: "/admin",
-      name: "admin",
-      children: [
-        {
-          path: "users",
-          name: "users",
          beforeEnter: isAdmin,
           component: AdminUserView,
         },

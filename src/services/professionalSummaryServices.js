@@ -3,6 +3,9 @@ export default {
   getAllProfessionalSummaryForUser() {
     return apiClient.get("/student/professionalsummary");
   },
+  getProfessionalSummaryById(id) {
+    return apiClient.get(`/student/professionalsummary/${id}`);
+  },
   deleteProfessionalSummary(id) {
     return apiClient.delete(`/student/professionalsummary/${id}`);
   },

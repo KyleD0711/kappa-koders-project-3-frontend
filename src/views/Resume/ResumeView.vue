@@ -8,12 +8,31 @@ import { computed, ref, onMounted, watch } from "vue";
 import template from "../../../templates/templates.json";
 import Comment from "../../components/comment/Comment.vue";
 import reviewServices from "../../services/reviewServices";
+import resumeServices from "../../services/resumeServices";
+import templateServices from "../../services/templateServices";
 
 const drawerCols = 4;
 
+onMounted(async () => {
+  console.log("Resume Data");
+  console.log(resumeId);
+
+  try {
+    const response = await resumeServices.getResumeByID(resumeId);
+    console.log(response);
+    templateData.value = response.data.template.template_data;
+    templateId.value = response.data.templateId;
+  } catch (e) {
+    console.log("Error");
+  }
+
+  selectedTemplate.value = "template" + templateId.value;
+});
+const templateId = ref();
+
 // Reactive variables
-const selectedTemplate = ref("template1"); // Default to 'template1'
-const templateData = ref(template["template1"]);
+const selectedTemplate = ref(""); // Default to 'template1'
+const templateData = ref();
 const metadata = ref({});
 const header_data = ref({});
 const resume_data = ref({});
@@ -47,10 +66,23 @@ watch(leftTab, (newVal) => {
   }
 });
 
+const switchDisplayedTemplate = async (id) => {
+  try {
+    const response = await templateServices.getTemplateForId(id);
+    return response.data.template_data;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 // Watch the selectedTemplate for changes
-watch(selectedTemplate, (newTemplateKey) => {
-  console.log("Selected template:", newTemplateKey);
-  templateData.value = template[newTemplateKey] || {}; // Dynamically select the template
+watch(selectedTemplate, async (newTemplateKey) => {
+  let response = await switchDisplayedTemplate(newTemplateKey.substring(8));
+  if (typeof response == "string") {
+    templateData.value = JSON.parse(response);
+  } else {
+    templateData.value = response;
+  }
 });
 
 // Export to PDF function

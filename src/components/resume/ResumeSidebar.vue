@@ -1,5 +1,6 @@
 <script setup>
-import { ref, watch, onMounted, defineProps, computed, defineEmits} from "vue";
+import { ref, watch, onMounted, defineProps, computed, defineEmits } from "vue";
+import debounce from "lodash/debounce";
 import draggable from "vuedraggable";
 import {
   VCard,
@@ -11,7 +12,7 @@ import {
 } from "vuetify/components";
 import { useModalStore } from "../../store/modal.store";
 
-import 'primeicons/primeicons.css'
+import "primeicons/primeicons.css";
 
 // Education:
 import EducationModal from "../education/EducationModal.vue";
@@ -34,12 +35,12 @@ import LinkModal from "../links/LinkModal.vue";
 import linkServices from "../../services/linkServices";
 
 // Skills
-import SkillModal from '../skill/SkillModal.vue';
-import skillServices from '../../services/skillServices';
+import SkillModal from "../skill/SkillModal.vue";
+import skillServices from "../../services/skillServices";
 
 // professional summaries
-import professionalSummaryServices from '../../services/professionalSummaryServices';
-import ProfessionalSummaryModal from '../professionalSummary/ProfessionalSummaryModal.vue';
+import professionalSummaryServices from "../../services/professionalSummaryServices";
+import ProfessionalSummaryModal from "../professionalSummary/ProfessionalSummaryModal.vue";
 
 import saveResume from "../../services/saveResumeService";
 
@@ -47,7 +48,6 @@ import resumeServices from "../../services/resumeServices";
 import resumeSectionServices from "../../services/resumeSectionServices";
 
 import { storeToRefs } from "pinia";
-import { string } from "@vueform/vueform";
 import educationItemServices from "../../services/educationItemServices";
 import experienceItemServices from "../../services/experienceItemServices";
 import projectItemServices from "../../services/projectItemServices";
@@ -55,12 +55,14 @@ import awardItemServices from "../../services/awardItemServices";
 import linkItemServices from "../../services/linkItemServices";
 import skillItemServices from "../../services/skillItemServices";
 import professionalSummaryItemServices from "../../services/professionalSummaryItemServices";
+import reviewServices from "../../services/reviewServices";
+import { readonly } from "vue";
 // import { link } from "../../../../kappakoders-project3-backend/app/models";
 
 const modalStore = useModalStore();
 const { isVisible } = storeToRefs(modalStore);
 
-const emit = defineEmits(['dataChange']);
+const emit = defineEmits(["dataChange"]);
 
 let resume;
 let professional_Summary_id;
@@ -85,8 +87,6 @@ const props = defineProps({
   },
 });
 
-
-
 const resume_data_local = ref([]);
 const header_data_local = ref([]);
 const metadata_local = ref({});
@@ -98,10 +98,39 @@ const personalInfo = ref({
   professional_summary: "",
 });
 
-const professionalSummaries = ref([]);  
+const professionalSummaries = ref([]);
 const resumeTitle = ref();
 const isEditingTitle = ref(false);
+const requestReview = ref(false);
+const resumeActions = [
+  {
+    title: "Download",
+    action: () => {
+      props.exportFunction();
+    },
+  },
+  {
+    title: "Request Review",
+    action: () => {
+      handleRequestReview();
+    },
+  },
+];
 
+const handleRequestReview = async () => {
+  if (!requestReview.value) {
+    alert("A review that is in-review already exists for this resume!");
+  } else {
+    await reviewServices
+      .startReview(props.resumeId)
+      .then((_) => {
+        alert("Review successfully created!");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+};
 
 const toggleEditTitle = () => {
   isEditingTitle.value = !isEditingTitle.value;
@@ -122,19 +151,26 @@ const getEducation = async () => {
       (section) => section.title === "Education"
     );
     if (educationSection) {
-      educationSection.items = res.data.map(item => ({ name: item.institution, selected: false, data: item }));
+      educationSection.items = res.data.map((item) => ({
+        name: item.institution,
+        selected: false,
+        data: item,
+      }));
     } else {
       resume_data_local.value.push({
-        title: 'Education',
-        items: res.data.map(item => ({ name: item.institution, selected: false, data: item })),
-        icon: 'pi pi-graduation-cap'
+        title: "Education",
+        items: res.data.map((item) => ({
+          name: item.institution,
+          selected: false,
+          data: item,
+        })),
+        icon: "pi pi-graduation-cap",
       });
     }
   } catch (err) {
     console.error(err);
   }
   processResumeData();
-  
 };
 
 const getExperience = async () => {
@@ -144,12 +180,20 @@ const getExperience = async () => {
       (section) => section.title === "Experience"
     );
     if (experienceSection) {
-      experienceSection.items = res.data.map(item => ({ name: item.employer, selected: false, data: item }));
+      experienceSection.items = res.data.map((item) => ({
+        name: item.employer,
+        selected: false,
+        data: item,
+      }));
     } else {
       resume_data_local.value.push({
-        title: 'Experience',
-        items: res.data.map(item => ({ name: item.employer, selected: false, data: item })),
-        icon: 'pi pi-briefcase'
+        title: "Experience",
+        items: res.data.map((item) => ({
+          name: item.employer,
+          selected: false,
+          data: item,
+        })),
+        icon: "pi pi-briefcase",
       });
     }
   } catch (err) {
@@ -165,12 +209,20 @@ const getProject = async () => {
       (section) => section.title === "Project"
     );
     if (projectSection) {
-      projectSection.items = res.data.map(item => ({ name: item.name, selected: false, data: item }));
+      projectSection.items = res.data.map((item) => ({
+        name: item.name,
+        selected: false,
+        data: item,
+      }));
     } else {
       resume_data_local.value.push({
-        title: 'Project',
-        items: res.data.map(item => ({ name: item.name, selected: false, data: item })),
-        icon: 'pi pi-book'
+        title: "Project",
+        items: res.data.map((item) => ({
+          name: item.name,
+          selected: false,
+          data: item,
+        })),
+        icon: "pi pi-book",
       });
     }
   } catch (err) {
@@ -186,12 +238,20 @@ const getAwards = async () => {
       (section) => section.title === "Award"
     );
     if (awardSection) {
-      awardSection.items = res.data.map(item => ({ name: item.institution, selected: false, data: item }));
+      awardSection.items = res.data.map((item) => ({
+        name: item.institution,
+        selected: false,
+        data: item,
+      }));
     } else {
       resume_data_local.value.push({
-        title: 'Award',
-        items: res.data.map(item => ({ name: item.institution, selected: false, data: item })),
-        icon: 'pi pi-trophy'
+        title: "Award",
+        items: res.data.map((item) => ({
+          name: item.institution,
+          selected: false,
+          data: item,
+        })),
+        icon: "pi pi-trophy",
       });
     }
   } catch (err) {
@@ -203,21 +263,31 @@ const getAwards = async () => {
 const getLinks = async () => {
   try {
     const res = await linkServices.getAllLinkForUser();
-    const linkHeader = header_data_local.value.find(header => header.title === 'Link');
+    const linkHeader = header_data_local.value.find(
+      (header) => header.title === "Link"
+    );
     if (linkHeader) {
-      linkHeader.items = res.data.map(item => ({ name: item.name, selected: false, data: item }));
+      linkHeader.items = res.data.map((item) => ({
+        name: item.name,
+        selected: false,
+        data: item,
+      }));
     } else {
       header_data_local.value.push({
-        title: 'Link',
-        items: res.data.map(item => ({ name: item.name, selected: false, data: item })),
-        icon: 'pi pi-link'
+        title: "Link",
+        items: res.data.map((item) => ({
+          name: item.name,
+          selected: false,
+          data: item,
+        })),
+        icon: "pi pi-link",
       });
     }
   } catch (err) {
     console.error(err);
   }
   processResumeData();
-}
+};
 
 const getSkills = async () => {
   try {
@@ -226,44 +296,52 @@ const getSkills = async () => {
       (section) => section.title === "Skill"
     );
     if (skillSection) {
-      skillSection.items = res.data.map(item => ({ name: item.name, selected: false, data: item }));
+      skillSection.items = res.data.map((item) => ({
+        name: item.name,
+        selected: false,
+        data: item,
+      }));
     } else {
       resume_data_local.value.push({
-        title: 'Skill',
-        items: res.data.map(item => ({ name: item.name, selected: false, data: item })),
-        icon: 'pi pi-lightbulb'
+        title: "Skill",
+        items: res.data.map((item) => ({
+          name: item.name,
+          selected: false,
+          data: item,
+        })),
+        icon: "pi pi-lightbulb",
       });
     }
   } catch (err) {
     console.error(err);
   }
   processResumeData();
-}
+};
 
 const getProf_sums = async () => {
   try {
-    const res = await professionalSummaryServices.getAllProfessionalSummaryForUser();  // API call for professional summaries
-    professionalSummaries.value = res.data.map(item => ({
+    const res =
+      await professionalSummaryServices.getAllProfessionalSummaryForUser(); // API call for professional summaries
+    professionalSummaries.value = res.data.map((item) => ({
       summary: item.summary,
       selected: false,
-      data: item
+      data: item,
     }));
   } catch (err) {
-    console.error('Error fetching professional summaries:', err);
+    console.error("Error fetching professional summaries:", err);
   }
   processResumeData();
 };
 
-
 const editLinkItem = (item) => {
   modalStore.link = item.data;
-  modalStore.modalType = 'link';
-  modalStore.isVisible = true; 
-}
+  modalStore.modalType = "link";
+  modalStore.isVisible = true;
+};
 
 const editProfessionalSummary = (item) => {
-  modalStore.professionalSummary = item.data;  // Pass the full data of the item to the modal
-  modalStore.modalType = 'professionalSummary';
+  modalStore.professionalSummary = item.data; // Pass the full data of the item to the modal
+  modalStore.modalType = "professionalSummary";
   modalStore.isVisible = true;
 };
 
@@ -297,16 +375,16 @@ const showAddLinkDialog = () => {
     name: "",
     url: "",
   };
-  modalStore.isVisible = true; 
-  modalStore.modalType = 'link'; 
+  modalStore.isVisible = true;
+  modalStore.modalType = "link";
 };
 
 const showAddSummaryDialog = () => {
   modalStore.professionalSummary = {
-    summary: "",  
+    summary: "",
   };
   modalStore.isVisible = true;
-  modalStore.modalType = 'professionalSummary';
+  modalStore.modalType = "professionalSummary";
 };
 
 // add
@@ -386,13 +464,13 @@ const getResumeData = async (id) => {
 
 onMounted(async () => {
   isLoaded.value = false;
-  emit('dataChange', { isLoaded: isLoaded.value });
-  
-  document.body.style.caretColor = 'transparent';
+  emit("dataChange", { isLoaded: isLoaded.value });
+
+  document.body.style.caretColor = "transparent";
 
   // Wait for the resume data
   resume = await getResumeData(props.resumeId);
-  
+
   await Promise.all([
     getEducation(),
     getExperience(),
@@ -400,14 +478,12 @@ onMounted(async () => {
     getAwards(),
     getLinks(),
     getSkills(),
-    getProf_sums()
+    getProf_sums(),
   ]);
 
   try {
     await processResumeData();
-  } catch(err) {
-  }
-  
+  } catch (err) {}
 
   resume_data_local.value.forEach((section) => {
     if (section.isOpen === undefined) {
@@ -415,22 +491,27 @@ onMounted(async () => {
     }
   });
 
-  
   isLoaded.value = true;
-  handleDataChange();  
-});
+  handleDataChange();
 
+  await reviewServices.getReviewsForResume(props.resumeId).then((response) => {
+    requestReview.value = response.data.every((value) => {
+      return value.status != "in-review";
+    });
+  });
+});
 
 async function processResumeData() {
   // Set up resume metadata and personal info
   resume = await getResumeData(props.resumeId);
   resumeTitle.value = resume.name;
-  if (typeof(resume.metadata) == "string"){
+  if (typeof resume.metadata == "string") {
     resume.metadata = JSON.parse(resume.metadata);
   }
-  metadata_local.value.section_dividers = resume.metadata.section_dividers ?? false;
+  metadata_local.value.section_dividers =
+    resume.metadata.section_dividers ?? false;
   metadata_local.value.render_fields = resume.metadata.render_fields ?? [];
-  
+
   // JONAH - Handle default fName. lName, phone_num, and email from user
   personalInfo.value.fName = resume.metadata.fName ?? "";
   personalInfo.value.lName = resume.metadata.lName ?? "";
@@ -439,10 +520,16 @@ async function processResumeData() {
 
   // Sort resume data based on render_fields order
   const sortedResumeData = computed(() => {
-    const renderFieldsMap = new Map(metadata_local.value.render_fields.map((field, index) => [field, index]));
+    const renderFieldsMap = new Map(
+      metadata_local.value.render_fields.map((field, index) => [field, index])
+    );
     return resume_data_local.value.sort((a, b) => {
-      const indexA = renderFieldsMap.has(a.title.toLowerCase()) ? renderFieldsMap.get(a.title.toLowerCase()) : Infinity;
-      const indexB = renderFieldsMap.has(b.title.toLowerCase()) ? renderFieldsMap.get(b.title.toLowerCase()) : Infinity;
+      const indexA = renderFieldsMap.has(a.title.toLowerCase())
+        ? renderFieldsMap.get(a.title.toLowerCase())
+        : Infinity;
+      const indexB = renderFieldsMap.has(b.title.toLowerCase())
+        ? renderFieldsMap.get(b.title.toLowerCase())
+        : Infinity;
       return indexA - indexB;
     });
   });
@@ -453,17 +540,26 @@ async function processResumeData() {
 
 async function processSectionItems() {
   // Get all resume sections and their items
-  const resumeSections = await resumeSectionServices.getSectionsForResume(props.resumeId);
+  const resumeSections = await resumeSectionServices.getSectionsForResume(
+    props.resumeId
+  );
 
   if (resumeSections && resumeSections.data) {
     const fetchItemPromises = resumeSections.data.map((section) =>
-      fetchSectionItems(section.section_type, props.resumeId, section.section_id)
+      fetchSectionItems(
+        section.section_type,
+        props.resumeId,
+        section.section_id
+      )
         .then((itemsResponse) => {
           // Process the fetched items for each section
           processFetchedItemsForSection(section, itemsResponse);
         })
         .catch((err) => {
-          console.error(`Error fetching items for section ${section.section_type}:`, err);
+          console.error(
+            `Error fetching items for section ${section.section_type}:`,
+            err
+          );
         })
     );
 
@@ -475,20 +571,26 @@ async function processSectionItems() {
 
 async function fetchSectionItems(sectionType, resumeId, sectionId) {
   switch (sectionType) {
-    case 'education':
+    case "education":
       return await educationItemServices.getEducationItems(sectionId, resumeId);
-    case 'experience':
-      return await experienceItemServices.getExperienceItems(sectionId, resumeId);
-    case 'project':
+    case "experience":
+      return await experienceItemServices.getExperienceItems(
+        sectionId,
+        resumeId
+      );
+    case "project":
       return await projectItemServices.getProjectItems(sectionId, resumeId);
-    case 'award':
+    case "award":
       return await awardItemServices.getAwardItems(sectionId, resumeId);
-    case 'link':
+    case "link":
       return await linkItemServices.getLinkItems(sectionId, resumeId);
-    case 'skill':
+    case "skill":
       return await skillItemServices.getSkillItems(sectionId, resumeId);
-    case 'professional_summary':
-      return await professionalSummaryItemServices.getProfessionalSummaryItems(sectionId, resumeId);
+    case "professional_summary":
+      return await professionalSummaryItemServices.getProfessionalSummaryItems(
+        sectionId,
+        resumeId
+      );
     default:
       return [];
   }
@@ -512,7 +614,7 @@ function processFetchedItemsForSection(section, itemsResponse) {
       if (resumeSection.items) {
         // Create a mapping of itemIdKey to order
         const orderMap = {};
-        itemsResponse.data.forEach(item => {
+        itemsResponse.data.forEach((item) => {
           const itemIdKey = getItemIdKey(resumeSection.title);
           orderMap[item[itemIdKey]] = item.order;
         });
@@ -527,8 +629,14 @@ function processFetchedItemsForSection(section, itemsResponse) {
 
         // Sort resumeSection.items based on the order value
         resumeSection.items.sort((a, b) => {
-          const orderA = orderMap[a.data?.id] !== undefined ? orderMap[a.data?.id] : Infinity;
-          const orderB = orderMap[b.data?.id] !== undefined ? orderMap[b.data?.id] : Infinity;
+          const orderA =
+            orderMap[a.data?.id] !== undefined
+              ? orderMap[a.data?.id]
+              : Infinity;
+          const orderB =
+            orderMap[b.data?.id] !== undefined
+              ? orderMap[b.data?.id]
+              : Infinity;
           return orderA - orderB;
         });
       }
@@ -537,7 +645,9 @@ function processFetchedItemsForSection(section, itemsResponse) {
 }
 
 function matchAndSelect(localItem, itemsData, itemIdKey) {
-  const matchingItem = itemsData.find(item => item[itemIdKey] === localItem.data?.id);
+  const matchingItem = itemsData.find(
+    (item) => item[itemIdKey] === localItem.data?.id
+  );
   if (matchingItem) {
     localItem.selected = true;
   }
@@ -546,20 +656,20 @@ function matchAndSelect(localItem, itemsData, itemIdKey) {
 function getItemIdKey(sectionTitle) {
   switch (sectionTitle) {
     case "Skill":
-      return 'skill_id';
+      return "skill_id";
     case "Education":
-      return 'education_id';
+      return "education_id";
     case "Experience":
-      return 'experience_id';
+      return "experience_id";
     case "Award":
-      return 'award_id';
+      return "award_id";
     case "Project":
-      return 'project_id';
+      return "project_id";
     default:
       return null;
   }
 }
- 
+
 // when add model is submitted then render processResumeData
 
 function handleProfessionalSummary(itemsResponse) {
@@ -577,32 +687,55 @@ function handleProfessionalSummary(itemsResponse) {
 function handleLinkItems(itemsResponse) {
   // Create a mapping of link_id to order
   const orderMap = {};
-  itemsResponse.data.forEach(item => {
+  itemsResponse.data.forEach((item) => {
     orderMap[item.link_id] = item.order;
   });
 
   // Select the values in header_data_local if they are in the database
-  header_data_local.value[0].items.forEach(headerItem => {
+  header_data_local.value[0].items.forEach((headerItem) => {
     if (orderMap.hasOwnProperty(headerItem.data.id)) {
       headerItem.selected = true;
     }
   });
 
-
   // Sort header_data_local.value[0].items based on the order value
   header_data_local.value[0].items.sort((a, b) => {
-    const orderA = orderMap[a.data.id] !== undefined ? orderMap[a.data.id] : Infinity;
-    const orderB = orderMap[b.data.id] !== undefined ? orderMap[b.data.id] : Infinity;
+    const orderA =
+      orderMap[a.data.id] !== undefined ? orderMap[a.data.id] : Infinity;
+    const orderB =
+      orderMap[b.data.id] !== undefined ? orderMap[b.data.id] : Infinity;
     return orderA - orderB;
   });
- 
 }
 
-watch([resume_data_local, header_data_local, personalInfo, metadata_local, isLoaded], () => {
-  handleDataChange();
-}, { deep: true });
+watch(
+  [
+    resume_data_local,
+    header_data_local,
+    personalInfo,
+    metadata_local,
+    isLoaded,
+    props,
+    resumeTitle,
+  ],
+  () => {
+    handleDataChangeDebounced(); // Trigger debounced handleDataChange
+  },
+  { deep: true }
+);
 
-const handleDataChange = () => {
+const handleDataChangeDebounced = debounce(async () => {
+  await handleDataChange(); // Wait for handleDataChange to finish
+  setTimeout(() => {}, 100);
+  handleSaveResumeDebounced(); // Then trigger debounced handleSaveResume
+}, 100);
+
+const handleSaveResumeDebounced = debounce(() => {
+  handleSaveResume(); // Save the resume
+  // Updated last updated
+}, 1000);
+
+async function handleDataChange() {
   const changes = {};
 
   if (resume_data_local.value) {
@@ -610,20 +743,25 @@ const handleDataChange = () => {
     resume_data.value = parsedResumeData;
     changes.resume_data = resume_data.value;
 
-    const parsedMetadata = parseMetadata(metadata_local.value, parsedResumeData);
+    const parsedMetadata = parseMetadata(
+      metadata_local.value,
+      parsedResumeData
+    );
     metadata.value = parsedMetadata;
     changes.metadata = metadata.value;
   }
 
   if (header_data_local.value || personalInfo.value) {
-    const parsedHeader_data = parseHeader_data(header_data_local.value, personalInfo.value);
-    
-    if (parsedHeader_data.link && Array.isArray(parsedHeader_data.link)) {
+    const parsedHeader_data = parseHeader_data(
+      header_data_local.value,
+      personalInfo.value
+    );
 
-        parsedHeader_data.link = parsedHeader_data.link.map(link => {
-          const plainLink = { ...link };
-          return plainLink;
-        });
+    if (parsedHeader_data.link && Array.isArray(parsedHeader_data.link)) {
+      parsedHeader_data.link = parsedHeader_data.link.map((link) => {
+        const plainLink = { ...link };
+        return plainLink;
+      });
     }
 
     header_data.value = parsedHeader_data;
@@ -633,8 +771,8 @@ const handleDataChange = () => {
   isLoaded.value = true;
   changes.isLoaded = isLoaded;
 
-  emit('dataChange', changes);
-};
+  emit("dataChange", changes);
+}
 
 const parseResumeData = (resumeData) => {
   const result = {};
@@ -657,24 +795,23 @@ const parseResumeData = (resumeData) => {
 const parseHeader_data = (header_data, personalInfo) => {
   const result = {};
 
-  header_data.forEach(header => {
+  header_data.forEach((header) => {
     if (header.items && Array.isArray(header.items)) {
       const selectedItems = header.items
-        .filter(item => item.selected === true) 
-        .map(item => item.data || {});
-
+        .filter((item) => item.selected === true)
+        .map((item) => item.data || {});
 
       if (selectedItems.length > 0) {
         result[header.title.toLowerCase()] = selectedItems;
       }
     }
   });
-  
-  result.fName = personalInfo.fName || '';
-  result.lName = personalInfo.lName || '';
-  result.email = personalInfo.email || '';
-  result.phone_number = personalInfo.phone_number || '';
-  result.professional_summary = personalInfo.professional_summary || '';
+
+  result.fName = personalInfo.fName || "";
+  result.lName = personalInfo.lName || "";
+  result.email = personalInfo.email || "";
+  result.phone_number = personalInfo.phone_number || "";
+  result.professional_summary = personalInfo.professional_summary || "";
 
   return result;
 };
@@ -684,38 +821,42 @@ const parseMetadata = (metadata_local, resume_data) => {
 
   result.render_fields = Object.keys(resume_data);
   result.section_dividers = metadata_local.section_dividers;
-  
 
   return result;
 };
 
 const updateSummary = (summary) => {
   // Deselect all other summaries
-  professionalSummaries.value.forEach(item => {
+  professionalSummaries.value.forEach((item) => {
     if (item !== summary) {
       item.selected = false;
     }
   });
-
 
   if (summary.selected) {
     professional_Summary_id = summary.data.id;
     personalInfo.value.professional_summary = summary.summary;
   } else {
     professional_Summary_id = null;
-    personalInfo.value.professional_summary = null;  
+    personalInfo.value.professional_summary = null;
   }
 };
 
 defineExpose({
-  resumeTitle
+  resumeTitle,
 });
 
 const handleSaveResume = async () => {
-  await saveResume(props, resume_data, header_data, metadata, professional_Summary_id, resumeTitle, personalInfo);
+  await saveResume(
+    props,
+    resume_data,
+    header_data,
+    metadata,
+    professional_Summary_id,
+    resumeTitle,
+    personalInfo
+  );
 };
-
-
 </script>
 
 <template>
@@ -738,21 +879,25 @@ const handleSaveResume = async () => {
       </template>
       <template v-else>
         <span @click="toggleEditTitle">{{ resumeTitle }}</span>
-        <v-icon
-          style="font-size: 30px; padding-left: 5%"
-          class="edit-icon"
-          @click="toggleEditTitle"
-          >mdi-pencil</v-icon
-        >
-
-        <i 
-          @click="exportFunction" 
-          v-if="!isEditingTitle" 
-          style="margin-left: 30px; vertical-align: middle; position: relative; top: -2px;" 
-          class="pi pi-print">
-        </i>    
-        <br> 
-        <p v-if="!isEditingTitle" style="pointer-events: none; font-size:14px;"> Last updated: {{ resume.updatedAt ? new Date(resume.updatedAt).toLocaleString() : 'Never' }}</p>  
+        <div style="float: right; margin-right: 10px">
+          <v-btn
+            class="mx-2"
+            text="Actions"
+            style="background-color: #3d7ae2; color: white; margin-left: 5px"
+            ><v-menu activator="parent" open-on-hover>
+              <v-list>
+                <v-list-item
+                  v-for="(resume, index) in resumeActions"
+                  :key="index"
+                  :value="index"
+                  @click="resume.action"
+                >
+                  <v-list-item-title>{{ resume.title }}</v-list-item-title>
+                </v-list-item>
+              </v-list> </v-menu
+            >Actions</v-btn
+          >
+        </div>
       </template>
     </div>
 
@@ -762,52 +907,80 @@ const handleSaveResume = async () => {
           Header
         </v-expansion-panel-title>
         <v-expansion-panel-text class="panel-background">
-
-          
           <div class="option-checkboxes">
             <v-form>
-            <!-- Name, email, phone, etc. -->
-            <v-row>
-              <v-col cols="6">
-                <v-text-field v-model="personalInfo.fName" label="First Name"></v-text-field>
-              </v-col>
-              <v-col cols="6">
-                <v-text-field v-model="personalInfo.lName" label="Last Name"></v-text-field>
-              </v-col>
-            </v-row>
-            <v-text-field v-model="personalInfo.email" label="Email"></v-text-field>
-            <v-text-field v-model="personalInfo.phone_number" label="Phone Number"></v-text-field>
-          </v-form>
+              <!-- Name, email, phone, etc. -->
+              <v-row>
+                <v-col cols="6">
+                  <v-text-field
+                    v-model="personalInfo.fName"
+                    label="First Name"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="6">
+                  <v-text-field
+                    v-model="personalInfo.lName"
+                    label="Last Name"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-text-field
+                v-model="personalInfo.email"
+                label="Email"
+              ></v-text-field>
+              <v-text-field
+                v-model="personalInfo.phone_number"
+                label="Phone Number"
+              ></v-text-field>
+            </v-form>
 
-          <v-card class="mb-3">
+            <v-card class="mb-3">
               <v-expansion-panels>
                 <v-expansion-panel class="section-0">
                   <v-expansion-panel-title>
-                    <i style="margin-left: -10px; margin-right: 5px;"class="pi pi-verified"></i>
+                    <i
+                      style="margin-left: -10px; margin-right: 5px"
+                      class="pi pi-verified"
+                    ></i>
                     Professional Summaries
                   </v-expansion-panel-title>
                   <v-expansion-panel-text>
                     <!-- Professional Summaries List -->
                     <ul>
-                      <template v-for="summary in professionalSummaries" :key="summary.data.id">
+                      <template
+                        v-for="summary in professionalSummaries"
+                        :key="summary.data.id"
+                      >
                         <v-card class="mb-3">
                           <li class="list-item">
                             <div style="padding-left: 2%">
-                              <span>{{ summary.summary.substring(0, 30) }}...</span> <!-- Show first 30 characters of the summary -->
+                              <span
+                                >{{ summary.summary.substring(0, 30) }}...</span
+                              >
+                              <!-- Show first 30 characters of the summary -->
                             </div>
                             <div class="right-icons">
-                              <v-icon @click="editProfessionalSummary(summary)" class="edit-icon">mdi-pencil</v-icon>
-                              <v-switch v-model="summary.selected" @change="updateSummary(summary)" class="v-checkbox pa-0 ma-0" />
+                              <v-icon
+                                @click="editProfessionalSummary(summary)"
+                                class="edit-icon"
+                                >mdi-pencil</v-icon
+                              >
+                              <v-switch
+                                v-model="summary.selected"
+                                @change="updateSummary(summary)"
+                                class="v-checkbox pa-0 ma-0"
+                              />
                             </div>
                           </li>
                         </v-card>
                       </template>
                     </ul>
-  
+
                     <!-- Add Professional Summary Card -->
-                    <v-card @click="showAddSummaryDialog()">  
+                    <v-card @click="showAddSummaryDialog()">
                       <div class="addSection">
-                        Add Professional Summary <v-icon style="padding-bottom: 1%;">mdi-plus</v-icon>
+                        Add Professional Summary
+                        <v-icon style="padding-bottom: 1%">mdi-plus</v-icon>
                       </div>
                     </v-card>
                   </v-expansion-panel-text>
@@ -820,7 +993,13 @@ const handleSaveResume = async () => {
                 <v-card class="mb-3">
                   <v-expansion-panels>
                     <v-expansion-panel class="section-0" :key="header.title">
-                      <v-expansion-panel-title> <i style="margin-left: -10px; margin-right: 5px;"class="pi pi-link"></i> Links </v-expansion-panel-title>
+                      <v-expansion-panel-title>
+                        <i
+                          style="margin-left: -10px; margin-right: 5px"
+                          class="pi pi-link"
+                        ></i>
+                        Links
+                      </v-expansion-panel-title>
                       <v-expansion-panel-text>
                         <draggable
                           class="item-list"
@@ -861,13 +1040,12 @@ const handleSaveResume = async () => {
                 </v-card>
               </template>
             </draggable>
-            
-            <v-checkbox v-model="metadata_local.section_dividers" label="Include section dividers" />
 
-            
+            <v-checkbox
+              v-model="metadata_local.section_dividers"
+              label="Include section dividers"
+            />
           </div>
-          
-          
         </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
@@ -880,7 +1058,9 @@ const handleSaveResume = async () => {
           <v-expansion-panels v-model="resume_data_local[index].isOpen">
             <v-expansion-panel class="section-0">
               <v-expansion-panel-title>
-                <v-icon class="mr-2" style="margin-left: -10px">mdi-drag</v-icon>
+                <v-icon class="mr-2" style="margin-left: -10px"
+                  >mdi-drag</v-icon
+                >
                 <i :class="section.icon" style="margin-right: 5px"></i>
                 {{ section.title }}
               </v-expansion-panel-title>
@@ -920,25 +1100,47 @@ const handleSaveResume = async () => {
         </v-card>
       </template>
     </draggable>
-
-    <v-btn block style="background-color:#3D7AE2; color: white" @click="handleSaveResume">
-      Save Resume
-    </v-btn>
-  
-
     <!-- Conditionally render the correct modal based on modalType -->
-    <EducationModal v-if="isVisible && modalStore.modalType === 'education'" :education="modalStore.education" @submit-form="getEducation" />
-    <ExperienceModal v-if="isVisible && modalStore.modalType === 'experience'" :experience="modalStore.experience" @submit-form="getExperience" />
-    <ProjectModal v-if="isVisible && modalStore.modalType === 'project'" :project="modalStore.project" @submit-form="getProject" />
-    <AwardModal v-if="isVisible && modalStore.modalType === 'award'" :award="modalStore.award" @submit-form="getAwards" />
-    <LinkModal v-if="isVisible && modalStore.modalType === 'link'" :link="modalStore.link" @submit-form="getLinks" />
-    <SkillModal v-if="isVisible && modalStore.modalType === 'skill'" :skill="modalStore.skill" @submit-form="getSkills" />
-    <ProfessionalSummaryModal v-if="isVisible && modalStore.modalType === 'professionalSummary'" :professionalSummary="modalStore.professionalSummary" @submit-form="getProf_sums"></ProfessionalSummaryModal>
+    <EducationModal
+      v-if="isVisible && modalStore.modalType === 'education'"
+      :education="modalStore.education"
+      @submit-form="getEducation"
+    />
+    <ExperienceModal
+      v-if="isVisible && modalStore.modalType === 'experience'"
+      :experience="modalStore.experience"
+      @submit-form="getExperience"
+    />
+    <ProjectModal
+      v-if="isVisible && modalStore.modalType === 'project'"
+      :project="modalStore.project"
+      @submit-form="getProject"
+    />
+    <AwardModal
+      v-if="isVisible && modalStore.modalType === 'award'"
+      :award="modalStore.award"
+      @submit-form="getAwards"
+    />
+    <LinkModal
+      v-if="isVisible && modalStore.modalType === 'link'"
+      :link="modalStore.link"
+      @submit-form="getLinks"
+    />
+    <SkillModal
+      v-if="isVisible && modalStore.modalType === 'skill'"
+      :skill="modalStore.skill"
+      @submit-form="getSkills"
+    />
+    <ProfessionalSummaryModal
+      v-if="isVisible && modalStore.modalType === 'professionalSummary'"
+      :professionalSummary="modalStore.professionalSummary"
+      @submit-form="getProf_sums"
+    ></ProfessionalSummaryModal>
   </div>
 </template>
 
 <style>
-.edit-pencil-summary{
+.edit-pencil-summary {
   cursor: pointer;
   padding-top: 13%;
 }

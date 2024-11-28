@@ -43,7 +43,9 @@ onMounted(async () => {
   await reviewServices
     .getReviewsForResume(props.resumeId)
     .then((response) => {
-      reviews.value = response.data;
+      reviews.value = response.data.sort(
+        (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+      );
       if (reviews.value.length > 0) {
         isData.value = true;
         currentReview.value = reviews.value[currentIndex.value];
@@ -115,8 +117,10 @@ onMounted(async () => {
     <TextBubble
       v-for="comment in currentReview.comment"
       :sectionName="
-        comment.resumeSection.section_type[0].toUpperCase() +
-        comment.resumeSection.section_type.slice(1)
+        (
+          comment.resumeSection.section_type[0].toUpperCase() +
+          comment.resumeSection.section_type.slice(1)
+        ).replace('_', ' ')
       "
       :reviewText="comment.text"
     ></TextBubble>
@@ -151,7 +155,7 @@ onMounted(async () => {
 
 .sub-text {
   font-size: 0.9rem; /* Slightly smaller font for sub-text */
-  color: rgba(0, 0, 0, 0.6); /* Lighter text for sub-text */
+  color: rgba(215, 213, 213, 0.6); /* Lighter text for sub-text */
   margin-top: 4px; /* Space between main and sub-text */
 }
 
@@ -159,22 +163,23 @@ onMounted(async () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: 20px 10px;
 }
 
 .chevron-button {
-  background-color: transparent !important; /* Remove the background */
+  background-color: transparent; /* Remove the background */
   box-shadow: none !important; /* Remove any box shadow */
   border: none !important; /* Remove the border */
   padding: 0 !important; /* Remove extra padding */
-  min-width: 36px !important; /* Ensure the button is still clickable */
+  min-width: 36px; /* Ensure the button is still clickable */
 }
 
 .chevron-button .v-icon {
   font-size: 24px; /* Adjust the size of the chevron */
-  color: #000; /* Set the color of the icon (black or any color you prefer) */
+  color: #ccc; /* Set the color of the icon (black or any color you prefer) */
 }
 
 .chevron-button:disabled .v-icon {
-  color: #ccc; /* Light gray for disabled state */
+  color: #000; /* Light gray for disabled state */
 }
 </style>
