@@ -5,6 +5,7 @@ import ResumeServices from "../../services/resumeServices";
 import { useModalStore } from "../../store/modal.store";
 import { storeToRefs } from "pinia";
 import { Validator } from "@vueform/vueform";
+import Utils from "../../config/utils";
 const modalStore = useModalStore();
 const { isVisible } = storeToRefs(modalStore);
 
@@ -31,6 +32,10 @@ const submitForm = async () => {
   const data = {
     ...item.value,
     metadata: {
+      fName: Utils.getStore("user").fName,
+      lName: Utils.getStore("user").lName,
+      email: Utils.getStore("user").email,
+      phone_number: Utils.getStore("user").phone_number,
       render_fields: [],
       section_dividers: false,
     },
