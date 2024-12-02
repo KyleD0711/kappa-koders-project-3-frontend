@@ -117,16 +117,18 @@ export default {
 </script>
 
 <template>
-  <div class="infoSidebar">
+  <v-card class="infoSidebar" color="primary">
 
-    <div id="exp" class="infoSection" @click="showExperience()"> 
-        <i class="pi pi-briefcase"></i>
-        Experience
-    </div>
-    <div id="skill" class="infoSection skill" @click="showSkills()">
+    <v-card id="exp" class="infoSection exp" color="secondary" @click="showExperience()"> 
+        <v-card-text color="success">
+            <i class="pi pi-briefcase"></i>
+            Experience
+        </v-card-text>
+    </v-card>
+    <v-card id="skill" class="infoSection skill" @click="showSkills()">
         <i class="pi pi-lightbulb"></i>
         Skills
-    </div>
+    </v-card>
     <div id="awards" class="infoSection awards" @click="showAwards()">
         <i class="pi pi-trophy"></i>
         Awards
@@ -147,7 +149,7 @@ export default {
       <i class="pi pi-verified"></i>
       Professional Summaries
     </div>
-  </div>
+</v-card>
 </template>
 
 <style>
@@ -166,17 +168,14 @@ export default {
 .infoSidebar {
     width: 20%;
     height: 100%;
-    background-color: #ccc;
 }
 
 .infoSection {
     height: 60px;
     width: 100%;
-    background-color: #ccc;
 
     padding-left: 15px;
     align-content: center;
-    color: #000;
 
     font-size: 18px;
     font-weight: 700;

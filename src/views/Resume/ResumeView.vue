@@ -172,14 +172,14 @@ const templates = ["template1", "template2", "template3", "template4"];
       <v-tabs
         v-model="selectedTemplate"
         vertical
-        class="white-text mt-1"
+        class="slider-text mt-1"
         style="width: fit-content; margin: auto"
       >
         <v-tab
           v-for="templateKey in templates"
           :key="templateKey"
           :value="templateKey"
-          class="white-text"
+          color="slider-text"
         >
           {{ templateKey }}
         </v-tab>

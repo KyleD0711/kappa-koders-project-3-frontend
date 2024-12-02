@@ -14,7 +14,7 @@ import "@mdi/font/css/materialdesignicons.css";
 
 const vuetify = createVuetify({
   theme: {
-    defaultTheme: 'lightTheme',
+    defaultTheme: 'darkTheme',
     themes:{
       lightTheme: {
         dark: false,
@@ -24,15 +24,15 @@ const vuetify = createVuetify({
           accent: "#000fff",
           success: "#fff000",
           white: "#00f",
-          "dark-grey": "#0f0f0f",
-          "light-grey": "#0ffff0",
-          "rich-black": "#04080F",
-          "light-blue": "#708E9A",
-          "background": "#E9ECEA",
-          "slider-text": "#403f3f",
-          "resume-title": "#403f3f",
-          "section-0": "#403f3f",
-          "panel-background": "#00f",
+          darkGrey: "#0f0f0f",
+          lightGrey: "#0ffff0",
+          richBlack: "#04080F",
+          lightBlue: "#708E9A",
+          background: "#E9ECEA",
+          sliderText: "#403f3f",
+          resumeTitle: "#403f3f",
+          section0: "#403f3f",
+          panelBackground: "#00f",
           yellow: "#0f0",
           text: "#000"
         },
