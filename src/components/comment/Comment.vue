@@ -8,6 +8,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  render_fields: {
+    type: Array,
+    required: true,
+  },
 });
 
 const errorMessage = ref("");
@@ -50,6 +54,21 @@ onMounted(async () => {
         isData.value = true;
         currentReview.value = reviews.value[currentIndex.value];
       }
+      reviews.value.forEach((review) => {
+        review.comment.sort((a, b) => {
+          const sectionA = a.resumeSection.section_title;
+          const sectionB = b.resumeSection.section_title;
+
+          // Explicitly prioritize professional_summary
+          if (sectionA === "professional_summary") return -1;
+          if (sectionB === "professional_summary") return 1;
+
+          return (
+            props.render_fields.indexOf(sectionA) -
+            props.render_fields.indexOf(sectionB)
+          );
+        });
+      });
     })
     .catch((error) => {
       errorMessage.value = error.message;
