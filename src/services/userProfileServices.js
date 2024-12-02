@@ -19,7 +19,6 @@ export default {
 
   // Create a user's profile
   async createUserProfile(profileData) {
-    console.log(profileData);
     try {
       const response = await apiClient.post(`/userProfile`, profileData);
       return response.data; // Return the created profile data

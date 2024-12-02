@@ -7,7 +7,6 @@ export const useEditProfileModalStore = defineStore('editProfileModal', {
   }),
   actions: {
     open() {
-      console.log("Opening Modal [STORE]");
       this.isVisible = true; // Set the modal to visible
     },
     close() {

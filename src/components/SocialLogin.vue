@@ -16,7 +16,6 @@ const profilePhoto = ref(""); // To store the profile photo URL
 const loginWithGoogle = () => {
   window.handleCredentialResponse = handleCredentialResponse;
   const client = import.meta.env.VITE_APP_CLIENT_ID;
-  console.log(client);
   window.google.accounts.id.initialize({
     client_id: client,
     cancel_on_tap_outside: false,
@@ -35,7 +34,6 @@ const loginWithGoogle = () => {
 const handleCredentialResponse = async (response) => {
   const decodedToken = jwtDecode(response.credential);
   profilePhoto.value = decodedToken.picture;
-  console.log("Profile photo URL:", profilePhoto.value);
 
   let token = {
     credential: response.credential,
@@ -51,19 +49,15 @@ const handleCredentialResponse = async (response) => {
     try {
       const existingProfile = await userProfileServices.getUserProfile(user.value.userId);
       if (!existingProfile) {
-        console.log("Profile not found, creating a new profile...");
         await createUserProfile(); // Call to createUserProfile
       } else {
-        console.log("User profile found, using existing profile.");
       }
     } catch (profileError) {
       console.error("Error fetching user profile:", profileError);
       // Attempt to create a new profile regardless of the fetch error
-      console.log("Attempting to create a new profile due to fetch error...");
       await createUserProfile();
     }
 
-    console.log("Hello");
     router.push({ name: "resumes" });
     fName.value = user.value.fName;
     lName.value = user.value.lName;
@@ -74,8 +68,6 @@ const handleCredentialResponse = async (response) => {
 };
 
 const createUserProfile = async () => {
-  console.log("Creating user profile...");
-  console.log(user.value.userId + ", " + user.value.fName + ", " +  user.value.lName + ", " + user.value.email + ", " + user.value.profilePhoto);
   try {
     await userProfileServices.createUserProfile({
       userId: user.value.userId,
@@ -84,7 +76,6 @@ const createUserProfile = async () => {
       phoneNum: user.value.phoneNum,
       profilePhoto: user.value.profilePhoto,
     });
-    console.log("User profile created successfully");
   } catch (error) {
     console.error("Error creating user profile:", error);
   }

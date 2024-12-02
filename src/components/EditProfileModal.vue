@@ -165,7 +165,6 @@ const submitForm = async () => {
     profilePhoto: profilePhoto.value
   };
 
-  console.log(updatedProfile);
 
   try {
     await userProfileServices.updateUserProfile(user.userId, updatedProfile);

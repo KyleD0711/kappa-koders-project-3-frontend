@@ -71,7 +71,6 @@ const logout = () => {
 };
 
 const handleProfileUpdated = () => {
-  console.log("User Profile Updated");
   resetMenu(); // Call the function to reload user profile data
 };
 
