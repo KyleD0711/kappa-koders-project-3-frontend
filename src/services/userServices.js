@@ -12,4 +12,7 @@ export default {
   updateUser(item) {
     return apiClient.put(`/user/${item.id}`, item);
   },
+  getUserByEmail(email) {
+    return apiClient.get(`/user/email/${email}`);
+  },
 };
