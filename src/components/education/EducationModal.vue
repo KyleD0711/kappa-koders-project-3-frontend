@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineEmits } from "vue";
+import { ref } from "vue";
 import educationServices from "../../services/educationServices";
 import { useModalStore } from "../../store/modal.store";
 import { storeToRefs } from "pinia";
