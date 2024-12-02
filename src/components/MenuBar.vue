@@ -4,11 +4,18 @@ import { ref, onMounted, watch, watchEffect } from "vue";
 import Utils from "../config/utils";
 import AuthServices from "../services/authServices";
 import { useRouter } from "vue-router";
+import { useTheme } from "vuetify";
+
+import 'primeicons/primeicons.css';
+
 
 import { useNavBarStore } from "../store/navbar.store";
 import { storeToRefs } from "pinia";
 
 const router = useRouter();
+
+const theme = useTheme();
+
 
 const user = ref(null);
 const title = ref("Career Services");
@@ -20,6 +27,8 @@ const isAdmin = ref(false);
 const navStore = useNavBarStore();
 navStore.setupRouteWatcher();
 const { showNavOptions } = storeToRefs(navStore);
+const isDarkTheme = ref(theme.global.name.value === "darkTheme");
+
 
 const adminActions = [
   {
@@ -57,6 +66,22 @@ onMounted(() => {
   logoURL.value = ocLogo;
   resetMenu();
 });
+
+
+// Function to toggle themes
+const toggleTheme = () => {
+  theme.global.name.value = isDarkTheme.value
+    ? "darkTheme"
+    : "lightTheme";
+};
+
+// Watch theme changes and sync state
+watch(
+  () => theme.global.name.value,
+  (newTheme) => {
+    isDarkTheme.value = newTheme === "darkTheme";
+  }
+);
 </script>
 
 <template>
@@ -117,6 +142,19 @@ onMounted(() => {
                 <v-divider class="my-3"></v-divider>
                 <v-btn depressed rounded text @click="logout" color="white"> Logout </v-btn>
                 <v-btn depressed rounded text color="white">Edit Profile</v-btn>
+                <div class="theme-toggle">
+                <!-- Styled v-switch -->
+                <v-switch
+                  v-model="isDarkTheme"
+                  @change="toggleTheme"
+                  inset
+                  class="theme-switch"
+                ></v-switch>
+
+                <!-- Background Icons -->
+                <i class="pi pi-sun sun-icon"></i>
+                <i class="pi pi-moon moon-icon"></i>
+              </div>
               </div>
             </v-card-text>
           </v-card>
@@ -134,4 +172,46 @@ onMounted(() => {
     background-position: right;
     background-size: 45% 100%;
   }
+
+  .theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 200px; /* Adjust container width */
+}
+
+.theme-switch {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.sun-icon,
+.moon-icon {
+  font-size: 1.5rem;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 0;
+}
+
+.sun-icon {
+  left: 10px;
+  color: #fbc02d; /* Sun (yellow) color */
+}
+
+.moon-icon {
+  right: 10px;
+  color: #90caf9; /* Moon (blue) color */
+}
+
+.theme-switch .v-switch-track {
+  background-image: linear-gradient(
+    to right,
+    #fbc02d, /* Sun (yellow) */
+    #90caf9 /* Moon (blue) */
+  );
+  opacity: 0.5; /* Blend background */
+}
 </style>
