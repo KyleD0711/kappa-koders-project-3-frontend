@@ -55,7 +55,16 @@ const renderPDF = () => {
     title
   );
 
-  let personal_info = `${header_data.email} | ${header_data.phone_number}`;
+  let personal_info = "";
+
+  if (header_data.email != "" && header_data.phone_number != "") {
+    personal_info = `${header_data.email} | ${header_data.phone_number}`;
+  } else {
+    personal_info =
+      header_data.email == ""
+        ? `${header_data.phone_number}`
+        : `${header_data.email}`;
+  }
 
   let linkArray = (header_data.link ?? []).map((value) => ({
     name: value.name,
