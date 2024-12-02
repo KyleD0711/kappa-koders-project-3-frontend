@@ -84,10 +84,6 @@ const saveResume = async (
       }
     });
 
-    // console.log("Sections to Create:", sectionsToCreate);
-    // console.log("Sections to Update:", sectionsToUpdate);
-    // console.log("Sections to Delete:", sectionsToDelete);
-
     // Handle section creation
     for (const section of sectionsToCreate) {
       const createdSection = await resumeSectionServices.createResumeSection(

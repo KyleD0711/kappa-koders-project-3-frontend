@@ -5,12 +5,14 @@ import ResumeServices from "../../services/resumeServices";
 import { useModalStore } from "../../store/modal.store";
 import { storeToRefs } from "pinia";
 import { Validator } from "@vueform/vueform";
+import userProfileServices from "../../services/userProfileServices";
 import Utils from "../../config/utils";
 const modalStore = useModalStore();
 const { isVisible } = storeToRefs(modalStore);
 
 const router = useRouter();
 
+const userProfile = ref(null); // Store userProfile data
 
 const emit = defineEmits(["submitForm"]);
 
@@ -29,13 +31,14 @@ const closeDialog = () => {
 };
 
 const submitForm = async () => {
+  await fetchUserProfile();
   const data = {
     ...item.value,
     metadata: {
-      fName: Utils.getStore("user").fName,
-      lName: Utils.getStore("user").lName,
-      email: Utils.getStore("user").email,
-      phone_number: Utils.getStore("user").phone_number,
+      fName: userProfile.value.fName || "", 
+      lName: userProfile.value.lName || "", 
+      email: Utils.getStore("user").email, 
+      phone_number: userProfile.value.phoneNum || "", 
       render_fields: [],
       section_dividers: false,
     },
@@ -57,6 +60,17 @@ const addResume = async (data) => {
     });
 };
 
+// Fetch user profile data on mounted
+const fetchUserProfile = async () => {
+  try {
+    const userId = Utils.getStore("user").userId; // Get user ID from local storage
+    const response = await userProfileServices.getUserProfile(userId);
+    userProfile.value = response; // Store the user profile data
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+  }
+};
+
 
 const nameValidator = class extends Validator {
   get msg() {
@@ -68,11 +82,9 @@ const nameValidator = class extends Validator {
   }
 };
 
-// onMounted(() => {
-//   if (props.project.id != null) {
-//     item.value = props.project;
-//   }
-// });
+onMounted(() => {
+  fetchUserProfile();
+});
 </script>
 <template>
   <v-dialog v-model="isVisible" max-width="60%">
