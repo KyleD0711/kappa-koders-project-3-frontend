@@ -127,7 +127,7 @@ onMounted(() => {
           <v-card color="light-grey">
             <v-card-text>
               <div class="mx-auto text-center">
-                <v-avatar color="secondary" class="mt-2 mb-2" size="100">
+                <v-avatar color="secondary" class="mt-2 mb-2" size="100" style="font-size: 30px;">
                   <v-img v-if="profilePhoto" :src="profilePhoto" alt="Profile Photo" contain />
                   <span v-else class="accent--text font-weight-bold">{{ initials }}</span>
                 </v-avatar>

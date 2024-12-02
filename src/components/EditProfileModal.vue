@@ -1,3 +1,102 @@
+<script setup>
+import { ref, defineEmits, watch } from "vue";
+import { useEditProfileModalStore } from "../store/editProfileModal.store";
+import { storeToRefs } from "pinia";
+import Utils from "../config/utils";
+import userProfileServices from "../services/userProfileServices";
+
+const editProfileModalStore = useEditProfileModalStore();
+const { isVisible } = storeToRefs(editProfileModalStore);
+
+const profilePhoto = ref("");
+const emit = defineEmits(["profileUpdated"]);
+const item = ref({});
+const errorMsg = ref("");
+const loading = ref(true);
+const user = Utils.getStore("user");
+
+const showEditOverlay = ref(false);
+const editPhotoDialog = ref(false);
+const newProfilePhoto = ref("");
+
+const fetchUserProfile = async () => {
+  loading.value = true;
+  if (user) {
+    try {
+      const response = await userProfileServices.getUserProfile(user.userId);
+      if (response) {
+        item.value = response;
+      } else {
+        errorMsg.value = "User profile not found.";
+      }
+    } catch (error) {
+      errorMsg.value = "An error occurred while fetching the profile. Please try again.";
+    } finally {
+      loading.value = false;
+    }
+  } else {
+    errorMsg.value = "No user data found.";
+    loading.value = false;
+  }
+
+  profilePhoto.value = item.value.profilePhoto || "";
+};
+
+const isValidPhotoUrl = (url) => {
+  return url && (url.startsWith('http://') || url.startsWith('https://'));
+};
+
+const getInitials = (firstName, lastName) => {
+  const initials = (firstName[0] || '') + (lastName[0] || '');
+  return initials.toUpperCase();
+};
+
+const submitForm = async () => {
+  if (!item.value.fName || !item.value.lName) {
+    errorMsg.value = "Please fill in all required fields.";
+    return;
+  }
+
+  const updatedProfile = {
+    ...item.value,
+    profilePhoto: profilePhoto.value
+  };
+
+  try {
+    await userProfileServices.updateUserProfile(user.userId, updatedProfile);
+    emit("profileUpdated", updatedProfile);
+    errorMsg.value = "";
+    editProfileModalStore.close();
+  } catch (error) {
+    errorMsg.value = "An error occurred while updating the profile. Please try again.";
+  }
+};
+
+const closeDialog = () => {
+  editProfileModalStore.close();
+};
+
+const openEditPhotoDialog = () => {
+  newProfilePhoto.value = profilePhoto.value;
+  editPhotoDialog.value = true;
+};
+
+const updateProfilePhoto = () => {
+  profilePhoto.value = newProfilePhoto.value || ""; // Allow empty URL
+  editPhotoDialog.value = false;
+};
+
+const closeEditPhotoDialog = () => {
+  editPhotoDialog.value = false;
+};
+
+watch(isVisible, (newValue) => {
+  if (newValue) {
+    fetchUserProfile();
+  }
+});
+</script>
+
 <template>
   <v-dialog v-model="isVisible" max-width="600px">
     <div style="border-radius: 20px;">
@@ -10,11 +109,13 @@
                   <v-skeleton-loader class="profile-photo" />
                 </template>
                 <template v-else>
-                  <template v-if="profilePhoto">
+                  <template v-if="isValidPhotoUrl(profilePhoto)">
                     <img :src="profilePhoto" alt="Profile Photo" class="profile-photo" />
                   </template>
                   <template v-else>
-                    <span class="accent--text font-weight-bold">No Photo Available</span>
+                    <span class="accent--text font-weight-bold" style="font-size: 60px;">
+                      {{ getInitials(item.fName, item.lName) || 'NA' }}
+                    </span>
                   </template>
                 </template>
               </v-avatar>
@@ -93,7 +194,7 @@
               <v-card>
                 <v-card-title>Edit Profile Photo</v-card-title>
                 <v-card-text>
-                  <v-text-field v-model="newProfilePhoto" label="Photo URL" />
+                  <v-text-field clearable v-model="newProfilePhoto" label="Photo URL" />
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer />
@@ -109,101 +210,6 @@
   </v-dialog>
 </template>
 
-<script setup>
-import { ref, defineEmits, watch } from "vue";
-import { useEditProfileModalStore } from "../store/editProfileModal.store";
-import { storeToRefs } from "pinia";
-import Utils from "../config/utils";
-import userProfileServices from "../services/userProfileServices";
-
-const editProfileModalStore = useEditProfileModalStore();
-const { isVisible } = storeToRefs(editProfileModalStore);
-
-const profilePhoto = ref("");
-const emit = defineEmits(["profileUpdated"]);
-const item = ref({});
-const errorMsg = ref("");
-const loading = ref(true);
-const user = Utils.getStore("user");
-
-const showEditOverlay = ref(false);
-const editPhotoDialog = ref(false);
-const newProfilePhoto = ref("");
-
-const fetchUserProfile = async () => {
-  loading.value = true;
-  if (user) {
-    try {
-      const response = await userProfileServices.getUserProfile(user.userId);
-      if (response) {
-        item.value = response;
-      } else {
-        errorMsg.value = "User profile not found.";
-      }
-    } catch (error) {
-      errorMsg.value = "An error occurred while fetching the profile. Please try again.";
-    } finally {
-      loading.value = false;
-    }
-  } else {
-    errorMsg.value = "No user data found.";
-    loading.value = false;
-  }
-
-  profilePhoto.value = item.value.profilePhoto;
-};
-
-const submitForm = async () => {
-  if (!item.value.fName || !item.value.lName) {
-    errorMsg.value = "Please fill in all required fields.";
-    return;
-  }
-
-
-  const updatedProfile = {
-    ...item.value,
-    profilePhoto: profilePhoto.value
-  };
-
-
-  try {
-    await userProfileServices.updateUserProfile(user.userId, updatedProfile);
-    emit("profileUpdated", updatedProfile);
-    errorMsg.value = "";
-    editProfileModalStore.close();
-  } catch (error) {
-    errorMsg.value = "An error occurred while updating the profile. Please try again.";
-  }
-};
-
-const closeDialog = () => {
-  editProfileModalStore.close();
-};
-
-const openEditPhotoDialog = () => {
-  newProfilePhoto.value = profilePhoto.value;
-  editPhotoDialog.value = true;
-};
-
-const updateProfilePhoto = () => {
-  if (newProfilePhoto.value) {
-    profilePhoto.value = newProfilePhoto.value;
-    editPhotoDialog.value = false;
-  } else {
-    errorMsg.value = "Please enter a valid photo URL.";
-  }
-};
-
-const closeEditPhotoDialog = () => {
-  editPhotoDialog.value = false;
-};
-
-watch(isVisible, (newValue) => {
-  if (newValue) {
-    fetchUserProfile();
-  }
-});
-</script>
 
 <style scoped>
 .editProfile-modal {
