@@ -18,7 +18,6 @@ const props = defineProps({
 });
 
 const item = ref({});
-const degreeItems = ["Masters", "Bachelors", "Associates"];
 const errorMsg = ref("");
 
 const closeDialog = () => {
@@ -111,14 +110,11 @@ onMounted(() => {
           before="Institution"
           :rules="['required']"
         />
-        <SelectElement
+        <TextElement
           name="credential_earned"
-          :search="true"
-          :items="degreeItems"
-          :native="false"
           before="Credential Earned"
           :rules="['required']"
-        ></SelectElement>
+        ></TextElement>
         <GroupElement name="date_container" :rules="[dateValidator]">
           <DateElement
             name="date_from"
