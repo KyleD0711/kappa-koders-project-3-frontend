@@ -21,6 +21,7 @@
     "draggable": "^4.2.0",
     "eslint": "^8.28.0",
     "eslint-plugin-vue": "^9.7.0",
+    "html2canvas": "^1.4.1",
     "jspdf": "^2.5.2",
     "jwt-decode": "^4.0.0",
     "pinia": "^2.2.5",

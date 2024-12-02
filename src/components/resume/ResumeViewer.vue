@@ -12,6 +12,8 @@ import jsonUtils from "./resumeUtils/jsonUtils";
 import NoDataFound from "./NoDataFound.vue";
 import { storeToRefs } from "pinia";
 import { useResumeViewerStore } from "../../store/resumeViewer.store";
+import html2canvas from "html2canvas"; // Import html2canvas
+
 
 const resumeViewerStore = useResumeViewerStore();
 const { innerHTML } = storeToRefs(resumeViewerStore);
@@ -180,7 +182,19 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   window.removeEventListener("resize", setPDFWidth);
+  captureScreenshot();
 });
+
+const captureScreenshot = () => {
+  if (pdf.value) {
+    html2canvas(pdf.value).then((canvas) => {
+      screenshotSrc.value = canvas.toDataURL("image/png"); // Set the screenshot source
+    });
+  }
+};
+
+
+
 </script>
 <template>
   <div
