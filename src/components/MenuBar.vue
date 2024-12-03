@@ -159,8 +159,9 @@ watch(
                 <h3>{{ name }}</h3>
                 <p class="text-caption mt-1">{{ user.email }}</p> <!-- Use user from local storage -->
                 <v-divider class="my-3"></v-divider>
-                <v-btn depressed rounded text @click="logout" color="lightBlue"> Logout </v-btn>
-                <v-btn depressed rounded text color="lightBlue">Edit Profile</v-btn>
+                <v-btn depressed rounded text color="lightBlue" @click="editProfileModalStore.open">Edit Profile</v-btn>
+                <br>
+                <v-btn depressed rounded text @click="logout" color="lightBlue" class="mt-2"> Logout </v-btn>
                 <div class="theme-toggle">
                 <!-- Styled v-switch -->
                 <v-switch
