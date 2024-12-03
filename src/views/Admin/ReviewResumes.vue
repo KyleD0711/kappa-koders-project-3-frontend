@@ -56,7 +56,7 @@ onMounted(() => {
   <div>
     <v-col :cols="pageCols" class="mx-auto">
         <v-row class="w-100 justify-space-between align-center" no-gutters>
-          <p class="text-h4 my-4 ml-4 text-secondary">Review Resumes</p>
+          <p class="text-h4 my-4 ml-4" style="color: var(--v-theme-text) !important">Review Resumes</p>
           <Vueform
             size="md"
             :endpoint="false"
@@ -86,7 +86,7 @@ onMounted(() => {
               md="4"
               class="d-flex"
             >
-              <ResumeCard :resume-data="resume" class="ma-4"/>
+              <ResumeCard :resume-data="resume" class="ma-4" color="section0"/>
             </v-col>
           </v-row>
         </v-container>
