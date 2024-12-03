@@ -3,7 +3,6 @@
     "structure": {
       "metadata": {
         "font": "'Times New Roman', Times, serif"
-
       },
       "pdf_header": {
         "section_name": "pdf_header",
@@ -74,7 +73,7 @@
                 "style": {
                   "font-weight": "bold",
                   "margin-top": "10px",
-              "margin-bottom": "10px"
+                  "margin-bottom": "10px"
                 },
                 "content": "EDUCATION",
                 "children": []
@@ -290,6 +289,14 @@
                     ]
                   }
                 ]
+              },
+              {
+                "section_name": "description",
+                "style": {
+                  "font-style": "italic"
+                },
+                "content": "",
+                "children": []
               }
             ]
           }
@@ -400,7 +407,6 @@
             "section_name": "section_header",
             "style": {
               "font-weight": "600"
-            
             },
             "content": "",
             "children": [
@@ -408,8 +414,8 @@
                 "section_name": "head",
                 "style": {
                   "font-weight": "bold",
-                    "margin-top": "10px",
-              "margin-bottom": "10px"
+                  "margin-top": "10px",
+                  "margin-bottom": "10px"
                 },
                 "content": "PROJECTS",
                 "children": []
@@ -480,7 +486,6 @@
                 "section_name": "description",
                 "style": {},
                 "content": "",
-                "type": "li",
                 "children": []
               }
             ]
@@ -496,7 +501,6 @@
             "section_name": "section_header",
             "style": {
               "font-weight": "600"
-             
             },
             "content": "",
             "children": [
@@ -504,8 +508,8 @@
                 "section_name": "head",
                 "style": {
                   "font-weight": "bold",
-                   "margin-top": "10px",
-              "margin-bottom": "10px"
+                  "margin-top": "10px",
+                  "margin-bottom": "10px"
                 },
                 "content": "AWARDS",
                 "children": []
@@ -576,7 +580,7 @@
                 "section_name": "description",
                 "style": {},
                 "content": "",
-                "type": "li",
+                "type": "",
                 "children": []
               }
             ]
@@ -636,6 +640,10 @@
         },
         "date_end": {
           "section_name": "date_end",
+          "optional": true
+        },
+        "description": {
+          "section_name": "description",
           "optional": true
         }
       },
@@ -707,7 +715,7 @@
       "pdf_header": {
         "section_name": "pdf_header",
         "style": {
-          "margin":"0.5em 1em 1em 1em"
+          "margin": "0.5em 1em 1em 1em"
         },
         "children": [
           {
@@ -738,7 +746,7 @@
               "font-family": "'Times New Roman', Times, serif",
               "font-weight": "600",
               "font-size": "18px",
-              "margin":"15px 1em 0px 1em"
+              "margin": "15px 1em 0px 1em"
             },
             "content": "PROFESSIONAL SUMMARY"
           },
@@ -748,7 +756,7 @@
           {
             "section_name": "section_body",
             "style": {
-              "margin":"0px 1em 10px 1em"
+              "margin": "0px 1em 10px 1em"
             }
           }
         ]
@@ -767,7 +775,7 @@
                 "style": {
                   "font-family": "'Times New Roman', Times, serif",
                   "font-weight": "bold",
-                  "margin":"15px 1em 0px 1em",
+                  "margin": "15px 1em 0px 1em",
                   "font-size": "18px"
                 },
                 "content": "EDUCATION"
@@ -780,7 +788,7 @@
           {
             "section_name": "section_item",
             "style": {
-              "margin":"0px 1em .67em 1em"
+              "margin": "0px 1em .67em 1em"
             },
             "children": [
               {
@@ -874,7 +882,7 @@
                   "font-family": "'Times New Roman', Times, serif",
                   "font-weight": "bold",
                   "font-size": "18px",
-                  "margin":"15px 1em 0px 1em"
+                  "margin": "15px 1em 0px 1em"
                 },
                 "content": "EXPERIENCE"
               },
@@ -886,7 +894,7 @@
           {
             "section_name": "section_item",
             "style": {
-              "margin":"0px 1em 10px 1em"
+              "margin": "0px 1em 10px 1em"
             },
             "children": [
               {
@@ -949,6 +957,14 @@
                     ]
                   }
                 ]
+              },
+              {
+                "section_name": "description",
+                "style": {
+                  "font-style": "italic"
+                },
+                "content": "",
+                "children": []
               }
             ]
           }
@@ -967,7 +983,7 @@
                 "section_name": "head",
                 "style": {
                   "font-weight": "bold",
-                  "margin":"15px 1em 0px 1em",
+                  "margin": "15px 1em 0px 1em",
                   "font-size": "18px",
                   "font-family": "'Times New Roman', Times, serif"
                 },
@@ -981,7 +997,7 @@
           {
             "section_name": "section_item",
             "style": {
-              "margin":"0px 1em 10px 1em"
+              "margin": "0px 1em 10px 1em"
             },
             "children": [
               {
@@ -1049,7 +1065,7 @@
                 "section_name": "head",
                 "style": {
                   "font-weight": "bold",
-                  "margin":"15px 1em 0px 1em",
+                  "margin": "15px 1em 0px 1em",
                   "font-size": "18px",
                   "font-family": "'Times New Roman', Times, serif"
                 },
@@ -1063,7 +1079,7 @@
           {
             "section_name": "section_item",
             "style": {
-              "margin":"0px 1em 10px 1em"
+              "margin": "0px 1em 10px 1em"
             },
             "children": [
               {
@@ -1128,7 +1144,7 @@
                 "section_name": "head",
                 "style": {
                   "font-weight": "bold",
-                  "margin":"15px 1em 0px 1em",
+                  "margin": "15px 1em 0px 1em",
                   "font-size": "18px",
                   "font-family": "'Times New Roman', Times, serif"
                 },
@@ -1143,7 +1159,7 @@
           {
             "section_name": "section_item",
             "style": {
-              "margin":"0px 1em 10px 1em"
+              "margin": "0px 1em 10px 1em"
             },
             "children": [
               {
@@ -1248,6 +1264,10 @@
         },
         "date_end": {
           "section_name": "date_end",
+          "optional": true
+        },
+        "description": {
+          "section_name": "description",
           "optional": true
         }
       },
@@ -1546,6 +1566,14 @@
                     ]
                   }
                 ]
+              },
+              {
+                "section_name": "description",
+                "style": {
+                  "font-style": "italic"
+                },
+                "content": "",
+                "children": []
               }
             ]
           }
@@ -1637,7 +1665,6 @@
                   "font-weight": "bold",
                   "margin-top": "5px",
                   "margin-bottom": "10px"
-
                 },
                 "content": "PROJECTS"
               },
@@ -1815,6 +1842,10 @@
         },
         "date_end": {
           "section_name": "date_end",
+          "optional": true
+        },
+        "description": {
+          "section_name": "description",
           "optional": true
         }
       },
@@ -2021,8 +2052,7 @@
               },
               {
                 "section_name": "credential_earned",
-                "style": {
-                },
+                "style": {},
                 "content": "",
                 "children": []
               },
@@ -2043,8 +2073,7 @@
                   },
                   {
                     "section_name": "gpa",
-                    "style": {
-                    },
+                    "style": {},
                     "content": "",
                     "children": []
                   }
@@ -2052,15 +2081,14 @@
               },
               {
                 "section_name": "coursework",
-                "style": {
-                },
+                "style": {},
                 "content": "",
                 "children": []
               }
             ]
           }
         ]
-      }, 
+      },
       "experience": {
         "section_name": "experience",
         "style": {},
@@ -2077,7 +2105,6 @@
                   "font-weight": "bold",
                   "margin-top": "10px",
                   "font-size": "20px"
-
                 },
                 "content": "WORK EXPERIENCE",
                 "children": []
@@ -2169,6 +2196,14 @@
                     ]
                   }
                 ]
+              },
+              {
+                "section_name": "description",
+                "style": {
+                  "font-style": "italic"
+                },
+                "content": "",
+                "children": []
               }
             ]
           }
@@ -2190,8 +2225,7 @@
                   "font-weight": "bold",
                   "margin-top": "10px",
                   "font-size": "20px"
-
-              },
+                },
                 "content": "SKILLS",
                 "children": []
               },
@@ -2280,7 +2314,6 @@
             "section_name": "section_header",
             "style": {
               "font-weight": "600"
-            
             },
             "content": "",
             "children": [
@@ -2288,9 +2321,8 @@
                 "section_name": "head",
                 "style": {
                   "font-weight": "bold",
-                    "margin-top": "10px",
-                    "font-size": "20px"
-
+                  "margin-top": "10px",
+                  "font-size": "20px"
                 },
                 "content": "PROJECTS",
                 "children": []
@@ -2377,7 +2409,6 @@
             "section_name": "section_header",
             "style": {
               "font-weight": "600"
-             
             },
             "content": "",
             "children": [
@@ -2385,9 +2416,8 @@
                 "section_name": "head",
                 "style": {
                   "font-weight": "bold",
-                   "margin-top": "10px",
-                   "font-size": "20px"
-
+                  "margin-top": "10px",
+                  "font-size": "20px"
                 },
                 "content": "HONORS",
                 "children": []
@@ -2518,6 +2548,10 @@
         },
         "date_end": {
           "section_name": "date_end",
+          "optional": true
+        },
+        "description": {
+          "section_name": "description",
           "optional": true
         }
       },

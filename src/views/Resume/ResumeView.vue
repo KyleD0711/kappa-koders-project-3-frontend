@@ -221,8 +221,14 @@ const templates = ["template1", "template2", "template3", "template4"];
       color="#4c4c4c"
       :width="drawerWidth"
     >
-      <Chat v-if="rightTab == 0" :resume-id="resumeId" />
-      <Comment v-else :resumeId="resumeId"></Comment>
+      <div v-if="rightTab != null">
+        <Chat v-if="rightTab == 0" :resume-id="resumeId" />
+        <Comment
+          v-else
+          :resumeId="resumeId"
+          :render_fields="metadata.render_fields"
+        ></Comment>
+      </div>
     </v-navigation-drawer>
   </v-row>
 </template>

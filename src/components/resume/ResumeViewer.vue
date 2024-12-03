@@ -49,13 +49,22 @@ const renderPDF = () => {
 
   let title = `${header_data.fName} ${header_data.lName}`;
 
-  let pdf_header = jsonUtils.findAndUpdateSectionByName(
+  let pdf_header = jsonUtils.findAndUpdateSectionDataByName(
     template.structure.pdf_header,
     template.data.pdf_header.title,
     title
   );
 
-  let personal_info = `${header_data.email} | ${header_data.phone_number}`;
+  let personal_info = "";
+
+  if (header_data.email != "" && header_data.phone_number != "") {
+    personal_info = `${header_data.email} | ${header_data.phone_number}`;
+  } else {
+    personal_info =
+      header_data.email == ""
+        ? `${header_data.phone_number}`
+        : `${header_data.email}`;
+  }
 
   let linkArray = (header_data.link ?? []).map((value) => ({
     name: value.name,
@@ -66,7 +75,7 @@ const renderPDF = () => {
     personal_info += ` | ${value.name}: ${value.url}`;
   });
 
-  pdf_header = jsonUtils.findAndUpdateSectionByName(
+  pdf_header = jsonUtils.findAndUpdateSectionDataByName(
     pdf_header,
     template.data.pdf_header.personal_info,
     personal_info
@@ -75,7 +84,7 @@ const renderPDF = () => {
   let body_children = [pdf_header];
 
   if (header_data.professional_summary != "") {
-    let professional_summary = jsonUtils.findAndUpdateSectionByName(
+    let professional_summary = jsonUtils.findAndUpdateSectionDataByName(
       template.structure.professional_summary,
       template.data.professional_summary,
       header_data.professional_summary
