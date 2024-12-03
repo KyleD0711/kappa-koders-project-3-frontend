@@ -9,6 +9,9 @@ export default {
 
     // Recursive function to build HTML elements
     function buildElement(element) {
+      if (element.type == "") {
+        element.type = "div";
+      }
       const {
         section_name = "",
         style = {},
