@@ -878,7 +878,9 @@ const handleSaveResume = async () => {
         </div>
       </template>
       <template v-else>
-        <span class="resumeTitleText" @click="toggleEditTitle">{{ resumeTitle }}</span>
+        <span class="resumeTitleText" @click="toggleEditTitle">{{
+          resumeTitle
+        }}</span>
         <div style="float: right; margin-right: 10px">
           <v-btn
             class="mx-2"
@@ -1168,12 +1170,9 @@ const handleSaveResume = async () => {
 .resumeTitleText:hover {
   color: rgb(165, 165, 165);
   border: solid 1px white;
-  border-radius: 4px; 
-  padding: 5px; 
+  border-radius: 4px;
+  padding: 5px;
 }
-
-
-
 
 .addSection {
   text-align: center;

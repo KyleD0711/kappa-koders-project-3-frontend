@@ -123,6 +123,10 @@ onMounted(() => {
             :rules="['required']"
           ></DateElement>
         </GroupElement>
+        <TextareaElement
+          name="description"
+          before="Description"
+        ></TextareaElement>
         <StaticElement name="spacer"></StaticElement>
         <GroupElement name="button_container">
           <ButtonElement
