@@ -13,7 +13,7 @@ import "@mdi/font/css/materialdesignicons.css";
 
 const vuetify = createVuetify({
   theme: {
-    defaultTheme: "lightTheme",
+    defaultTheme: "darkTheme",
     themes: {
       lightTheme: {
         dark: false,
