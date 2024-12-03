@@ -140,7 +140,7 @@ watch(
         </div>
         <v-menu bottom min-width="200px" rounded offset-y v-if="showNavOptions">
           <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" icon x-large>
+            <v-btn v-bind="props" icon x-large class="ml-2 mb-1">
               <v-avatar v-if="profilePhoto" color="secondary" size="50">
                 <v-img :src="profilePhoto" alt="Profile Photo" contain />
               </v-avatar>
@@ -159,8 +159,9 @@ watch(
                 <h3>{{ name }}</h3>
                 <p class="text-caption mt-1">{{ user.email }}</p> <!-- Use user from local storage -->
                 <v-divider class="my-3"></v-divider>
-                <v-btn depressed rounded text @click="logout" color="lightBlue"> Logout </v-btn>
-                <v-btn depressed rounded text color="lightBlue">Edit Profile</v-btn>
+                <v-btn depressed rounded text color="lightBlue" @click="editProfileModalStore.open">Edit Profile</v-btn>
+                <br>
+                <v-btn depressed rounded text @click="logout" color="lightBlue" class="mt-2"> Logout </v-btn>
                 <div class="theme-toggle">
                 <!-- Styled v-switch -->
                 <v-switch

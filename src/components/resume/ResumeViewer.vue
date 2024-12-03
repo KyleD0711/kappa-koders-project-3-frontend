@@ -134,6 +134,14 @@ const renderPDF = () => {
   );
 
   resumeViewerStore.updateInnerHTML(newHtml);
+  updatePdfContent();
+};
+
+const updatePdfContent = () => {
+  if (pdf.value) {
+    const pdfContent = pdf.value.outerHTML; // Get the entire HTML content as a string
+    resumeViewerStore.updatePdf(pdfContent);
+  }
 };
 
 watch(props, () => {
@@ -181,6 +189,10 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener("resize", setPDFWidth);
 });
+
+
+
+
 </script>
 <template>
   <div

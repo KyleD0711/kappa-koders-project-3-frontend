@@ -11,11 +11,10 @@ loadFonts();
 import "vuetify/styles";
 import "@mdi/font/css/materialdesignicons.css";
 
-
 const vuetify = createVuetify({
   theme: {
-    defaultTheme: 'lightTheme',
-    themes:{
+    defaultTheme: "darkTheme",
+    themes: {
       lightTheme: {
         dark: false,
         colors: {
@@ -24,6 +23,7 @@ const vuetify = createVuetify({
           tertiary: "#91A198",
           accent: "#000fff",
           success: "#fff000",
+          white: "#FDFFF7",
           richBlack: "#04080F",
           lightBlue: "#708E9A",
           background: "#E9ECEA",
@@ -35,7 +35,7 @@ const vuetify = createVuetify({
           yellow: "#0f0",
           text: "#141514",
           chatUser: "#d9d9d9",
-          chatAI: "#999"
+          chatAI: "#999",
         },
       },
       darkTheme: {
@@ -58,8 +58,8 @@ const vuetify = createVuetify({
           panelBackground: "#666",
           yellow: "#F9C633",
           text: "#141514",
-           chatUser: "#8b8b8b",
-          chatAI: "#999"
+          chatUser: "#8b8b8b",
+          chatAI: "#999",
         },
       },
     },
@@ -68,6 +68,5 @@ const vuetify = createVuetify({
     defaultSet: "mdi",
   },
 });
-
 
 export default vuetify;

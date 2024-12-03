@@ -28,9 +28,7 @@ export default {
     // console.log(targetSectionName);
     // Base case: Check if the current object's section_name matches the target
     if (jsonObj.section_name === targetSectionName.section_name) {
-      console.log(jsonObj);
       jsonObj.children = children; // Update content with the provided data
-      console.log(jsonObj);
       return jsonObj;
     }
 
@@ -91,13 +89,15 @@ export default {
             section_name != "award" &&
             section_name != "project")
         ) {
-          let splitEntries = value[entry[0]].split("\n");
-          let listOfData = this.listToJson(splitEntries);
-          body = this.findAndUpdateSectionChildrenByName(
-            body,
-            template.data[section_name][entry[0]],
-            listOfData
-          );
+          if (value[entry[0]] != "") {
+            let splitEntries = value[entry[0]].split("\n");
+            let listOfData = this.listToJson(splitEntries);
+            body = this.findAndUpdateSectionChildrenByName(
+              body,
+              template.data[section_name][entry[0]],
+              listOfData
+            );
+          }
         } else {
           body = this.findAndUpdateSectionDataByName(
             body,
