@@ -860,7 +860,7 @@ const handleSaveResume = async () => {
 </script>
 
 <template>
-  <v-card color="secondary">
+  <v-card color="section0">
     <v-card color="secondary" class="resumeTitle" style="padding-top: 2%">
       <template v-if="isEditingTitle">
         <div class="text-field-wrapper">
