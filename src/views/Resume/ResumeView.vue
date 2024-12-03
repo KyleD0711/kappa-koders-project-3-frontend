@@ -45,26 +45,8 @@ const route = useRoute();
 const resumeId = route.params.resumeId;
 
 const currentTab = ref(0);
-const rightTab = ref(null);
 
 const navDrawer = ref(true);
-// const rightDrawer = ref(false);
-
-// watch(rightTab, (newVal) => {
-//   if (newVal !== null) {
-//     leftTab.value = null; // Deselect left tab when a right tab is selected
-//     rightDrawer.value = true; // Open right drawer
-//     leftDrawer.value = false; // Close left drawer
-//   }
-// });
-
-// watch(leftTab, (newVal) => {
-//   if (newVal !== null) {
-//     rightTab.value = null; // Deselect right tab when a left tab is selected
-//     leftDrawer.value = true; // Open left drawer
-//     rightDrawer.value = false; // Close right drawer
-//   }
-// });
 
 const switchDisplayedTemplate = async (id) => {
   try {
@@ -220,9 +202,6 @@ const templates = ["template1", "template2", "template3", "template4"];
         />
       </div>
     </v-col>
-    <v-tabs v-model="rightTab" direction="vertical" hide-slider>
-      
-    </v-tabs>
   </v-row>
 </template>
 
