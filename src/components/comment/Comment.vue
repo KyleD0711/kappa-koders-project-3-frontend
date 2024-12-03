@@ -174,7 +174,6 @@ onMounted(async () => {
 
 .sub-text {
   font-size: 0.9rem; /* Slightly smaller font for sub-text */
-  color: rgba(215, 213, 213, 0.6); /* Lighter text for sub-text */
   margin-top: 4px; /* Space between main and sub-text */
 }
 
