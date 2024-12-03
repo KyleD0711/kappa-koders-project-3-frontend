@@ -49,7 +49,7 @@ const renderPDF = () => {
 
   let title = `${header_data.fName} ${header_data.lName}`;
 
-  let pdf_header = jsonUtils.findAndUpdateSectionByName(
+  let pdf_header = jsonUtils.findAndUpdateSectionDataByName(
     template.structure.pdf_header,
     template.data.pdf_header.title,
     title
@@ -75,7 +75,7 @@ const renderPDF = () => {
     personal_info += ` | ${value.name}: ${value.url}`;
   });
 
-  pdf_header = jsonUtils.findAndUpdateSectionByName(
+  pdf_header = jsonUtils.findAndUpdateSectionDataByName(
     pdf_header,
     template.data.pdf_header.personal_info,
     personal_info
@@ -84,7 +84,7 @@ const renderPDF = () => {
   let body_children = [pdf_header];
 
   if (header_data.professional_summary != "") {
-    let professional_summary = jsonUtils.findAndUpdateSectionByName(
+    let professional_summary = jsonUtils.findAndUpdateSectionDataByName(
       template.structure.professional_summary,
       template.data.professional_summary,
       header_data.professional_summary
