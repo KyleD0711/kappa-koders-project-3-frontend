@@ -103,7 +103,7 @@ const captureScreenshot = (pdfContent) => {
     width: 816,  // Set width in pixels
     height: 500,  // Capture 10 inches (960px)
     scrollX: 0,  // Adjust if needed
-    scrollY: -950,  // Adjust if needed to capture the top part
+    scrollY: -750,  // Adjust if needed to capture the top part
   })
     .then((canvas) => {
       // Use resumeId to store screenshotSrc separately for each resume
