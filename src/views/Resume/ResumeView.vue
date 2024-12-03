@@ -156,7 +156,7 @@ const templates = ["template1", "template2", "template3", "template4"];
     <v-navigation-drawer
       v-model="leftDrawer"
       location="left"
-      color="#4c4c4c"
+      color="secondary"
       :width="drawerWidth"
     >
       <ResumeSidebar
@@ -203,7 +203,7 @@ const templates = ["template1", "template2", "template3", "template4"];
         :color="rightTab == 0 ? 'teal' : ''"
       >
         <v-tab size="large" height="125">
-          <v-icon size="large" class="ml-n2">mdi-chat</v-icon>
+          <v-icon size="large" class="ml-n2" color="">mdi-chat</v-icon>
         </v-tab>
       </v-card>
       <v-card

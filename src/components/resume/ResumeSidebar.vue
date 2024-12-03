@@ -860,8 +860,8 @@ const handleSaveResume = async () => {
 </script>
 
 <template>
-  <div>
-    <div class="resumeTitle" style="padding-top: 2%">
+  <v-card color="secondary">
+    <v-card color="secondary" class="resumeTitle" style="padding-top: 2%">
       <template v-if="isEditingTitle">
         <div class="text-field-wrapper">
           <v-text-field
@@ -883,7 +883,8 @@ const handleSaveResume = async () => {
           <v-btn
             class="mx-2"
             text="Actions"
-            style="background-color: #3d7ae2; color: white; margin-left: 5px"
+            color="lightBlue"
+            style="color: white; margin-left: 5px"
             ><v-menu activator="parent" open-on-hover>
               <v-list>
                 <v-list-item
@@ -899,15 +900,15 @@ const handleSaveResume = async () => {
           >
         </div>
       </template>
-    </div>
+    </v-card>
 
     <v-expansion-panels style="padding-bottom: 2%">
-      <v-expansion-panel class="section-0">
+      <v-expansion-panel class="section-0" color="section0">
         <v-expansion-panel-title style="font-size: 20px">
           Header
         </v-expansion-panel-title>
-        <v-expansion-panel-text class="panel-background">
-          <div class="option-checkboxes">
+        <v-expansion-panel-text color="text" class="panel-background">
+          <div class="option-checkboxes" color="panelBackground">
             <v-form>
               <!-- Name, email, phone, etc. -->
               <v-row>
@@ -936,7 +937,7 @@ const handleSaveResume = async () => {
 
             <v-card class="mb-3">
               <v-expansion-panels>
-                <v-expansion-panel class="section-0">
+                <v-expansion-panel class="section-0" color="section0">
                   <v-expansion-panel-title>
                     <i
                       style="margin-left: -10px; margin-right: 5px"
@@ -978,10 +979,12 @@ const handleSaveResume = async () => {
 
                     <!-- Add Professional Summary Card -->
                     <v-card @click="showAddSummaryDialog()">
-                      <div class="addSection">
-                        Add Professional Summary
-                        <v-icon style="padding-bottom: 1%">mdi-plus</v-icon>
-                      </div>
+                      <v-card class="addSection" color="addButton">
+                        <v-card-text color="text">
+                          Add Professional Summary
+                          <v-icon style="padding-bottom: 1%">mdi-plus</v-icon>
+                        </v-card-text>
+                      </v-card>
                     </v-card>
                   </v-expansion-panel-text>
                 </v-expansion-panel>
@@ -992,7 +995,7 @@ const handleSaveResume = async () => {
               <template #item="{ element: header }">
                 <v-card class="mb-3">
                   <v-expansion-panels>
-                    <v-expansion-panel class="section-0" :key="header.title">
+                    <v-expansion-panel class="section-0" color="section0" :key="header.title">
                       <v-expansion-panel-title>
                         <i
                           style="margin-left: -10px; margin-right: 5px"
@@ -1000,7 +1003,7 @@ const handleSaveResume = async () => {
                         ></i>
                         Links
                       </v-expansion-panel-title>
-                      <v-expansion-panel-text>
+                      <v-expansion-panel-text color="success">
                         <draggable
                           class="item-list"
                           v-model="header.items"
@@ -1056,7 +1059,7 @@ const handleSaveResume = async () => {
       <template #item="{ element: section, index }">
         <v-card class="mb-3">
           <v-expansion-panels v-model="resume_data_local[index].isOpen">
-            <v-expansion-panel class="section-0">
+            <v-expansion-panel class="section-0" color="section0">
               <v-expansion-panel-title>
                 <v-icon class="mr-2" style="margin-left: -10px"
                   >mdi-drag</v-icon
@@ -1064,10 +1067,10 @@ const handleSaveResume = async () => {
                 <i :class="section.icon" style="margin-right: 5px"></i>
                 {{ section.title }}
               </v-expansion-panel-title>
-              <v-expansion-panel-text class="section-1">
+              <v-expansion-panel-text class="section-1" color="section1">
                 <draggable class="item-list" v-model="section.items" tag="ul">
                   <template #item="{ element: item }">
-                    <v-card class="mb-3">
+                    <v-card class="mb-3" >
                       <li :key="item.name" class="list-item">
                         <div class="left-icons">
                           <v-icon>mdi-drag</v-icon>
@@ -1136,7 +1139,7 @@ const handleSaveResume = async () => {
       :professionalSummary="modalStore.professionalSummary"
       @submit-form="getProf_sums"
     ></ProfessionalSummaryModal>
-  </div>
+  </v-card>
 </template>
 
 <style>
@@ -1158,7 +1161,6 @@ const handleSaveResume = async () => {
 }
 
 .resumeTitle {
-  color: white;
   padding-left: 2%;
   padding-bottom: 2%;
   font-size: 30px;
@@ -1167,11 +1169,9 @@ const handleSaveResume = async () => {
 
 .resumeTitle v-text-field {
   font-size: 30px;
-  color: white;
 }
 
 .resumeTitle {
-  color: white;
   padding-left: 2%;
   padding-bottom: 2%;
   font-size: 30px;
@@ -1182,16 +1182,12 @@ const handleSaveResume = async () => {
 }
 
 .section-1 {
-  background-color: #575757;
   display: block;
   color: white;
   flex-direction: column;
 }
 
-.section-0 {
-  background-color: #403f3f;
-  color: white;
-}
+
 
 .option-checkboxes {
   display: flex;
@@ -1220,12 +1216,9 @@ const handleSaveResume = async () => {
 }
 
 .v-card {
-  background-color: #d9d9d9;
 }
 
 .panel-background {
-  background-color: #575757;
-  color: white;
   padding: 16px;
   border-radius: 4px;
 }

@@ -14,13 +14,14 @@ import "@mdi/font/css/materialdesignicons.css";
 
 const vuetify = createVuetify({
   theme: {
-    defaultTheme: 'darkTheme',
+    defaultTheme: 'lightTheme',
     themes:{
       lightTheme: {
         dark: false,
         colors: {
           primary: "#f00",
-          secondary: "#00f",
+          secondary: "#a5b2ab",
+          tertiary: "#91A198",
           accent: "#000fff",
           success: "#fff000",
           white: "#00f",
@@ -31,10 +32,11 @@ const vuetify = createVuetify({
           background: "#E9ECEA",
           sliderText: "#403f3f",
           resumeTitle: "#403f3f",
-          section0: "#403f3f",
+          section0: "#C2C4C3",
+          section1: "#777E7A",
           panelBackground: "#00f",
           yellow: "#0f0",
-          text: "#000"
+          text: "#141514"
         },
       },
       darkTheme: {
@@ -45,18 +47,18 @@ const vuetify = createVuetify({
           accent: "#F9C633",
           success: "#47121D",
           white: "#FDFFF7",
-          "dark-grey": "#403F3F",
-          "light-grey": "#8C8A8A",
-          "rich-black": "#04080F",
-          "light-blue": "#708E9A",
-          "background": "#262626",
-          "slider-text": "#fdfff7",
-          "resume-title": "#fdfff7",
-          "section-0": "#fdfff7",
-          "section-1": "#4c4c4c",
-          "panel-background": "#f00",
+          darkGrey: "#403F3F",
+          lightGrey: "#8C8A8A",
+          richBlack: "#04080F",
+          lightBlue: "#3d7ae2",
+          background: "#262626",
+          sliderText: "#fdfff7",
+          resumeTitle: "#fdfff7",
+          section0: "#333",
+          section1: "#4c4c4c",
+          panelBackground: "#f00",
           yellow: "#F9C633",
-          text: "#000"
+          text: "#141514"
         },
       },
     },
