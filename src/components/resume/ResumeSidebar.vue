@@ -860,8 +860,8 @@ const handleSaveResume = async () => {
 </script>
 
 <template>
-  <v-card color="secondary">
-    <v-card color="secondary" class="resumeTitle" style="padding-top: 2%">
+  <v-card color="section0">
+    <v-card color="section0" class="resumeTitle" style="padding-top: 2%">
       <template v-if="isEditingTitle">
         <div class="text-field-wrapper">
           <v-text-field
@@ -905,7 +905,7 @@ const handleSaveResume = async () => {
     </v-card>
 
     <v-expansion-panels style="padding-bottom: 2%">
-      <v-expansion-panel class="section-0" color="section0">
+      <v-expansion-panel class="section-0" color="background">
         <v-expansion-panel-title style="font-size: 20px">
           Header
         </v-expansion-panel-title>
@@ -939,7 +939,7 @@ const handleSaveResume = async () => {
 
             <v-card class="mb-3">
               <v-expansion-panels>
-                <v-expansion-panel class="section-0" color="section0">
+                <v-expansion-panel class="section-0" color="background">
                   <v-expansion-panel-title>
                     <i
                       style="margin-left: -10px; margin-right: 5px"
@@ -997,7 +997,7 @@ const handleSaveResume = async () => {
               <template #item="{ element: header }">
                 <v-card class="mb-3">
                   <v-expansion-panels>
-                    <v-expansion-panel class="section-0" color="section0" :key="header.title">
+                    <v-expansion-panel class="section-0" color="background" :key="header.title">
                       <v-expansion-panel-title>
                         <i
                           style="margin-left: -10px; margin-right: 5px"
@@ -1062,7 +1062,7 @@ const handleSaveResume = async () => {
       <template #item="{ element: section, index }">
         <v-card class="mb-3">
           <v-expansion-panels v-model="resume_data_local[index].isOpen">
-            <v-expansion-panel class="section-0" color="section0">
+            <v-expansion-panel class="section-0" color="background">
               <v-expansion-panel-title>
                 <v-icon class="mr-2" style="margin-left: -10px"
                   >mdi-drag</v-icon

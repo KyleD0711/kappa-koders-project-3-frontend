@@ -156,7 +156,7 @@ const templates = ["template1", "template2", "template3", "template4"];
     <v-navigation-drawer
       v-model="leftDrawer"
       location="left"
-      color="secondary"
+      color="section0"
       :width="drawerWidth"
     >
       <ResumeSidebar
