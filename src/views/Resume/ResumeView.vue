@@ -145,7 +145,7 @@ const templates = ["template1", "template2", "template3", "template4"];
     <v-tabs v-model="leftTab" direction="vertical" hide-slider>
       <v-card
         class="mt-1 tab-width tab-left"
-        :color="leftTab == 0 ? 'teal' : ''"
+        :color="leftTab == 0 ? 'lightBlue' : 'section0'"
       >
         <v-tab height="125">
           <v-icon size="x-large">mdi-pencil</v-icon>
@@ -156,7 +156,7 @@ const templates = ["template1", "template2", "template3", "template4"];
     <v-navigation-drawer
       v-model="leftDrawer"
       location="left"
-      color="#4c4c4c"
+      color="secondary"
       :width="drawerWidth"
     >
       <ResumeSidebar
@@ -172,14 +172,14 @@ const templates = ["template1", "template2", "template3", "template4"];
       <v-tabs
         v-model="selectedTemplate"
         vertical
-        class="white-text mt-1"
+        class="slider-text mt-1"
         style="width: fit-content; margin: auto"
       >
         <v-tab
           v-for="templateKey in templates"
           :key="templateKey"
           :value="templateKey"
-          class="white-text"
+          color="slider-text"
         >
           {{ templateKey }}
         </v-tab>
@@ -200,15 +200,15 @@ const templates = ["template1", "template2", "template3", "template4"];
     <v-tabs v-model="rightTab" direction="vertical" hide-slider>
       <v-card
         class="mt-1 tab-width tab-right"
-        :color="rightTab == 0 ? 'teal' : ''"
+        :color="rightTab == 0 ? 'lightBlue' : 'section0'"
       >
         <v-tab size="large" height="125">
-          <v-icon size="large" class="ml-n2">mdi-chat</v-icon>
+          <v-icon size="large" class="ml-n2" color="">mdi-chat</v-icon>
         </v-tab>
       </v-card>
       <v-card
         class="mt-1 tab-width tab-right"
-        :color="rightTab == 1 ? 'teal' : ''"
+        :color="rightTab == 1 ? 'lightBlue' : 'section0'"
       >
         <v-tab size="large" height="125">
           <v-icon size="large" class="ml-n2">mdi-comment-multiple</v-icon>
@@ -218,7 +218,7 @@ const templates = ["template1", "template2", "template3", "template4"];
     <v-navigation-drawer
       v-model="rightDrawer"
       location="right"
-      color="#4c4c4c"
+      color="section0"
       :width="drawerWidth"
     >
       <div v-if="rightTab != null">

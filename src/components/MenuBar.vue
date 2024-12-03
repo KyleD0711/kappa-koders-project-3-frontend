@@ -1,10 +1,14 @@
 <script setup>
 import ocLogo from "/oc-logo-white.png";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import Utils from "../config/utils";
 import AuthServices from "../services/authServices";
 import userProfileServices from "../services/userProfileServices"; // Import userProfileServices
 import { useRouter } from "vue-router";
+import { useTheme } from "vuetify";
+
+import 'primeicons/primeicons.css';
+
 
 import { useNavBarStore } from "../store/navbar.store";
 import { storeToRefs } from "pinia";
@@ -13,6 +17,9 @@ import { useEditProfileModalStore } from "../store/editProfileModal.store.js"; /
 import EditProfileModal from "./EditProfileModal.vue"; // Import the modal component
 
 const router = useRouter();
+
+const theme = useTheme();
+
 
 const user = ref(Utils.getStore("user")); // Get user data from local storage
 const userProfile = ref(null); // Store userProfile data
@@ -26,6 +33,8 @@ const isAdmin = ref(false);
 const navStore = useNavBarStore();
 navStore.setupRouteWatcher();
 const { showNavOptions } = storeToRefs(navStore);
+const isDarkTheme = ref(theme.global.name.value === "darkTheme");
+
 
 const adminActions = [
   {
@@ -78,6 +87,22 @@ onMounted(() => {
   logoURL.value = ocLogo;
   resetMenu();
 });
+
+
+// Function to toggle themes
+const toggleTheme = () => {
+  theme.global.name.value = isDarkTheme.value
+    ? "darkTheme"
+    : "lightTheme";
+};
+
+// Watch theme changes and sync state
+watch(
+  () => theme.global.name.value,
+  (newTheme) => {
+    isDarkTheme.value = newTheme === "darkTheme";
+  }
+);
 </script>
 
 <template>
@@ -124,7 +149,7 @@ onMounted(() => {
               </v-avatar>
             </v-btn>
           </template>
-          <v-card color="light-grey">
+          <v-card color="background">
             <v-card-text>
               <div class="mx-auto text-center">
                 <v-avatar color="secondary" class="mt-2 mb-2" size="100" style="font-size: 30px;">
@@ -134,9 +159,21 @@ onMounted(() => {
                 <h3>{{ name }}</h3>
                 <p class="text-caption mt-1">{{ user.email }}</p> <!-- Use user from local storage -->
                 <v-divider class="my-3"></v-divider>
-                <v-btn depressed rounded text color="white" @click="editProfileModalStore.open">Edit Profile</v-btn>
-                <br>
-                <v-btn depressed rounded text @click="logout" color="white" class="mt-2"> Logout </v-btn>
+                <v-btn depressed rounded text @click="logout" color="lightBlue"> Logout </v-btn>
+                <v-btn depressed rounded text color="lightBlue">Edit Profile</v-btn>
+                <div class="theme-toggle">
+                <!-- Styled v-switch -->
+                <v-switch
+                  v-model="isDarkTheme"
+                  @change="toggleTheme"
+                  inset
+                  class="theme-switch"
+                ></v-switch>
+
+                <!-- Background Icons -->
+                <i class="pi pi-sun sun-icon"></i>
+                <i class="pi pi-moon moon-icon"></i>
+              </div>
               </div>
             </v-card-text>
           </v-card>
@@ -156,4 +193,48 @@ onMounted(() => {
     background-position: right;
     background-size: 45% 100%;
   }
+
+  .theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 200px; /* Adjust container width */
+}
+
+.theme-switch {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+  padding-left:75px;
+  padding-top:20px
+}
+
+.sun-icon,
+.moon-icon {
+  font-size: 1.5rem;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 0;
+}
+
+.sun-icon {
+  left: 10px;
+  color: #fbc02d; /* Sun (yellow) color */
+}
+
+.moon-icon {
+  right: 10px;
+  color: #90caf9; /* Moon (blue) color */
+}
+
+.theme-switch .v-switch-track {
+  background-image: linear-gradient(
+    to right,
+    #fbc02d, /* Sun (yellow) */
+    #90caf9 /* Moon (blue) */
+  );
+  opacity: 0.5; /* Blend background */
+}
 </style>

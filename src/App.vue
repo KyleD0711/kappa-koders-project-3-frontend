@@ -5,9 +5,9 @@ import MenuBar from "./components/MenuBar.vue";
 </script>
 
 <template>
-  <v-app style="background-color: #262626">
+  <v-app>
     <MenuBar :key="$route.fullPath" />
-    <v-main>
+    <v-main color="background">
       <router-view />
     </v-main>
   </v-app>

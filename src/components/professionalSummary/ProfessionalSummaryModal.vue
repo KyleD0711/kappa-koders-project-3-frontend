@@ -69,7 +69,7 @@ onMounted(() => {
 <template>
   <v-dialog v-model="isVisible" max-width="60%">
     <v-card
-      style="background-color: #d9d9d9; border-radius: 10px; padding: 20px"
+      style="background-color: #d9d9d9; border-radius: 10px; padding: 20px; color: #262626"
     >
       <Vueform
         size="md"

@@ -3,12 +3,12 @@ import SideBar from "../../components/InformationSideBar.vue";
 </script>
 
 <template>
-  <div class="main-page">
+  <v-card color="background" class="main-page">
     <SideBar></SideBar>
-    <div class="content-area">
+    <v-card class="content-area" color="background">
       <router-view></router-view>
-    </div>
-  </div>
+    </v-card>
+  </v-card>
 </template>
 
 

@@ -70,12 +70,12 @@ onMounted(() => {
 <template>
   <div style="margin: 10px">
     <div style="display: flex">
-      <p style="align-self: center; margin: 10px, 20px; color: #d9d9d9">
+      <p style="align-self: center; margin: 10px, 20px; color: var(--v-theme-text)">
         Project
       </p>
       <v-btn
         variant="elevated"
-        color="D9D9D9"
+        color="lightBlue"
         style="margin: 10px"
         @click="showAddDialog"
         >Add new</v-btn
@@ -86,6 +86,7 @@ onMounted(() => {
       :headers="headers"
       :items="items"
       v-if="isLoaded"
+      style="background-color: #C4c2c3; color: #262626"
       no-data-text="No data found!"
     >
       <template v-slot:item.actions="{ item }">

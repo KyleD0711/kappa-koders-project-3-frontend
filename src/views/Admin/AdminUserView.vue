@@ -101,13 +101,13 @@ onMounted(() => {
 <template>
   <div style="margin: 10px">
     <div style="display: flex">
-      <p style="align-self: center; margin: 10px 20px; color: #d9d9d9">
+      <p style="align-self: center; margin: 10px 20px; color: var(--v-theme-text)">
         Users
       </p>
       
     </div>
 
-    <v-data-table :headers="headers" :items="items" v-if="isLoaded">
+    <v-data-table :headers="headers" :items="items" v-if="isLoaded" style="background-color: #C4c2c3; color: #262626">
       <template v-slot:item.actions="{ item }">
         <v-icon v-if="curUser && item.id !== curUser.userId" class="me-2" size="small" @click="editUser(item)">
           mdi-pencil

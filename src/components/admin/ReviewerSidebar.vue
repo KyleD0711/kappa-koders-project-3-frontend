@@ -76,7 +76,7 @@ const submitReview = async (isSave) => {
 </script>
 
 <template>
-  <div class="resume_title">Resume Title</div>
+  <v-card class="resume_title" color="background" flat>Resume Title</v-card>
   <div class="d-flex flex-column fill-height pa-0">
     <v-expansion-panels>
       <v-expansion-panel class="section-0">
@@ -127,7 +127,6 @@ const submitReview = async (isSave) => {
 
 <style scoped>
 .resume_title {
-  color: white;
   padding-left: 2%;
   padding-bottom: 2%;
   font-size: 30px;
