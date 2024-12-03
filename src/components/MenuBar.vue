@@ -140,7 +140,7 @@ watch(
         </div>
         <v-menu bottom min-width="200px" rounded offset-y v-if="showNavOptions">
           <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" icon x-large>
+            <v-btn v-bind="props" icon x-large class="ml-2 mb-1">
               <v-avatar v-if="profilePhoto" color="secondary" size="50">
                 <v-img :src="profilePhoto" alt="Profile Photo" contain />
               </v-avatar>
