@@ -65,11 +65,7 @@ onMounted(() => {
   <div>
     <v-col :cols="pageCols" class="mx-auto">
         <v-row class="w-100 justify-space-between align-center" no-gutters>
-<<<<<<< Updated upstream
-          <p class="text-h4 my-4 ml-4" style="color: var(--v-theme-text)">My Resumes</p>
-=======
           <p class="text-h4 my-4 ml-4" style="color: var(--v-theme-text) !important">My Resumes</p>
->>>>>>> Stashed changes
           <v-btn
             prepend-icon="mdi-plus"
             color="teal"
