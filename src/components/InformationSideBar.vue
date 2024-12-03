@@ -117,35 +117,33 @@ export default {
 </script>
 
 <template>
-  <v-card class="infoSidebar" color="primary">
+  <v-card class="infoSidebar" color="section0">
 
-    <v-card id="exp" class="infoSection exp" color="secondary" @click="showExperience()"> 
-        <v-card-text color="success">
+    <div id="exp" class="infoSection exp" color="section0" @click="showExperience()"> 
             <i class="pi pi-briefcase"></i>
             Experience
-        </v-card-text>
-    </v-card>
-    <v-card id="skill" class="infoSection skill" @click="showSkills()">
+    </div>
+    <div id="skill" class="infoSection skill" color="section0" @click="showSkills()">
         <i class="pi pi-lightbulb"></i>
         Skills
-    </v-card>
-    <div id="awards" class="infoSection awards" @click="showAwards()">
+    </div>
+    <div id="awards" class="infoSection awards" color="section0" @click="showAwards()">
         <i class="pi pi-trophy"></i>
         Awards
     </div>
-    <div id="links" class="infoSection links" @click="showLinks()">
+    <div id="links" color="section0" class="infoSection links" @click="showLinks()">
         <i class="pi pi-link"></i>
         Links
     </div>
-    <div id="edu" class="infoSection edu" @click="showEducation()">
+    <div id="edu" color="section0" class="infoSection edu" @click="showEducation()">
         <i class="pi pi-graduation-cap"></i>
         Education
     </div>
-    <div id="proj" class="infoSection proj" @click="showProjects()">
+    <div id="proj" color="section0" class="infoSection proj" @click="showProjects()">
         <i class="pi pi-book"></i>
         Projects
     </div>
-    <div id="summ" class="infoSection summ" @click="showProfessionalSummaries()">
+    <div id="summ" color="section0" class="infoSection summ" @click="showProfessionalSummaries()">
       <i class="pi pi-verified"></i>
       Professional Summaries
     </div>
@@ -164,6 +162,7 @@ export default {
 
 .active {
     background-color: #eee !important;
+    color: #262626 !important;
 }
 .infoSidebar {
     width: 20%;

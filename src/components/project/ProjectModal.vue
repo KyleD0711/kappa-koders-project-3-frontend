@@ -90,7 +90,7 @@ onMounted(() => {
 </script>
 <template>
   <v-dialog v-model="isVisible" max-width="60%">
-    <div style="background-color: #d9d9d9; border-radius: 10px; padding: 20px">
+    <div style="background-color: #d9d9d9; border-radius: 10px; padding: 20px; color: #262626">
       <Vueform
         size="md"
         :endpoint="false"

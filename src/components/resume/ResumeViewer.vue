@@ -190,6 +190,7 @@ onBeforeUnmount(() => {
       max-width: 886px;
       aspect-ratio: 1 / 1.294;
       background-color: white;
+      color: black;
       overflow: hidden; /* Ensure no content spills out */
       box-sizing: border-box; /* Include padding in the total size */
       padding: 20px;

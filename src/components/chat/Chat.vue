@@ -155,7 +155,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="chat-container">
+  <v-card class="chat-container" color="section0">
     <v-row
       no-gutters
       class="align-center ma-4 justify-space-between no-flex-grow"
@@ -164,7 +164,7 @@ onMounted(() => {
         <p class="text-h5">Ask AI</p>
         <v-icon class="ml-3"> mdi-shimmer </v-icon>
       </v-row>
-      <v-btn append-icon="mdi-delete" color="teal" @click="clearHistory()">
+      <v-btn append-icon="mdi-delete" color="lightBlue" @click="clearHistory()">
         Clear
       </v-btn>
     </v-row>
@@ -176,11 +176,11 @@ onMounted(() => {
       >
         <div class="d-flex justify-end">
           <!-- User message on the right -->
-          <v-card class="chat-bubble user-message w-75 text-start">
+          <v-card color="chatUser" class="chat-bubble user-message w-75 text-start">
             {{ currentChatHistory.userMessage }}
           </v-card>
         </div>
-        <ResponseBubble :text="currentChatHistory.botResponse" />
+        <ResponseBubble color="chatAI" :text="currentChatHistory.botResponse" />
       </v-col>
     </div>
 
@@ -189,7 +189,7 @@ onMounted(() => {
         class="my-2 mr-1 px-4"
         prepend-icon="mdi-file-search-outline"
         variant="flat"
-        color="#262626"
+        color="lightBlue"
         @click="sendRecommendedMessage(1)"
       >
         General Feedback
@@ -198,7 +198,7 @@ onMounted(() => {
         class="my-2 mr-1 px-4"
         prepend-icon="mdi-file-edit"
         variant="flat"
-        color="#262626"
+        color="lightBlue"
         @click="sendRecommendedMessage(2)"
       >
         Spell Check
@@ -207,7 +207,7 @@ onMounted(() => {
         class="my-2 mr-1 px-4"
         prepend-icon="mdi-content-cut"
         variant="flat"
-        color="#262626"
+        color="lightBlue"
         @click="sendRecommendedMessage(3)"
       >
         Job Tailoring
@@ -233,7 +233,7 @@ onMounted(() => {
           }"
         />
         <ButtonElement
-          name="Submit"
+          color="lightBlue"
           :submits="true"
           button-label="Send"
           :disabled="isLoadingMessage"
@@ -245,14 +245,15 @@ onMounted(() => {
         />
       </GroupElement>
     </Vueform>
-  </div>
+  </v-card>
 </template>
 
 <style scoped>
 .chat-bubble {
   padding: 10px;
   border-radius: 10px;
-  background-color: #e1e1e1; /* Light blue */
+  background-color: var(--v-theme-lightBlue); /* Light blue */
+  color: var(--var-theme-text);
   margin-bottom: 16px;
   margin-top: 16px;
 }
@@ -289,11 +290,9 @@ onMounted(() => {
 }
 
 .scroll-pane::-webkit-scrollbar-thumb {
-  background-color: #888; /* Scrollbar thumb color */
   border-radius: 4px; /* Rounded edges */
 }
 
 .scroll-pane::-webkit-scrollbar-thumb:hover {
-  background-color: #555; /* Darker color on hover */
 }
 </style>

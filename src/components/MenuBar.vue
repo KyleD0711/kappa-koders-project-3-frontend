@@ -1,6 +1,6 @@
 <script setup>
 import ocLogo from "/oc-logo-white.png";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import Utils from "../config/utils";
 import AuthServices from "../services/authServices";
 import userProfileServices from "../services/userProfileServices"; // Import userProfileServices
@@ -17,9 +17,6 @@ import { useEditProfileModalStore } from "../store/editProfileModal.store.js"; /
 import EditProfileModal from "./EditProfileModal.vue"; // Import the modal component
 
 const router = useRouter();
-
-const theme = useTheme();
-
 
 const theme = useTheme();
 
@@ -152,7 +149,7 @@ watch(
               </v-avatar>
             </v-btn>
           </template>
-          <v-card color="light-grey">
+          <v-card color="background">
             <v-card-text>
               <div class="mx-auto text-center">
                 <v-avatar color="secondary" class="mt-2 mb-2" size="100" style="font-size: 30px;">
@@ -162,8 +159,8 @@ watch(
                 <h3>{{ name }}</h3>
                 <p class="text-caption mt-1">{{ user.email }}</p> <!-- Use user from local storage -->
                 <v-divider class="my-3"></v-divider>
-                <v-btn depressed rounded text @click="logout" color="white"> Logout </v-btn>
-                <v-btn depressed rounded text color="white">Edit Profile</v-btn>
+                <v-btn depressed rounded text @click="logout" color="lightBlue"> Logout </v-btn>
+                <v-btn depressed rounded text color="lightBlue">Edit Profile</v-btn>
                 <div class="theme-toggle">
                 <!-- Styled v-switch -->
                 <v-switch
@@ -209,6 +206,8 @@ watch(
   flex: 1;
   position: relative;
   z-index: 1;
+  padding-left:75px;
+  padding-top:20px
 }
 
 .sun-icon,

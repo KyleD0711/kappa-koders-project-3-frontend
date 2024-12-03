@@ -145,7 +145,7 @@ const templates = ["template1", "template2", "template3", "template4"];
     <v-tabs v-model="leftTab" direction="vertical" hide-slider>
       <v-card
         class="mt-1 tab-width tab-left"
-        :color="leftTab == 0 ? 'teal' : ''"
+        :color="leftTab == 0 ? 'lightBlue' : 'section0'"
       >
         <v-tab height="125">
           <v-icon size="x-large">mdi-pencil</v-icon>
@@ -200,7 +200,7 @@ const templates = ["template1", "template2", "template3", "template4"];
     <v-tabs v-model="rightTab" direction="vertical" hide-slider>
       <v-card
         class="mt-1 tab-width tab-right"
-        :color="rightTab == 0 ? 'teal' : ''"
+        :color="rightTab == 0 ? 'lightBlue' : 'section0'"
       >
         <v-tab size="large" height="125">
           <v-icon size="large" class="ml-n2" color="">mdi-chat</v-icon>
@@ -208,7 +208,7 @@ const templates = ["template1", "template2", "template3", "template4"];
       </v-card>
       <v-card
         class="mt-1 tab-width tab-right"
-        :color="rightTab == 1 ? 'teal' : ''"
+        :color="rightTab == 1 ? 'lightBlue' : 'section0'"
       >
         <v-tab size="large" height="125">
           <v-icon size="large" class="ml-n2">mdi-comment-multiple</v-icon>
@@ -218,7 +218,7 @@ const templates = ["template1", "template2", "template3", "template4"];
     <v-navigation-drawer
       v-model="rightDrawer"
       location="right"
-      color="#4c4c4c"
+      color="section0"
       :width="drawerWidth"
     >
       <div v-if="rightTab != null">

@@ -909,8 +909,8 @@ const handleSaveResume = async () => {
         <v-expansion-panel-title style="font-size: 20px">
           Header
         </v-expansion-panel-title>
-        <v-expansion-panel-text color="text" class="panel-background">
-          <div class="option-checkboxes" color="panelBackground">
+        <v-expansion-panel-text style="background-color: #666" >
+          <v-card class="option-checkboxes" color="panelBackground">
             <v-form>
               <!-- Name, email, phone, etc. -->
               <v-row>
@@ -947,14 +947,14 @@ const handleSaveResume = async () => {
                     ></i>
                     Professional Summaries
                   </v-expansion-panel-title>
-                  <v-expansion-panel-text>
+                  <v-expansion-panel-text style="background-color: #888">
                     <!-- Professional Summaries List -->
                     <ul>
                       <template
                         v-for="summary in professionalSummaries"
                         :key="summary.data.id"
                       >
-                        <v-card class="mb-3">
+                        <v-card class="mb-3" style="background-color: #aaa; color: #444">
                           <li class="list-item">
                             <div style="padding-left: 2%">
                               <span
@@ -982,7 +982,7 @@ const handleSaveResume = async () => {
                     <!-- Add Professional Summary Card -->
                     <v-card @click="showAddSummaryDialog()">
                       <v-card class="addSection" color="addButton">
-                        <v-card-text color="text">
+                        <v-card-text style="background-color: #aaa; color: #444">
                           Add Professional Summary
                           <v-icon style="padding-bottom: 1%">mdi-plus</v-icon>
                         </v-card-text>
@@ -1005,14 +1005,15 @@ const handleSaveResume = async () => {
                         ></i>
                         Links
                       </v-expansion-panel-title>
-                      <v-expansion-panel-text color="success">
+                      <v-expansion-panel-text style="background-color: #888">
                         <draggable
                           class="item-list"
+                          style="background-color: #aaa; color: #444"
                           v-model="header.items"
                           tag="ul"
                         >
                           <template #item="{ element: item }">
-                            <v-card class="mb-3">
+                            <v-card class="mb-3" style="background-color: #aaa; color: #444">
                               <li :key="item.name" class="list-item">
                                 <div class="left-icons">
                                   <v-icon>mdi-drag</v-icon>
@@ -1034,7 +1035,7 @@ const handleSaveResume = async () => {
                           </template>
                         </draggable>
                         <v-card @click="showAddLinkDialog()">
-                          <div class="addSection">
+                          <div class="addSection" style="background-color: #aaa; color: #444">
                             Add {{ header.title }}
                             <v-icon style="padding-bottom: 1%">mdi-plus</v-icon>
                           </div>
@@ -1050,7 +1051,7 @@ const handleSaveResume = async () => {
               v-model="metadata_local.section_dividers"
               label="Include section dividers"
             />
-          </div>
+          </v-card>
         </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
@@ -1069,11 +1070,11 @@ const handleSaveResume = async () => {
                 <i :class="section.icon" style="margin-right: 5px"></i>
                 {{ section.title }}
               </v-expansion-panel-title>
-              <v-expansion-panel-text class="section-1" color="section1">
+              <v-expansion-panel-text class="section-1" style="background-color: #888">
                 <draggable class="item-list" v-model="section.items" tag="ul">
                   <template #item="{ element: item }">
                     <v-card class="mb-3" >
-                      <li :key="item.name" class="list-item">
+                      <li :key="item.name" class="list-item" style="background-color: #aaa; color: #444">
                         <div class="left-icons">
                           <v-icon>mdi-drag</v-icon>
                           <span>{{ item.name }}</span>
@@ -1094,10 +1095,10 @@ const handleSaveResume = async () => {
                   </template>
                 </draggable>
                 <v-card @click="showAddDialog(section.title)">
-                  <div class="addSection">
+                  <v-card class="addSection" style="background-color:#aaa; color: #444">
                     Add {{ section.title }}
                     <v-icon style="padding-bottom: 1%">mdi-plus</v-icon>
-                  </div>
+                  </v-card>
                 </v-card>
               </v-expansion-panel-text>
             </v-expansion-panel>
@@ -1194,7 +1195,6 @@ const handleSaveResume = async () => {
 
 .section-1 {
   display: block;
-  color: white;
   flex-direction: column;
 }
 

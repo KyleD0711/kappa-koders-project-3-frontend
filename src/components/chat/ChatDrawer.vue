@@ -12,7 +12,7 @@ const drawer = ref(false);
         width="250"
         v-model="drawer"
         location="right"
-        color="#4c4c4c"
+        color="section0"
       >
 
         <Chat/>

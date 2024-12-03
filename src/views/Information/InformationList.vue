@@ -3,9 +3,9 @@ import SideBar from "../../components/InformationSideBar.vue";
 </script>
 
 <template>
-  <v-card class="main-page" color="background">
+  <v-card color="background" class="main-page">
     <SideBar></SideBar>
-    <v-card class="content-area">
+    <v-card class="content-area" color="background">
       <router-view></router-view>
     </v-card>
   </v-card>
