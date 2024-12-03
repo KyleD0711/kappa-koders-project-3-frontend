@@ -79,7 +79,7 @@ const submitReview = async (isSave) => {
   <v-card class="resume_title" color="background" flat>Resume Title</v-card>
   <div class="d-flex flex-column fill-height pa-0">
     <v-expansion-panels>
-      <v-expansion-panel class="section-0">
+      <v-expansion-panel color="section0" bg-color="section0">
         <v-expansion-panel-title class="section_title"
           >Overview</v-expansion-panel-title
         >
@@ -88,6 +88,7 @@ const submitReview = async (isSave) => {
             v-model="overviewData"
             auto-grow
             variant="solo-filled"
+            bg-color="white"
           ></v-textarea>
           <span v-if="isError" style="color: red">Overview is required!</span>
         </v-expansion-panel-text>
@@ -97,7 +98,7 @@ const submitReview = async (isSave) => {
 
     <v-card class="mb-3" v-for="(section, i) in sections" :key="i">
       <v-expansion-panels>
-        <v-expansion-panel class="section-0">
+        <v-expansion-panel color="section0" bg-color="section0">
           <v-expansion-panel-title class="section_title">{{
             (
               section.section_title[0].toUpperCase() +
@@ -109,16 +110,17 @@ const submitReview = async (isSave) => {
               v-model="sectionData[i].text"
               auto-grow
               variant="solo-filled"
+              bg-color="white"
             ></v-textarea>
           </v-expansion-panel-text>
         </v-expansion-panel>
       </v-expansion-panels>
     </v-card>
     <div class="d-flex flex-wrap align-center justify-center" style="gap: 16px">
-      <v-btn @click="submitReview(false)" color="#3D7AE2" large>
+      <v-btn @click="submitReview(false)" color="lightBlue" large>
         Submit Review
       </v-btn>
-      <v-btn @click="submitReview(true)" color="#3D7AE2" large>
+      <v-btn @click="submitReview(true)" color="lightBlue" large>
         Save Changes
       </v-btn>
     </div>
@@ -143,11 +145,6 @@ const submitReview = async (isSave) => {
   bottom: 0;
   left: 0;
   padding: 5px;
-}
-
-.section-0 {
-  background-color: #403f3f;
-  color: white;
 }
 
 .light-breakline {
