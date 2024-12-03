@@ -56,7 +56,7 @@ onMounted(() => {
   <div>
     <v-col :cols="pageCols" class="mx-auto">
         <v-row class="w-100 justify-space-between align-center" no-gutters>
-          <p class="text-h4 my-4 ml-4" color="text">Review Resumes</p>
+          <p class="text-h4 my-4 ml-4" style="color: var(--v-theme-text) !important">Review Resumes</p>
           <Vueform
             size="md"
             :endpoint="false"
