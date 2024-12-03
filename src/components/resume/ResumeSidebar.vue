@@ -1176,7 +1176,6 @@ const handleSaveResume = async () => {
 }
 
 .resumeTitleText:hover {
-  color: rgb(165, 165, 165);
   border: solid 1px white;
   border-radius: 4px;
   padding: 5px;
