@@ -44,27 +44,9 @@ const resumeSidebar = ref(null);
 const route = useRoute();
 const resumeId = route.params.resumeId;
 
-const leftTab = ref(null);
-const rightTab = ref(null);
+const currentTab = ref(0);
 
-const leftDrawer = ref(true);
-const rightDrawer = ref(false);
-
-watch(rightTab, (newVal) => {
-  if (newVal !== null) {
-    leftTab.value = null; // Deselect left tab when a right tab is selected
-    rightDrawer.value = true; // Open right drawer
-    leftDrawer.value = false; // Close left drawer
-  }
-});
-
-watch(leftTab, (newVal) => {
-  if (newVal !== null) {
-    rightTab.value = null; // Deselect right tab when a left tab is selected
-    leftDrawer.value = true; // Open left drawer
-    rightDrawer.value = false; // Close right drawer
-  }
-});
+const navDrawer = ref(true);
 
 const switchDisplayedTemplate = async (id) => {
   try {
@@ -142,24 +124,41 @@ const templates = ["template1", "template2", "template3", "template4"];
 
 <template>
   <v-row class="justify-space-between" no-gutters>
-    <v-tabs v-model="leftTab" direction="vertical" hide-slider>
+    <v-tabs v-model="currentTab" direction="vertical" hide-slider>
       <v-card
         class="mt-1 tab-width tab-left"
-        :color="leftTab == 0 ? 'lightBlue' : 'section0'"
+        :color="currentTab == 0 ? 'lightBlue' : 'section0'"
       >
         <v-tab height="125">
           <v-icon size="x-large">mdi-pencil</v-icon>
         </v-tab>
       </v-card>
+      <v-card
+        class="mt-1 tab-width tab-left"
+        :color="currentTab == 1 ? 'lightBlue' : 'section0'"
+      >
+        <v-tab size="large" height="125">
+          <v-icon size="large" class="ml-n2" color="">mdi-chat</v-icon>
+        </v-tab>
+      </v-card>
+      <v-card
+        class="mt-1 tab-width tab-left"
+        :color="currentTab == 2 ? 'lightBlue' : 'section0'"
+      >
+        <v-tab size="large" height="125">
+          <v-icon size="large" class="ml-n2">mdi-comment-multiple</v-icon>
+        </v-tab>
+      </v-card>
     </v-tabs>
 
     <v-navigation-drawer
-      v-model="leftDrawer"
+      v-model="navDrawer"
       location="left"
       color="section0"
       :width="drawerWidth"
     >
       <ResumeSidebar
+        v-if="currentTab == 0"
         ref="resumeSidebar"
         :resume_data="resume_data"
         :resumeId="String(resumeId)"
@@ -167,6 +166,12 @@ const templates = ["template1", "template2", "template3", "template4"];
         :exportFunction="exportToPDF"
         @dataChange="handleDataChange"
       />
+      <Chat v-else-if="currentTab == 1" :resume-id="resumeId" />
+      <Comment
+        v-else
+        :resumeId="resumeId"
+        :render_fields="metadata.render_fields"
+      ></Comment>
     </v-navigation-drawer>
     <v-col class="mx-5">
       <v-tabs
@@ -197,39 +202,6 @@ const templates = ["template1", "template2", "template3", "template4"];
         />
       </div>
     </v-col>
-    <v-tabs v-model="rightTab" direction="vertical" hide-slider>
-      <v-card
-        class="mt-1 tab-width tab-right"
-        :color="rightTab == 0 ? 'lightBlue' : 'section0'"
-      >
-        <v-tab size="large" height="125">
-          <v-icon size="large" class="ml-n2" color="">mdi-chat</v-icon>
-        </v-tab>
-      </v-card>
-      <v-card
-        class="mt-1 tab-width tab-right"
-        :color="rightTab == 1 ? 'lightBlue' : 'section0'"
-      >
-        <v-tab size="large" height="125">
-          <v-icon size="large" class="ml-n2">mdi-comment-multiple</v-icon>
-        </v-tab>
-      </v-card>
-    </v-tabs>
-    <v-navigation-drawer
-      v-model="rightDrawer"
-      location="right"
-      color="section0"
-      :width="drawerWidth"
-    >
-      <div v-if="rightTab != null">
-        <Chat v-if="rightTab == 0" :resume-id="resumeId" />
-        <Comment
-          v-else
-          :resumeId="resumeId"
-          :render_fields="metadata.render_fields"
-        ></Comment>
-      </div>
-    </v-navigation-drawer>
   </v-row>
 </template>
 
