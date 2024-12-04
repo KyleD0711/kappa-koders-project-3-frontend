@@ -158,7 +158,7 @@ const templates = ["template1", "template2", "template3", "template4"];
       :width="drawerWidth"
     >
       <ResumeSidebar
-        v-if="currentTab == 0"
+        v-show="currentTab == 0"
         ref="resumeSidebar"
         :resume_data="resume_data"
         :resumeId="String(resumeId)"
@@ -166,9 +166,9 @@ const templates = ["template1", "template2", "template3", "template4"];
         :exportFunction="exportToPDF"
         @dataChange="handleDataChange"
       />
-      <Chat v-else-if="currentTab == 1" :resume-id="resumeId" />
+      <Chat v-show="currentTab == 1" :resume-id="resumeId" />
       <Comment
-        v-else
+       v-show="currentTab == 2"
         :resumeId="resumeId"
         :render_fields="metadata.render_fields"
       ></Comment>

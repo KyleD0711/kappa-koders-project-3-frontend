@@ -95,14 +95,20 @@ const updateChatHistoryResume = () => {
       role: "User",
     });
   }
-
-  if (history.value[props.resumeId].length > 1) {
-    history.value[props.resumeId].push({
+  
+  const historyLength = history.value[props.resumeId].length
+  if (historyLength > 1) {
+    const newHistoryMessage = {
       role: "User",
       message:
         `I've updated my resume, use this version for any future questions:` +
         innerHTML.value,
-    });
+    }
+    if(history.value[props.resumeId][historyLength - 1].role == "User"){
+      history.value[props.resumeId][historyLength - 1] = newHistoryMessage
+    } else {
+      history.value[props.resumeId].push(newHistoryMessage);
+    }
   } else {
     history.value[props.resumeId][0].message =
       `This is the resume that this chat is regarding, ignore the HTML tags and only provide feedback on the text of the resume for this version and all future versions:` +
@@ -145,7 +151,7 @@ const sendRecommendedMessage = (index) => {
   handleSendMessage();
 };
 
-watch(innerHTML.value, () => {
+watch(innerHTML, (newValue) => {
   updateChatHistoryResume();
 });
 
