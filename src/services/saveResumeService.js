@@ -668,7 +668,6 @@ const saveResume = async (
       "Error saving the resume:",
       error.response?.data || error.message
     );
-    alert("Failed to save the resume. Please try again.");
   }
 };
 
