@@ -146,10 +146,10 @@ const modalYes = async () => {
 
         <div v-show="showYesModal" class="confirmation-modal" id="testModal">
           <div class="modal-content">
-            <p>Are you sure?</p>
+            <p color="#141212">Are you sure?</p>
             <br>
-            <button @click="modalYes" style="margin-right: 20px">Yes</button>
-            <button @click="closeDialog">No</button>
+            <button @click="modalYes" style="margin-right: 20px; color: #141212">Yes</button>
+            <button @click="closeDialog" style="color: #141212">No</button>
           </div>
         </div>
 
